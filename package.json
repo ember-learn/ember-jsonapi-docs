@@ -4,7 +4,7 @@
   "description": "audits ember docs and generates since tags",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "standard && mocha test"
   },
   "author": "Stanley Stuart <stanley+npm@stan.li>",
   "license": "MIT",
@@ -26,5 +26,8 @@
     "rsvp": "^3.1.0",
     "s3": "^4.4.0",
     "yuidoc-to-jsonapi": "^0.1.0"
+  },
+  "standard": {
+    "globals": ["describe", "beforeEach", "afterEach", "before", "after", "it"]
   }
 }
