@@ -11,52 +11,7 @@ var readDocs = require('./lib/read-docs');
 fetch()
 .then(readDocs)
 .then(function(versions) {
-  var VERSION_INDEX = Object.create(null);
-
-  var since = {};
-
-  versions.forEach(function(versionData) {
-    var data = versionData.data;
-    var version = versionData.version = versionData.version.replace('v', '');
-
-    var classItems = data.classitems.filter(item => item.itemtype);
-
-    function createMethodEntry(method, itemType, version) {
-      VERSION_INDEX[itemType] = VERSION_INDEX[itemType] || Object.create(null);
-      VERSION_INDEX[itemType][method] = VERSION_INDEX[itemType][method] || [];
-      VERSION_INDEX[itemType][method].push(version);
-    }
-
-    classItems.forEach(function(method) {
-      var methodName = method.class + '#' + method.name;
-      createMethodEntry(methodName, method.itemtype, version);
-      if (method.since) {
-        since[methodName] = true;
-      }
-    });
-
-  });
-  var keys = Object.keys(VERSION_INDEX);
-
-  var methods = versions.reduce(function(memo, version) {
-    return memo.concat(version.data.classitems);
-  }, []).filter(function(ci) {
-    return !ci.since && ci.itemtype;
-  });
-
-  keys.forEach(function(key) {
-    Object.keys(VERSION_INDEX[key]).forEach(function(item) {
-      VERSION_INDEX[key][item].sort();
-    });
-  });
-
-  methods.forEach(function(method) {
-    var methodName = method.class + '#' + method.name;
-    var version    = VERSION_INDEX[method.itemtype][methodName][0];
-    var key        = methodName;
-
-    method.since = version;
-  });
+  addSinceTags(versions);
 
   var PouchDB = require('pouchdb');
 
