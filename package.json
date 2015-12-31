@@ -4,7 +4,7 @@
   "description": "audits ember docs and generates since tags",
   "main": "index.js",
   "scripts": {
-    "test": "standard && mocha test"
+    "test": "mocha test"
   },
   "author": "Stanley Stuart <stanley+npm@stan.li>",
   "license": "MIT",
@@ -23,11 +23,19 @@
     "lodash.sortby": "^3.1.5",
     "mkdirp": "^0.5.1",
     "pouchdb": "^5.1.0",
+    "promise-queue": "^2.2.0",
     "rsvp": "^3.1.0",
     "s3": "^4.4.0",
-    "yuidoc-to-jsonapi": "^0.1.0"
+    "yuidoc-to-jsonapi": "^0.3.0"
   },
   "standard": {
-    "globals": ["describe", "beforeEach", "afterEach", "before", "after", "it"]
+    "globals": [
+      "describe",
+      "beforeEach",
+      "afterEach",
+      "before",
+      "after",
+      "it"
+    ]
   }
 }
