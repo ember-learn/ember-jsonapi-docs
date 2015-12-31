@@ -6,6 +6,7 @@ var readDocs = require('./lib/read-docs')
 var addSinceTags = require('./lib/add-since-tags')
 var putClassesInCouch = require('./lib/classes-in-couch')
 var createVersionIndex = require('./lib/create-version-index')
+var updateIDs = require('./lib/update-with-versions-and-project')
 
 fetch()
   .then(readDocs)
@@ -21,6 +22,7 @@ fetch()
 
     var jsonapidocs = versions.map(function (version) {
       var jsonapidoc = tojsonapi(version.data)
+      jsonapidoc = updateIDs(jsonapidoc, 'ember', version.version)
 
       // now that we have one giant ass document, put it on a diet to something smaller.
       var projectData = {
@@ -32,7 +34,7 @@ fetch()
       }
 
       var data = {
-        _id: version.version,
+        _id: 'ember-' + version.version,
         data: {
           id: version.version,
           type: 'project-version',
@@ -71,7 +73,9 @@ fetch()
       })
     }).then(function () {
       return RSVP.map(versions, (version) => {
-        return putClassesInCouch(tojsonapi(version.data), 'ember', version.version)
+        var jsonapidoc = tojsonapi(version.data)
+        jsonapidoc = updateIDs(jsonapidoc, 'ember', version.version)
+        return putClassesInCouch(jsonapidoc, 'ember', version.version)
       })
     })
   }).catch(function (err) {
