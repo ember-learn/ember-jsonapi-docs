@@ -4,7 +4,7 @@
   "description": "audits ember docs and generates since tags",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test"
+    "test": "standard && mocha test"
   },
   "author": "Stanley Stuart <stanley+npm@stan.li>",
   "license": "MIT",

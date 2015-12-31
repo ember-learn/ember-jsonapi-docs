@@ -4,7 +4,6 @@ let updateWithIDs = require('../lib/update-with-versions-and-project')
 let assert = require('chai').assert
 
 describe('update with versions and project', function () {
-
   describe('`data` in jsonapi document is an object', function () {
     beforeEach(function () {
       this.document = {

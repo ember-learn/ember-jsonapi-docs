@@ -5,9 +5,7 @@ var fetch = require('./lib/fetch')
 var readDocs = require('./lib/read-docs')
 var addSinceTags = require('./lib/add-since-tags')
 var putClassesInCouch = require('./lib/classes-in-couch')
-var PouchDB = require('pouchdb')
 var createVersionIndex = require('./lib/create-version-index')
-
 
 fetch()
   .then(readDocs)
@@ -51,7 +49,7 @@ fetch()
                 type: 'project'
               }
             }
-          },
+          }
         },
         included: [projectData]
       }
