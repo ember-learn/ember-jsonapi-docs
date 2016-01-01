@@ -1,84 +1,111 @@
-var RSVP = require('rsvp')
-var _ = require('lodash')
+'use strict'
 
+let RSVP = require('rsvp')
+let _ = require('lodash')
 var fetch = require('./lib/fetch')
 var readDocs = require('./lib/read-docs')
 var addSinceTags = require('./lib/add-since-tags')
 var putClassesInCouch = require('./lib/classes-in-couch')
 var createVersionIndex = require('./lib/create-version-index')
-var updateIDs = require('./lib/update-with-versions-and-project')
+var createProjectVersions = require('./lib/create-project-versions')
+let rm = require('rimraf')
+let PouchDB = require('pouchdb')
+let byType = require('./lib/filter-jsonapi-doc')
+
+let db = new PouchDB('http://localhost:5984/documentation')
+let PROJECT_NAME = 'ember'
+let fs = require('fs')
+
+if (fs.existsSync('tmp/docs')) {
+  rm.sync('tmp/docs')
+}
 
 fetch()
   .then(readDocs)
-  .then(createVersionIndex)
+  .then(addSinceTags)
+  .then(yuidocs => {
+    return normalizeIDs(yuidocs, PROJECT_NAME)
+  })
+  .then(createVersionIndex(db, PROJECT_NAME))
   .then(function (versions) {
-    addSinceTags(versions)
-
-    var PouchDB = require('pouchdb')
-
-    var db = new PouchDB('http://localhost:5984/project-versions')
-
-    var tojsonapi = require('yuidoc-to-jsonapi/lib/converter')
-
-    var jsonapidocs = versions.map(function (version) {
-      var jsonapidoc = tojsonapi(version.data)
-      jsonapidoc = updateIDs(jsonapidoc, 'ember', version.version)
-
-      // now that we have one giant ass document, put it on a diet to something smaller.
-      var projectData = {
-        type: 'project',
-        id: 'ember',
-        attributes: {
-          github: 'https://github.com/emberjs/ember.js'
-        }
-      }
-
-      var data = {
-        _id: 'ember-' + version.version,
-        data: {
-          id: version.version,
-          type: 'project-version',
-          relationships: {
-            classes: {
-              data: jsonapidoc.data.filter(item => item.type === 'class').map(item => ({id: item.id, type: 'class'}))
-            },
-            modules: {
-              data: jsonapidoc.data.filter(item => item.type === 'module').map(item => ({id: item.id, type: 'module'}))
-            },
-            project: {
-              data: {
-                id: 'ember',
-                type: 'project'
-              }
-            }
-          }
-        },
-        included: [projectData]
-      }
-
-      return data
-    })
-
-    return RSVP.map(jsonapidocs, function (jsonapidoc) {
-      return db.get(jsonapidoc._id).then(function (doc) {
-        return _.merge({}, {_rev: doc._rev}, jsonapidoc)
-      }).catch(function () {
-        // 404 probably
-        return jsonapidoc
-      })
-    }).then(function (docs) {
-      return RSVP.map(docs, function (doc) {
-        console.log('updating ' + doc._id)
-        return db.put(doc)
-      })
-    }).then(function () {
-      return RSVP.map(versions, (version) => {
-        var jsonapidoc = tojsonapi(version.data)
-        jsonapidoc = updateIDs(jsonapidoc, 'ember', version.version)
-        return putClassesInCouch(jsonapidoc, 'ember', version.version)
-      })
-    })
-  }).catch(function (err) {
+    //return createProjectVersions(versions, 'ember', db).then(() => {
+      return putClassesInCouch(versions, db)
+    //})
+  })
+  .catch(function (err) {
     console.warn('err!', err, err.stack)
     process.exit(1)
   })
+
+function normalizeIDs (versions, projectName) {
+  let tojsonapi = require('yuidoc-to-jsonapi/lib/converter')
+  let updateIDs = require('./lib/update-with-versions-and-project')
+
+  let jsonapidocs = versions.map(version => {
+    let jsonapidoc = tojsonapi(version.data)
+    return updateIDs(jsonapidoc, projectName, version.version)
+  })
+
+  let jsonapidoc = {
+    data: _.flatten(jsonapidocs.map(d => d.data)),
+  }
+
+  function extractRelationship(doc) {
+    return {
+      id: doc.id,
+      type: doc.type
+    }
+  }
+
+  let findType = require('./lib/filter-jsonapi-doc').byType
+
+  let projectVersions = versions.map(version => {
+    return {
+      id: `${projectName}-${version.version}`,
+      type: 'project-version',
+      attributes: {
+        version: version.version
+      },
+      relationships: {
+        classes: {
+          data: findType(jsonapidoc, 'class').map(extractRelationship)
+        },
+        modules: {
+          data: findType(jsonapidoc, 'module').map(extractRelationship)
+        },
+        project: {
+          data: {
+            id: projectName,
+            type: 'project'
+          }
+        }
+      }
+    }
+  })
+
+  let project = {
+    type: 'project',
+    id: `${projectName}`,
+    attributes: {
+      name: projectName,
+      github_url: 'https://github.com/emberjs/ember.js'
+    }
+  }
+
+  let doc = {
+    data: jsonapidoc.data.concat(projectVersions).concat([project])
+  }
+
+  let saveDoc = require('./lib/save-document')
+
+  let versionDocs = RSVP.map(projectVersions, (projectVersion) => {
+    let doc = {
+      data: projectVersion
+    }
+
+    return saveDoc(doc)
+  })
+
+  return versionDocs.then(() => doc)
+}
+

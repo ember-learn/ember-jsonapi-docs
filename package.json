@@ -19,11 +19,13 @@
   "dependencies": {
     "continuation-local-storage": "^3.1.4",
     "glob": "^6.0.2",
+    "graceful-fs": "^4.1.2",
     "lodash": "^3.10.1",
     "lodash.sortby": "^3.1.5",
     "mkdirp": "^0.5.1",
     "pouchdb": "^5.1.0",
     "promise-queue": "^2.2.0",
+    "rimraf": "^2.5.0",
     "rsvp": "^3.1.0",
     "s3": "^4.4.0",
     "yuidoc-to-jsonapi": "^0.3.0"
