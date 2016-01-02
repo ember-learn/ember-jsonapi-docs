@@ -31,6 +31,26 @@ fetch()
     //return createProjectVersions(versions, 'ember', db).then(() => {
       return putClassesInCouch(versions, db)
     //})
+  }).then(function() {
+    let glob = require('glob')
+    let path = require('path')
+
+    let docs = glob.sync('tmp/docs/**/*.json')
+
+    let Queue = require('promise-queue')
+    let queue = new Queue(10)
+    return RSVP.map(docs, function(doc) {
+      return queue.add(() => {
+        let document = require(path.join(__dirname, doc))
+
+        document._id = `${document.data.type}-${document.data.id}`
+
+        console.log(`putting ${document._id} in couchdb`)
+        return db.get(document._id).catch(() => document).then(doc => {
+          return db.put(_.merge(doc, document));
+        })
+      })
+    })
   })
   .catch(function (err) {
     console.warn('err!', err, err.stack)
@@ -59,6 +79,13 @@ function normalizeIDs (versions, projectName) {
 
   let findType = require('./lib/filter-jsonapi-doc').byType
 
+  function filterForVersion(version) {
+    return function(doc) {
+      var projectVersion = doc.relationships['project-version'].data.id.split('-').pop();
+      return version.version === projectVersion;
+    }
+  }
+
   let projectVersions = versions.map(version => {
     return {
       id: `${projectName}-${version.version}`,
@@ -68,10 +95,10 @@ function normalizeIDs (versions, projectName) {
       },
       relationships: {
         classes: {
-          data: findType(jsonapidoc, 'class').map(extractRelationship)
+          data: findType(jsonapidoc, 'class').filter(filterForVersion(version)).map(extractRelationship)
         },
         modules: {
-          data: findType(jsonapidoc, 'module').map(extractRelationship)
+          data: findType(jsonapidoc, 'module').filter(filterForVersion(version)).map(extractRelationship)
         },
         project: {
           data: {
@@ -106,6 +133,6 @@ function normalizeIDs (versions, projectName) {
     return saveDoc(doc)
   })
 
-  return versionDocs.then(() => doc)
+  return versionDocs.then(() => doc);
 }
 
