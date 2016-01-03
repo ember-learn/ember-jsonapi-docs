@@ -1,5 +1,6 @@
 'use strict'
 
+let Queue = require('promise-queue')
 let RSVP = require('rsvp')
 let _ = require('lodash')
 var fetch = require('./lib/fetch')
@@ -121,12 +122,13 @@ function normalizeIDs (versions, projectName) {
 
   let saveDoc = require('./lib/save-document')
 
+  let queue = new Queue(10)
   let versionDocs = RSVP.map(projectVersions, (projectVersion) => {
     let doc = {
       data: projectVersion
     }
 
-    return saveDoc(doc)
+    return queue.add(() => saveDoc(doc))
   })
 
   return versionDocs.then(() => doc)
