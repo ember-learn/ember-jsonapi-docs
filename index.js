@@ -7,10 +7,8 @@ var readDocs = require('./lib/read-docs')
 var addSinceTags = require('./lib/add-since-tags')
 var putClassesInCouch = require('./lib/classes-in-couch')
 var createVersionIndex = require('./lib/create-version-index')
-var createProjectVersions = require('./lib/create-project-versions')
 let rm = require('rimraf')
 let PouchDB = require('pouchdb')
-let byType = require('./lib/filter-jsonapi-doc')
 
 let db = new PouchDB('http://localhost:5984/documentation')
 let PROJECT_NAME = 'ember'
@@ -28,10 +26,8 @@ fetch()
   })
   .then(createVersionIndex(db, PROJECT_NAME))
   .then(function (versions) {
-    //return createProjectVersions(versions, 'ember', db).then(() => {
-      return putClassesInCouch(versions, db)
-    //})
-  }).then(function() {
+    return putClassesInCouch(versions, db)
+  }).then(function () {
     let glob = require('glob')
     let path = require('path')
 
@@ -39,7 +35,7 @@ fetch()
 
     let Queue = require('promise-queue')
     let queue = new Queue(10)
-    return RSVP.map(docs, function(doc) {
+    return RSVP.map(docs, function (doc) {
       return queue.add(() => {
         let document = require(path.join(__dirname, doc))
 
@@ -47,7 +43,7 @@ fetch()
 
         console.log(`putting ${document._id} in couchdb`)
         return db.get(document._id).catch(() => document).then(doc => {
-          return db.put(_.merge(doc, document));
+          return db.put(_.merge(doc, document))
         })
       })
     })
@@ -67,10 +63,10 @@ function normalizeIDs (versions, projectName) {
   })
 
   let jsonapidoc = {
-    data: _.flatten(jsonapidocs.map(d => d.data)),
+    data: _.flatten(jsonapidocs.map(d => d.data))
   }
 
-  function extractRelationship(doc) {
+  function extractRelationship (doc) {
     return {
       id: doc.id,
       type: doc.type
@@ -79,10 +75,10 @@ function normalizeIDs (versions, projectName) {
 
   let findType = require('./lib/filter-jsonapi-doc').byType
 
-  function filterForVersion(version) {
-    return function(doc) {
-      var projectVersion = doc.relationships['project-version'].data.id.split('-').pop();
-      return version.version === projectVersion;
+  function filterForVersion (version) {
+    return function (doc) {
+      var projectVersion = doc.relationships['project-version'].data.id.split('-').pop()
+      return version.version === projectVersion
     }
   }
 
@@ -133,6 +129,5 @@ function normalizeIDs (versions, projectName) {
     return saveDoc(doc)
   })
 
-  return versionDocs.then(() => doc);
+  return versionDocs.then(() => doc)
 }
-
