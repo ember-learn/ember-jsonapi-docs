@@ -8,10 +8,12 @@ var readDocs = require('./lib/read-docs')
 var addSinceTags = require('./lib/add-since-tags')
 var putClassesInCouch = require('./lib/classes-in-couch')
 var createVersionIndex = require('./lib/create-version-index')
+let normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
 let rm = require('rimraf')
 let PouchDB = require('pouchdb')
+let marked = require('marked')
 
-let db = new PouchDB('http://localhost:5984/documentation')
+let db = new PouchDB(process.env.COUCH_URL)
 let PROJECT_NAME = 'ember'
 let fs = require('fs')
 
@@ -19,15 +21,35 @@ if (fs.existsSync('tmp/docs')) {
   rm.sync('tmp/docs')
 }
 
-fetch()
-  .then(readDocs)
-  .then(addSinceTags)
-  .then(yuidocs => {
-    return normalizeIDs(yuidocs, PROJECT_NAME)
-  })
-  .then(createVersionIndex(db, PROJECT_NAME))
-  .then(function (versions) {
-    return putClassesInCouch(versions, db)
+function fetchProject (projectName) {
+  let promise = fetch()
+    .then(() => readDocs(projectName))
+    .then(addSinceTags)
+    .then(yuidocs => {
+      return normalizeIDs(yuidocs, projectName)
+    }).then(doc => {
+      return createVersionIndex(db, projectName, doc).then(() => doc)
+    }).then(doc => {
+      doc.data.forEach(document => {
+        let description
+
+        if (description = document.attributes.description) {
+          document.attributes.description = marked(description)
+        }
+      })
+      return putClassesInCouch(doc, db)
+    })
+
+  return promise
+}
+
+let projects = ['ember', 'ember-data']
+
+RSVP.map(projects, fetchProject).then(docs => {
+  let giantDocument = {
+    data: _.flatten(docs.map(doc => doc.data))
+  }
+  normalizeEmberDependencies(giantDocument)
   }).then(function () {
     let glob = require('glob')
     let path = require('path')
@@ -44,7 +66,7 @@ fetch()
 
         console.log(`putting ${document._id} in couchdb`)
         return db.get(document._id).catch(() => document).then(doc => {
-          return db.put(_.merge(doc, document))
+          return db.put(_.extend({}, {_rev: doc._rev}, document))
         })
       })
     })
@@ -107,17 +129,8 @@ function normalizeIDs (versions, projectName) {
     }
   })
 
-  let project = {
-    type: 'project',
-    id: `${projectName}`,
-    attributes: {
-      name: projectName,
-      github_url: 'https://github.com/emberjs/ember.js'
-    }
-  }
-
   let doc = {
-    data: jsonapidoc.data.concat(projectVersions).concat([project])
+    data: jsonapidoc.data.concat(projectVersions)
   }
 
   let saveDoc = require('./lib/save-document')
