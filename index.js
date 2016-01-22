@@ -37,7 +37,7 @@ function fetchProject (projectName) {
           document.attributes.description = marked(description)
         }
       })
-      return putClassesInCouch(doc, db)
+      return doc;
     })
 
   return promise
@@ -50,6 +50,8 @@ RSVP.map(projects, fetchProject).then(docs => {
     data: _.flatten(docs.map(doc => doc.data))
   }
   normalizeEmberDependencies(giantDocument)
+
+  return putClassesInCouch(giantDocument, db)
   }).then(function () {
     let glob = require('glob')
     let path = require('path')
