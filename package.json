@@ -29,6 +29,7 @@
     "mkdirp": "^0.5.1",
     "pouchdb": "^5.1.0",
     "promise-queue": "^2.2.0",
+    "promise-retry": "^1.0.2",
     "rimraf": "^2.5.0",
     "rsvp": "^3.1.0",
     "s3": "^4.4.0",

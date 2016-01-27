@@ -21,15 +21,29 @@ if (fs.existsSync('tmp/docs')) {
   rm.sync('tmp/docs')
 }
 
+function removeLongDocsBecauseEmber1HasWeirdDocs(document) {
+  let str = "A Suite can"
+  return document.id.indexOf(str) === -1
+}
+
 function fetchProject (projectName) {
+  console.log('downloading docs for ' + projectName)
   let promise = fetch()
-    .then(() => readDocs(projectName))
-    .then(addSinceTags)
-    .then(yuidocs => {
+    .then((stuff) => {
+      console.log('reading docs for ' + projectName)
+      return readDocs(projectName)
+    })
+    .then((stuff) => {
+      console.log('reading docs for ' + projectName)
+      return addSinceTags(stuff)
+    }).then(yuidocs => {
+      console.log('normalizing yuidocs for ' + projectName)
       return normalizeIDs(yuidocs, projectName)
     }).then(doc => {
+      console.log('creating version index for ' + projectName)
       return createVersionIndex(db, projectName, doc).then(() => doc)
     }).then(doc => {
+      console.log('converting markdown to html for ' + projectName)
       doc.data.forEach(document => {
         let description
 
@@ -37,7 +51,8 @@ function fetchProject (projectName) {
           document.attributes.description = marked(description)
         }
       })
-      return doc;
+
+      return doc
     })
 
   return promise
@@ -49,6 +64,7 @@ RSVP.map(projects, fetchProject).then(docs => {
   let giantDocument = {
     data: _.flatten(docs.map(doc => doc.data))
   }
+  console.log('normalizing dependencies')
   normalizeEmberDependencies(giantDocument)
 
   return putClassesInCouch(giantDocument, db)
@@ -58,20 +74,10 @@ RSVP.map(projects, fetchProject).then(docs => {
 
     let docs = glob.sync('tmp/docs/**/*.json')
 
-    let Queue = require('promise-queue')
-    let queue = new Queue(10)
-    return RSVP.map(docs, function (doc) {
-      return queue.add(() => {
-        let document = require(path.join(__dirname, doc))
+    let batchUpdate = require('./lib/batch-update');
 
-        document._id = `${document.data.type}-${document.data.id}`
-
-        console.log(`putting ${document._id} in couchdb`)
-        return db.get(document._id).catch(() => document).then(doc => {
-          return db.put(_.extend({}, {_rev: doc._rev}, document))
-        })
-      })
-    })
+    console.log('putting document in CouchDB')
+    return batchUpdate(db, docs);
   })
   .catch(function (err) {
     console.warn('err!', err, err.stack)
@@ -81,6 +87,7 @@ RSVP.map(projects, fetchProject).then(docs => {
 function normalizeIDs (versions, projectName) {
   let tojsonapi = require('yuidoc-to-jsonapi/lib/converter')
   let updateIDs = require('./lib/update-with-versions-and-project')
+  let findType = require('./lib/filter-jsonapi-doc').byType
 
   let jsonapidocs = versions.map(version => {
     let jsonapidoc = tojsonapi(version.data)
@@ -91,14 +98,14 @@ function normalizeIDs (versions, projectName) {
     data: _.flatten(jsonapidocs.map(d => d.data))
   }
 
+  jsonapidoc.data = jsonapidoc.data.filter(removeLongDocsBecauseEmber1HasWeirdDocs)
+
   function extractRelationship (doc) {
     return {
       id: doc.id,
       type: doc.type
     }
   }
-
-  let findType = require('./lib/filter-jsonapi-doc').byType
 
   function filterForVersion (version) {
     return function (doc) {
@@ -116,7 +123,12 @@ function normalizeIDs (versions, projectName) {
       },
       relationships: {
         classes: {
-          data: findType(jsonapidoc, 'class').filter(filterForVersion(version)).map(extractRelationship)
+          data: findType(jsonapidoc, 'class')
+                    .filter(filterForVersion(version))
+                    .filter(doc => {
+                      return removeLongDocsBecauseEmber1HasWeirdDocs(doc);
+                    })
+                    .map(extractRelationship)
         },
         modules: {
           data: findType(jsonapidoc, 'module').filter(filterForVersion(version)).map(extractRelationship)
