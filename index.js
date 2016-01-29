@@ -44,15 +44,8 @@ function fetchProject (projectName) {
       return createVersionIndex(db, projectName, doc).then(() => doc)
     }).then(doc => {
       console.log('converting markdown to html for ' + projectName)
-      doc.data.forEach(document => {
-        let description
 
-        if (description = document.attributes.description) {
-          document.attributes.description = marked(description)
-        }
-      })
-
-      return doc
+      return require('./lib/markup')(doc)
     })
 
   return promise

@@ -19,9 +19,11 @@
     "standard-format": "^2.1.0"
   },
   "dependencies": {
+    "cheerio": "^0.19.0",
     "continuation-local-storage": "^3.1.4",
     "glob": "^6.0.2",
     "graceful-fs": "^4.1.2",
+    "highlight.js": "^9.1.0",
     "inflected": "^1.1.6",
     "lodash": "^3.10.1",
     "lodash.sortby": "^3.1.5",
