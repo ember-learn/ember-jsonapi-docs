@@ -11,18 +11,17 @@ var createVersionIndex = require('./lib/create-version-index')
 let normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
 let rm = require('rimraf')
 let PouchDB = require('pouchdb')
-let marked = require('marked')
+require('marked')
 
 let db = new PouchDB(process.env.COUCH_URL)
-let PROJECT_NAME = 'ember'
 let fs = require('fs')
 
 if (fs.existsSync('tmp/docs')) {
   rm.sync('tmp/docs')
 }
 
-function removeLongDocsBecauseEmber1HasWeirdDocs(document) {
-  let str = "A Suite can"
+function removeLongDocsBecauseEmber1HasWeirdDocs (document) {
+  let str = 'A Suite can'
   return document.id.indexOf(str) === -1
 }
 
@@ -61,21 +60,19 @@ RSVP.map(projects, fetchProject).then(docs => {
   normalizeEmberDependencies(giantDocument)
 
   return putClassesInCouch(giantDocument, db)
-  }).then(function () {
-    let glob = require('glob')
-    let path = require('path')
+}).then(function () {
+  let glob = require('glob')
 
-    let docs = glob.sync('tmp/docs/**/*.json')
+  let docs = glob.sync('tmp/docs/**/*.json')
 
-    let batchUpdate = require('./lib/batch-update');
+  let batchUpdate = require('./lib/batch-update')
 
-    console.log('putting document in CouchDB')
-    return batchUpdate(db, docs);
-  })
-  .catch(function (err) {
-    console.warn('err!', err, err.stack)
-    process.exit(1)
-  })
+  console.log('putting document in CouchDB')
+  return batchUpdate(db, docs)
+}).catch(function (err) {
+  console.warn('err!', err, err.stack)
+  process.exit(1)
+})
 
 function normalizeIDs (versions, projectName) {
   let tojsonapi = require('yuidoc-to-jsonapi/lib/converter')
@@ -119,7 +116,7 @@ function normalizeIDs (versions, projectName) {
           data: findType(jsonapidoc, 'class')
                     .filter(filterForVersion(version))
                     .filter(doc => {
-                      return removeLongDocsBecauseEmber1HasWeirdDocs(doc);
+                      return removeLongDocsBecauseEmber1HasWeirdDocs(doc)
                     })
                     .map(extractRelationship)
         },
