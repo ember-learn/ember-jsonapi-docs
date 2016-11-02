@@ -6,6 +6,7 @@ let _ = require('lodash')
 var fetch = require('./lib/fetch')
 var readDocs = require('./lib/read-docs')
 var addSinceTags = require('./lib/add-since-tags')
+var addInheritedItems = require('./lib/add-inherited-items')
 var putClassesInCouch = require('./lib/classes-in-couch')
 var createVersionIndex = require('./lib/create-version-index')
 let normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
@@ -38,8 +39,11 @@ function fetchProject (projectName) {
       return readDocs(projectName)
     })
     .then((stuff) => {
-      console.log('reading docs for ' + projectName)
+      console.log('adding since tags for ' + projectName)
       return addSinceTags(stuff)
+    }).then((stuff) => {
+      console.log('adding inherited items for ' + projectName)
+      return addInheritedItems(stuff)
     }).then(yuidocs => {
       console.log('normalizing yuidocs for ' + projectName)
       return normalizeIDs(yuidocs, projectName)
