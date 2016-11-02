@@ -13,7 +13,12 @@ let rm = require('rimraf')
 let PouchDB = require('pouchdb')
 require('marked')
 
-let db = new PouchDB(process.env.COUCH_URL)
+let db = new PouchDB(process.env.COUCH_URL, {
+  auth: {
+    username: process.env.COUCH_USERNAME,
+    password: process.env.COUCH_PASSWORD
+  }
+})
 let fs = require('fs')
 
 if (fs.existsSync('tmp/docs')) {
@@ -104,7 +109,21 @@ function normalizeIDs (versions, projectName) {
     }
   }
 
+  function isPrivate (doc) {
+    return doc.attributes.access === 'private' || doc.attributes.deprecated === true
+  }
+
+  function isPublic (doc) {
+    return doc.attributes.access !== 'private' && doc.attributes.deprecated !== true
+  }
+
   let projectVersions = versions.map(version => {
+    let classes = findType(jsonapidoc, 'class')
+      .filter(filterForVersion(version))
+      .filter(doc => {
+        return removeLongDocsBecauseEmber1HasWeirdDocs(doc)
+      })
+
     return {
       id: `${projectName}-${version.version}`,
       type: 'project-version',
@@ -113,12 +132,8 @@ function normalizeIDs (versions, projectName) {
       },
       relationships: {
         classes: {
-          data: findType(jsonapidoc, 'class')
-                    .filter(filterForVersion(version))
-                    .filter(doc => {
-                      return removeLongDocsBecauseEmber1HasWeirdDocs(doc)
-                    })
-                    .map(extractRelationship)
+          data: classes
+            .map(extractRelationship)
         },
         modules: {
           data: findType(jsonapidoc, 'module').filter(filterForVersion(version)).map(extractRelationship)
@@ -128,6 +143,16 @@ function normalizeIDs (versions, projectName) {
             id: projectName,
             type: 'project'
           }
+        },
+        'private-classes': {
+          data: classes
+            .filter(isPrivate)
+            .map(extractRelationship)
+        },
+        'public-classes': {
+          data: classes
+            .filter(isPublic)
+            .map(extractRelationship)
         }
       }
     }
