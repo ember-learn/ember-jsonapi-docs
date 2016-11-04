@@ -128,6 +128,16 @@ function normalizeIDs (versions, projectName) {
         return removeLongDocsBecauseEmber1HasWeirdDocs(doc)
       })
 
+    let namespaces = classes.filter(doc => doc.attributes.static === 1);
+    classes = classes.filter(doc => doc.attributes.static !== 1);
+
+    namespaces.forEach(ns => {
+      ns.type = 'namespace'
+    })
+
+    let modules = findType(jsonapidoc, 'module')
+      .filter(filterForVersion(version))
+
     return {
       id: `${projectName}-${version.version}`,
       type: 'project-version',
@@ -136,11 +146,13 @@ function normalizeIDs (versions, projectName) {
       },
       relationships: {
         classes: {
-          data: classes
-            .map(extractRelationship)
+          data: classes.map(extractRelationship)
+        },
+        namespaces: {
+          data: namespaces.map(extractRelationship)
         },
         modules: {
-          data: findType(jsonapidoc, 'module').filter(filterForVersion(version)).map(extractRelationship)
+          data: modules.map(extractRelationship)
         },
         project: {
           data: {
