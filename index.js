@@ -169,6 +169,26 @@ function normalizeIDs (versions, projectName) {
           data: classes
             .filter(isPublic)
             .map(extractRelationship)
+        },
+        'private-namespaces': {
+          data: namespaces
+            .filter(isPrivate)
+            .map(extractRelationship)
+        },
+        'public-namespaces': {
+          data: namespaces
+            .filter(isPublic)
+            .map(extractRelationship)
+        },
+        'private-modules': {
+          data: modules
+            .filter(isPrivate)
+            .map(extractRelationship)
+        },
+        'public-modules': {
+          data: modules
+            .filter(isPublic)
+            .map(extractRelationship)
         }
       }
     }
