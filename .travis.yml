@@ -1,0 +1,18 @@
+language: node_js
+node_js: '6'
+env:
+  - COUCH_URL="https://sivakumar-kailasam.cloudant.com/ember-docs-api"
+
+cache:
+  directories:
+    - $HOME/.yarn-cache
+    - node_modules
+    - tmp
+
+script:
+  - yarn run test
+  - yarn start
+
+branches:
+  only:
+    - master
