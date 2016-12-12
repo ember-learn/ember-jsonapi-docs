@@ -1,4 +1,5 @@
 ember-jsonapi-docs is a script for turning ember API doc build output into jsonapi compliant data for use in various applications seeking to use the Ember API.
+[![Build Status](https://travis-ci.org/ember-learn/ember-jsonapi-docs.svg?branch=master)](https://travis-ci.org/ember-learn/ember-jsonapi-docs)
 
 The script pulls yuidoc build output from all Ember versions from Amazon S3, converts it to json-api, and pushes it to CouchDB.
 
