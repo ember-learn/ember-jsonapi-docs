@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "autoformat": "standard --fix index.js lib/*.js",
-    "start": "node index.js",
+    "start": "node --max-old-space-size=3072 index.js",
     "test": "standard && mocha test"
   },
   "author": "Stanley Stuart <stanley+npm@stan.li>",
