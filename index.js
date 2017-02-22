@@ -11,6 +11,7 @@ let fetch = require('./lib/fetch')
 let readDocs = require('./lib/read-docs')
 let addSinceTags = require('./lib/add-since-tags')
 let addInheritedItems = require('./lib/add-inherited-items')
+let addSubModulesParent = require('./lib/add-sub-modules-parent')
 let putClassesInCouch = require('./lib/classes-in-couch')
 let createVersionIndex = require('./lib/create-version-index')
 let normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
@@ -35,6 +36,9 @@ function transformProjectFiles (projectName) {
   console.log('reading docs for ' + projectName)
   let promise = RSVP.resolve(readDocs(projectName))
     .then((stuff) => {
+      console.log('adding sub modules parent for ' + projectName)
+      return addSubModulesParent(stuff)
+    }).then((stuff) => {
       console.log('adding since tags for ' + projectName)
       return addSinceTags(stuff)
     }).then((stuff) => {
