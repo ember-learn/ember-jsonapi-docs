@@ -3,33 +3,25 @@
 let RSVP = require('rsvp')
 let _ = require('lodash')
 let rm = require('rimraf')
-let PouchDB = require('pouchdb')
 let fs = require('fs')
-let glob = require('glob')
+let archiver = require('archiver-promise')
+let path = require('path')
 
 let fetch = require('./lib/fetch')
 let readDocs = require('./lib/read-docs')
 let addSinceTags = require('./lib/add-since-tags')
 let addInheritedItems = require('./lib/add-inherited-items')
 let addSubModulesParent = require('./lib/add-sub-modules-parent')
-let putClassesInCouch = require('./lib/classes-in-couch')
+let createClassesOnDisk = require('./lib/create-classes')
 let createVersionIndex = require('./lib/create-version-index')
 let normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
 let normalizeIDs = require('./lib/normalize-ids')
 let markup = require('./lib/markup')
-let batchUpdate = require('./lib/batch-update')
 
 require('marked')
 
-let db = new PouchDB(process.env.COUCH_URL, {
-  auth: {
-    username: process.env.COUCH_USERNAME,
-    password: process.env.COUCH_PASSWORD
-  }
-})
-
-if (fs.existsSync('tmp/docs')) {
-  rm.sync('tmp/docs')
+if (fs.existsSync('tmp/json-docs')) {
+  rm.sync('tmp/json-docs')
 }
 
 function transformProjectFiles (projectName) {
@@ -49,7 +41,7 @@ function transformProjectFiles (projectName) {
       return normalizeIDs(yuidocs, projectName)
     }).then(doc => {
       console.log('creating version index for ' + projectName)
-      return createVersionIndex(db, projectName, doc).then(() => doc)
+      return createVersionIndex(projectName, doc).then(() => doc)
     }).then(doc => {
       console.log('converting markdown to html for ' + projectName)
       return markup(doc)
@@ -63,7 +55,7 @@ let releaseToGenDocFor = process.argv[2] ? process.argv[2] : ''
 
 console.log('downloading docs for ' + projects.join(' & '))
 
-fetch(db, releaseToGenDocFor).then(downloadedFiles => {
+fetch(releaseToGenDocFor).then(() => {
   RSVP.map(projects, transformProjectFiles).then(docs => {
     let giantDocument = {
       data: _.flatten(docs.map(doc => doc.data))
@@ -71,14 +63,23 @@ fetch(db, releaseToGenDocFor).then(downloadedFiles => {
     console.log('normalizing dependencies')
     normalizeEmberDependencies(giantDocument)
 
-    return putClassesInCouch(giantDocument, db)
+    return createClassesOnDisk(giantDocument)
   }).then(function () {
-    let docs = glob.sync('tmp/docs/**/*.json')
-
-    console.log('putting document in CouchDB')
-    return batchUpdate(db, docs)
-  }).catch(function (err) {
-    console.warn('err!', err, err.stack)
-    process.exit(1)
+    console.log('Zipping docs')
+    let originalDir = __dirname
+    process.chdir(path.join(originalDir, 'tmp'))
+    let archive = archiver('docs.tar', {
+      gzip: true,
+      gzipOptions: {
+        level: 1
+      }
+    })
+    archive.directory('json-docs').finalize().then(() => {
+      process.chdir(originalDir)
+      console.log(`Done! The docs are zipped in tmp/docs.tar`)
+    })
   })
+}).catch(function (err) {
+  console.warn('err!', err, err.stack)
+  process.exit(1)
 })
