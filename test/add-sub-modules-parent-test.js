@@ -2,11 +2,11 @@
 
 let addSubModulesParent = require('../lib/add-sub-modules-parent')
 let assert = require('chai').assert
-let _ = require('lodash')
+let range = require('lodash/range')
 
 describe('addSubModulesParent', function () {
   beforeEach(function () {
-    this.yuiDocSets = _.range(3).map(i => {
+    this.yuiDocSets = range(3).map(i => {
       return {
         version: 'v1.0.' + i,
         data: {
@@ -32,7 +32,7 @@ describe('addSubModulesParent', function () {
 
   it('adds a parent attribute to sub modules', function () {
     this.yuiDocSets.forEach(docSet => {
-      let subModules = _.filter(docSet.data.modules, (mod) => (mod.is_submodule))
+      let subModules = docSet.data.modules.filter((mod) => (mod.is_submodule))
       subModules.forEach((moduleItem) => {
         assert.equal(moduleItem.parent, 'foo')
       })
