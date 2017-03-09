@@ -47,13 +47,13 @@ describe('update with versions and project', function () {
     })
 
     it('adds the project name and version to the IDs', function () {
-      assert.equal(this.converted.data.id, 'ember-1.1.0-Ember.CoreView')
-      assert.equal(this.converted.included[0].id, 'ember-1.1.0-ember')
-      assert.equal(this.converted.included[0].relationships.classes.data[0].id, 'ember-1.1.0-Ember.CoreView')
+      assert.equal(this.converted.data.id, 'Ember.CoreView')
+      assert.equal(this.converted.included[0].id, 'ember')
+      assert.equal(this.converted.included[0].relationships.classes.data[0].id, 'Ember.CoreView')
     })
 
     it('adds the id to relationships', function () {
-      assert.equal(this.converted.data.relationships.module.data.id, 'ember-1.1.0-ember')
+      assert.equal(this.converted.data.relationships.module.data.id, 'ember')
     })
   })
 
@@ -100,13 +100,13 @@ describe('update with versions and project', function () {
     })
 
     it('adds the project name and version to the IDs', function () {
-      assert.equal(this.converted.data[0].id, 'ember-1.1.0-Ember.CoreView')
-      assert.equal(this.converted.included[0].id, 'ember-1.1.0-ember')
-      assert.equal(this.converted.included[0].relationships.classes.data[0].id, 'ember-1.1.0-Ember.CoreView')
+      assert.equal(this.converted.data[0].id, 'Ember.CoreView')
+      assert.equal(this.converted.included[0].id, 'ember')
+      assert.equal(this.converted.included[0].relationships.classes.data[0].id, 'Ember.CoreView')
     })
 
     it('adds the id to relationships', function () {
-      assert.equal(this.converted.data[0].relationships.module.data.id, 'ember-1.1.0-ember')
+      assert.equal(this.converted.data[0].relationships.module.data.id, 'ember')
     })
   })
 })
