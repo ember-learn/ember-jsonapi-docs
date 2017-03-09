@@ -17,7 +17,7 @@ The script pulls yuidoc build output from all Ember versions from Amazon S3, con
 
     You can get your credentials by logging into your [AWS console](https://console.aws.amazon.com) and navigating to "_My Security Credentials_" under your profile name. You can generate a new pair under the "_Access Keys (Access Key ID and Secret Access Key)_" section.
 1. To test your changes in the app run,
-   ```node index.js 2.11```
-   This will run the app only for the specified version of the docs. Once complete, if no errors you should see a docs.tar file inside the `tmp` folder. When no version is passed, the app will try to process all 
-   ember versions since 1.0 which takes high memory & time to complete. If you intend it, then run `node --max_old_space_size=8192 index.js`.
+   ```node index.js```
+   Once complete, if no errors you should see a docs.tar file inside the `tmp` folder. The app tries to process all 
+   ember & ember-data versions since 1.0 which takes high memory & time to complete. If you intend it, then run `node --max_old_space_size=8192 index.js`.
    You are setting your node max heap space to 8GB, so make sure you have that much space available on your machine.
