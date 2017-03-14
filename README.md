@@ -21,3 +21,7 @@ The script pulls yuidoc build output from all Ember versions from Amazon S3, con
    Once complete, if no errors you should see a docs.tar file inside the `tmp` folder. The app tries to process all 
    ember & ember-data versions since 1.0 which takes high memory & time to complete. If you intend it, then run `node --max_old_space_size=8192 index.js`.
    You are setting your node max heap space to 8GB, so make sure you have that much space available on your machine.
+
+
+## To Generate docs for a specific project and/or version for development 
+You can do this by passing `--project ember/ember-data --version 2.11.1` as an argument to the index script. e.g., `yarn start -- --project ember --version 2.11.0`

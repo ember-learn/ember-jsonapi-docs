@@ -1,54 +1,51 @@
-let RSVP = require('rsvp')
-let archiver = require('archiver-promise')
-let path = require('path')
+const RSVP = require('rsvp')
+const argv = require('minimist')(process.argv.slice(2))
 
-let markup = require('./lib/markup')
-let readDocs = require('./lib/read-docs')
-let fetchYuiDocs = require('./lib/fetch-yui-docs')
-let createClassesOnDisk = require('./lib/create-classes')
-let transformYuiObject = require('./lib/transform-yui-object')
-let normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
-let { createVersionIndex } = require('./lib/manage-version-index')
-
-let projects = ['ember', 'ember-data']
-let specificDocsVersion = process.argv[2] ? process.argv[2] : ''
-let docsVersionMsg = specificDocsVersion !== '' ? '. For version ' + specificDocsVersion : ''
-
-console.log(`Downloading docs for ${projects.join(' & ')} ${docsVersionMsg}`)
-
-fetchYuiDocs(specificDocsVersion)
-.then(() => {
-  return RSVP.map(projects, (projName) => {
-    return transformYuiObject(readDocs(projName), projName)
-            .then(doc => {
-              return createVersionIndex(projName, doc).then(() => doc)
-            }).then(doc => {
-              return markup(doc)
-            }).then(doc => {
-              let giantDocument = {
-                data: doc.data
-              }
-              console.log('normalizing dependencies')
-              normalizeEmberDependencies(giantDocument)
-              return createClassesOnDisk(giantDocument, projName)
-            })
-  })
-}).then(() => {
-  console.log('Zipping docs')
-  let originalDir = __dirname
-  process.chdir(path.join(originalDir, 'tmp'))
-  let archive = archiver('docs.tar', {
-    gzip: true,
-    gzipOptions: {
-      level: 1
-    }
-  })
-  archive.directory('json-docs').finalize().then(() => {
-    process.chdir(originalDir)
-    console.log(`Done! The docs are zipped in tmp/docs.tar`)
-  })
-})
+const markup = require('./lib/markup')
+const readDocs = require('./lib/read-docs')
+const fetchYuiDocs = require('./lib/fetch-yui-docs')
+const createClassesOnDisk = require('./lib/create-classes')
+const transformYuiObject = require('./lib/transform-yui-object')
+const normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
+const getVersionIndex = require('./lib/get-version-index')
+const saveDoc = require('./lib/save-document')
 
 RSVP.on('error', function (reason) {
   console.log(reason)
 })
+
+let possibleProjects = ['ember', 'ember-data']
+let projects = argv.project && possibleProjects.includes(argv.project) ? [argv.project] : possibleProjects
+let specificDocsVersion = argv.version ? argv.version : ''
+
+let docsVersionMsg = specificDocsVersion !== '' ? '. For version ' + specificDocsVersion : ''
+console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
+
+fetchYuiDocs(projects, specificDocsVersion)
+  .then(() => readDocs(projects, specificDocsVersion))
+  .then(docs => {
+    return RSVP.map(projects, projectName => {
+      return RSVP.map(docs[projectName], doc => {
+        let docVersion = doc.version
+        console.log(`Starting to process ${projectName}-${docVersion}`)
+        return transformYuiObject([doc], projectName).then(markup).then(doc => {
+          let giantDocument = {
+            data: doc.data
+          }
+          console.log('normalizing dependencies')
+          return normalizeEmberDependencies(giantDocument)
+        }).then(doc => {
+          return createClassesOnDisk(doc, projectName, docVersion)
+        }).then(doc => {
+          console.log(`Finished processing ${projectName}-${docVersion} \n\n\n`)
+          return getVersionIndex(doc, projectName)
+        })
+      }).then((docs) => {
+        let [docToSave, ...remainingDocs] = docs.filter(doc => doc.data.id === projectName)
+        remainingDocs.forEach(d => {
+          docToSave.data.relationships['project-versions'].data = docToSave.data.relationships['project-versions'].data.concat(d.data.relationships['project-versions'].data)
+        })
+        return saveDoc(docToSave, projectName).then(() => projectName)
+      })
+    })
+  })

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "autoformat": "standard --fix index.js lib/*.js",
-    "start": "node --max-old-space-size=3572 --use-strict index.js",
+    "start": "node --use-strict index.js",
     "test": "standard && mocha test"
   },
   "author": "Stanley Stuart <stanley+npm@stan.li>",
@@ -17,7 +17,6 @@
     "standard-format": "^2.2.4"
   },
   "dependencies": {
-    "archiver-promise": "^1.0.0",
     "cheerio": "^0.22.0",
     "fs-extra": "^2.0.0",
     "glob": "^7.1.1",
@@ -26,6 +25,7 @@
     "inflected": "^1.1.7",
     "lodash": "^4.17.4",
     "marked": "^0.3.6",
+    "minimist": "^1.2.0",
     "mkdir-promise": "^1.0.0",
     "mkdirp": "^0.5.1",
     "rsvp": "^3.4.0",
