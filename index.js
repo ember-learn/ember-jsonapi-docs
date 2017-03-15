@@ -9,10 +9,11 @@ const transformYuiObject = require('./lib/transform-yui-object')
 const normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
 const getVersionIndex = require('./lib/get-version-index')
 const saveDoc = require('./lib/save-document')
-const { syncToLocal } = require('./lib/s3-sync')
+const { syncToLocal, syncToS3 } = require('./lib/s3-sync')
 
 RSVP.on('error', function (reason) {
   console.log(reason)
+  process.exit(1)
 })
 
 let possibleProjects = ['ember', 'ember-data']
@@ -51,3 +52,4 @@ syncToLocal()
       })
     })
   })
+  .then(syncToS3)
