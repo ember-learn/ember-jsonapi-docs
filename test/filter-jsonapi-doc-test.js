@@ -67,7 +67,7 @@ describe('filter json api docs', function () {
     })
 
     it('does not return unassociated models', function () {
-      let unassociated = _.filter(this.response.included, 'type', 'yoloswag')
+      let unassociated = _.filter(this.response.included, ['type', 'yoloswag'])
       assert.equal(unassociated.length, 0)
     })
   })

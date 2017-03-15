@@ -1,84 +1,67 @@
-'use strict'
+const RSVP = require('rsvp')
+const fs = require('graceful-fs')
+const argv = require('minimist')(process.argv.slice(2))
 
-let RSVP = require('rsvp')
-let _ = require('lodash')
-let rm = require('rimraf')
-let PouchDB = require('pouchdb')
-let fs = require('fs')
-let glob = require('glob')
+const markup = require('./lib/markup')
+const readDocs = require('./lib/read-docs')
+const fetchYuiDocs = require('./lib/fetch-yui-docs')
+const createClassesOnDisk = require('./lib/create-classes')
+const transformYuiObject = require('./lib/transform-yui-object')
+const normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
+const getVersionIndex = require('./lib/get-version-index')
+const saveDoc = require('./lib/save-document')
+const { syncToLocal, syncToS3 } = require('./lib/s3-sync')
 
-let fetch = require('./lib/fetch')
-let readDocs = require('./lib/read-docs')
-let addSinceTags = require('./lib/add-since-tags')
-let addInheritedItems = require('./lib/add-inherited-items')
-let transformModules = require('./lib/modules-transform')
-let putClassesInCouch = require('./lib/classes-in-couch')
-let createVersionIndex = require('./lib/create-version-index')
-let normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
-let normalizeIDs = require('./lib/normalize-ids')
-let markup = require('./lib/markup')
-let batchUpdate = require('./lib/batch-update')
-
-require('marked')
-
-let db = new PouchDB(process.env.COUCH_URL, {
-  auth: {
-    username: process.env.COUCH_USERNAME,
-    password: process.env.COUCH_PASSWORD
-  }
+RSVP.on('error', function (reason) {
+  console.log(reason)
+  process.exit(1)
 })
 
-if (fs.existsSync('tmp/docs')) {
-  rm.sync('tmp/docs')
-}
+let possibleProjects = ['ember', 'ember-data']
+let projects = argv.project && possibleProjects.includes(argv.project) ? [argv.project] : possibleProjects
+let specificDocsVersion = argv.version ? argv.version : ''
 
-function transformProjectFiles (projectName) {
-  console.log('reading docs for ' + projectName)
-  let promise = RSVP.resolve(readDocs(projectName))
-    .then((stuff) => {
-      console.log('transforming modules for ' + projectName)
-      return transformModules(stuff)
-    }).then((stuff) => {
-      console.log('adding since tags for ' + projectName)
-      return addSinceTags(stuff)
-    }).then((stuff) => {
-      console.log('adding inherited items for ' + projectName)
-      return addInheritedItems(stuff)
-    }).then(yuidocs => {
-      console.log('normalizing yuidocs for ' + projectName)
-      return normalizeIDs(yuidocs, projectName)
-    }).then(doc => {
-      console.log('creating version index for ' + projectName)
-      return createVersionIndex(db, projectName, doc).then(() => doc)
-    }).then(doc => {
-      console.log('converting markdown to html for ' + projectName)
-      return markup(doc)
+let docsVersionMsg = specificDocsVersion !== '' ? '. For version ' + specificDocsVersion : ''
+console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
+
+syncToLocal()
+  .then(() => fetchYuiDocs(projects, specificDocsVersion))
+  .then(() => readDocs(projects, specificDocsVersion))
+  .then(docs => {
+    return RSVP.map(projects, projectName => {
+      return RSVP.map(docs[projectName], doc => {
+        let docVersion = doc.version
+        console.log(`Starting to process ${projectName}-${docVersion}`)
+        return transformYuiObject([doc], projectName).then(markup).then(doc => {
+          let giantDocument = {
+            data: doc.data
+          }
+          console.log('normalizing dependencies')
+          return normalizeEmberDependencies(giantDocument)
+        }).then(doc => {
+          return createClassesOnDisk(doc, projectName, docVersion)
+        }).then(doc => {
+          console.log(`Finished processing ${projectName}-${docVersion}`)
+          return getVersionIndex(doc, projectName)
+        })
+      }).then((docs) => {
+        let [docToSave, ...remainingDocs] = docs.filter(doc => doc.data.id === projectName)
+
+        if (!docToSave) {
+          return Promise.resolve()
+        }
+
+        let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`
+        if (fs.existsSync(existingDoc)) {
+          existingDoc = JSON.parse(fs.readFileSync(existingDoc))
+          docToSave.data.relationships['project-versions'].data = docToSave.data.relationships['project-versions'].data.concat(existingDoc.data.relationships['project-versions'].data)
+        }
+
+        remainingDocs.forEach(d => {
+          docToSave.data.relationships['project-versions'].data = docToSave.data.relationships['project-versions'].data.concat(d.data.relationships['project-versions'].data)
+        })
+        return saveDoc(docToSave, projectName).then(() => projectName)
+      })
     })
-
-  return promise
-}
-
-let projects = ['ember', 'ember-data']
-let releaseToGenDocFor = process.argv[2] ? process.argv[2] : ''
-
-console.log('downloading docs for ' + projects.join(' & '))
-
-fetch(db, releaseToGenDocFor).then(downloadedFiles => {
-  RSVP.map(projects, transformProjectFiles).then(docs => {
-    let giantDocument = {
-      data: _.flatten(docs.map(doc => doc.data))
-    }
-    console.log('normalizing dependencies')
-    normalizeEmberDependencies(giantDocument)
-
-    return putClassesInCouch(giantDocument, db)
-  }).then(function () {
-    let docs = glob.sync('tmp/docs/**/*.json')
-
-    console.log('putting document in CouchDB')
-    return batchUpdate(db, docs)
-  }).catch(function (err) {
-    console.warn('err!', err, err.stack)
-    process.exit(1)
   })
-})
+  .then(syncToS3)
