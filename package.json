@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "cheerio": "^0.22.0",
-    "fs-extra": "^2.0.0",
+    "fs-extra": "^2.1.0",
     "glob": "^7.1.1",
     "graceful-fs": "^4.1.11",
     "highlight.js": "^9.10.0",
