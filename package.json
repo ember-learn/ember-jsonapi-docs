@@ -1,10 +1,10 @@
 {
-  "name": "ember-api-since",
+  "name": "ember-jsonapi-docs-generator",
   "version": "0.1.0",
-  "description": "audits ember docs and generates since tags",
+  "description": "Generates json api docs from ember's yuidocs",
   "main": "index.js",
   "engines": {
-    "node" : ">= 6"
+    "node": ">= 6"
   },
   "scripts": {
     "autoformat": "standard --fix index.js lib/*.js",
@@ -44,5 +44,16 @@
       "after",
       "it"
     ]
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ember-learn/ember-jsonapi-docs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ember-learn/ember-jsonapi-docs/issues"
+  },
+  "homepage": "https://github.com/ember-learn/ember-jsonapi-docs#readme"
 }
