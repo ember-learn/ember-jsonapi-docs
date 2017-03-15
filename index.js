@@ -9,6 +9,7 @@ const transformYuiObject = require('./lib/transform-yui-object')
 const normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
 const getVersionIndex = require('./lib/get-version-index')
 const saveDoc = require('./lib/save-document')
+const { syncToLocal } = require('./lib/s3-sync')
 
 RSVP.on('error', function (reason) {
   console.log(reason)
@@ -21,7 +22,8 @@ let specificDocsVersion = argv.version ? argv.version : ''
 let docsVersionMsg = specificDocsVersion !== '' ? '. For version ' + specificDocsVersion : ''
 console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
 
-fetchYuiDocs(projects, specificDocsVersion)
+syncToLocal()
+  .then(() => fetchYuiDocs(projects, specificDocsVersion))
   .then(() => readDocs(projects, specificDocsVersion))
   .then(docs => {
     return RSVP.map(projects, projectName => {
