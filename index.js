@@ -1,4 +1,5 @@
 const RSVP = require('rsvp')
+const fs = require('graceful-fs')
 const argv = require('minimist')(process.argv.slice(2))
 
 const markup = require('./lib/markup')
@@ -40,11 +41,22 @@ syncToLocal()
         }).then(doc => {
           return createClassesOnDisk(doc, projectName, docVersion)
         }).then(doc => {
-          console.log(`Finished processing ${projectName}-${docVersion} \n\n\n`)
+          console.log(`Finished processing ${projectName}-${docVersion}`)
           return getVersionIndex(doc, projectName)
         })
       }).then((docs) => {
         let [docToSave, ...remainingDocs] = docs.filter(doc => doc.data.id === projectName)
+
+        if (!docToSave) {
+          return Promise.resolve()
+        }
+
+        let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`
+        if (fs.existsSync(existingDoc)) {
+          existingDoc = JSON.parse(fs.readFileSync(existingDoc))
+          docToSave.data.relationships['project-versions'].data = docToSave.data.relationships['project-versions'].data.concat(existingDoc.data.relationships['project-versions'].data)
+        }
+
         remainingDocs.forEach(d => {
           docToSave.data.relationships['project-versions'].data = docToSave.data.relationships['project-versions'].data.concat(d.data.relationships['project-versions'].data)
         })
