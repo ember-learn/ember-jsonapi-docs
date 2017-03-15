@@ -10,8 +10,8 @@ The script pulls yuidoc build output from all Ember versions from Amazon S3, con
 1. Run `yarn` or `npm install` (Needs node 6+)
 1. Set up AWS access
     ```shell
-    export AWS_ACCESS_KEY_ID=xxxxxx
-    export AWS_SECRET_ACCESS_KEY=xxxxx
+    export AWS_ACCESS_KEY=xxxxxx
+    export AWS_SECRET_KEY=xxxxx
     ```
     The app accesses builds.emberjs.com (an Amazon S3 bucket) in read-only mode, which is public. This requires any valid AWS credentials.
 
