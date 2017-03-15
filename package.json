@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "audits ember docs and generates since tags",
   "main": "index.js",
+  "engines": {
+    "node" : ">= 6"
+  },
   "scripts": {
     "autoformat": "standard --fix index.js lib/*.js",
     "start": "node --use-strict index.js",

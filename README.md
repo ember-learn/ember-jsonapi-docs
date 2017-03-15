@@ -7,7 +7,7 @@ The script pulls yuidoc build output from all Ember versions from Amazon S3, con
 ## Running the app
 
 1. Fork/Clone [ember-jsonapi-docs](https://github.com/ember-learn/ember-jsonapi-docs)
-1. Run `yarn` or `npm install`
+1. Run `yarn` or `npm install` (Needs node 6+)
 1. Set up AWS access
     ```shell
     export AWS_ACCESS_KEY_ID=xxxxxx
