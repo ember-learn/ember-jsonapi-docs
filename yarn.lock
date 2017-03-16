@@ -767,8 +767,8 @@ foreach@^2.0.5:
   resolved "https://registry.yarnpkg.com/foreach/-/foreach-2.0.5.tgz#0bee005018aeb260d0a3af3ae658dd0136ec1b99"
 
 fs-extra@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-2.1.0.tgz#122ac03cf15a84dd89c7a5b4edb42b1b46265dbe"
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-2.1.1.tgz#f8a34cc890522fc233896f34944ff2e35948959f"
   dependencies:
     graceful-fs "^4.1.2"
     jsonfile "^2.1.0"
@@ -903,8 +903,8 @@ human-size@^1.1.0:
   resolved "https://registry.yarnpkg.com/human-size/-/human-size-1.1.0.tgz#052562be999841c037022c20259990c56ea996f9"
 
 ignore@^3.0.9, ignore@^3.2.0:
-  version "3.2.5"
-  resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.2.5.tgz#6437903354653e32ebbf562c45e68e4922a95df6"
+  version "3.2.6"
+  resolved "https://registry.yarnpkg.com/ignore/-/ignore-3.2.6.tgz#26e8da0644be0bb4cb39516f6c79f0e0f4ffe48c"
 
 imurmurhash@^0.1.4:
   version "0.1.4"
@@ -1584,8 +1584,8 @@ pseudomap@^1.0.1:
   resolved "https://registry.yarnpkg.com/pseudomap/-/pseudomap-1.0.2.tgz#f052a28da70e618917ef0a8ac34c1ae5a68286b3"
 
 readable-stream@^2.0.2, readable-stream@^2.2.2:
-  version "2.2.5"
-  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.2.5.tgz#a0b187304e05bab01a4ce2b4cc9c607d5aa1d606"
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.2.6.tgz#8b43aed76e71483938d12a8d46c6cf1a00b1f816"
   dependencies:
     buffer-shims "^1.0.0"
     core-util-is "~1.0.0"
