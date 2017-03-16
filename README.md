@@ -24,4 +24,5 @@ The script pulls yuidoc build output from all Ember versions from Amazon S3, con
 
 
 ## To Generate docs for a specific project and/or version for development 
-You can do this by passing `--project ember/ember-data --version 2.11.1` as an argument to the index script. e.g., `yarn start -- --project ember --version 2.11.0`
+You can do this by passing `--project ember/ember-data --version 2.11.1` as an argument to the index script. e.g., `yarn start -- --project ember --version 2.11.0`.
+Setting `export SKIP_S3_SYNC=yes` will stop the generator from syncing existing docs from s3 in the beginning.
