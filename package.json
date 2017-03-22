@@ -32,7 +32,9 @@
     "minimist": "^1.2.0",
     "mkdir-promise": "^1.0.0",
     "mkdirp": "^0.5.1",
+    "node-zopfli": "^2.0.2",
     "ora": "^1.1.0",
+    "rimraf": "^2.6.1",
     "rsvp": "^3.4.0",
     "s3": "^4.4.0",
     "yuidoc-to-jsonapi": "^0.4.1"
