@@ -4,7 +4,6 @@ cache:
   directories:
   - "$HOME/.yarn-cache"
   - node_modules
-  - tmp
 script:
 - yarn run test
 - if [ "$TRAVIS_PULL_REQUEST" = false ]; then AWS_SHOULD_PUBLISH=yes yarn start; else echo "We dont publish docs via PRs"; fi
