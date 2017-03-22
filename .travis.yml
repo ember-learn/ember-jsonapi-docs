@@ -1,6 +1,16 @@
-os: osx
+sudo: false
 language: node_js
 node_js: '6'
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-4.8
+before_install:
+  - export CXX=g++
+  - export CC=gcc
+  - export CXX=g++-4.8
 cache:
   directories:
   - "$HOME/.yarn-cache"
