@@ -1,5 +1,5 @@
 const RSVP = require('rsvp')
-const fs = require('graceful-fs')
+const fs = require('fs-extra')
 const argv = require('minimist')(process.argv.slice(2))
 
 const markup = require('./lib/markup')
@@ -10,6 +10,7 @@ const transformYuiObject = require('./lib/transform-yui-object')
 const normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
 const getVersionIndex = require('./lib/get-version-index')
 const saveDoc = require('./lib/save-document')
+const revProjVersionFiles = require('./lib/rev-docs')
 const { syncToLocal, syncToS3 } = require('./lib/s3-sync')
 
 RSVP.on('error', function (reason) {
@@ -43,6 +44,9 @@ syncToLocal()
         }).then(doc => {
           console.log(`Finished processing ${projectName}-${docVersion}`)
           return getVersionIndex(doc, projectName)
+        }).then(doc => {
+          revProjVersionFiles(projectName, docVersion)
+          return doc
         })
       }).then((docs) => {
         let [docToSave, ...remainingDocs] = docs.filter(doc => doc.data.id === projectName)
@@ -53,7 +57,7 @@ syncToLocal()
 
         let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`
         if (fs.existsSync(existingDoc)) {
-          existingDoc = JSON.parse(fs.readFileSync(existingDoc))
+          existingDoc = fs.readJsonSync(existingDoc)
           docToSave.data.relationships['project-versions'].data = docToSave.data.relationships['project-versions'].data.concat(existingDoc.data.relationships['project-versions'].data)
         }
 
@@ -62,6 +66,17 @@ syncToLocal()
         })
         return saveDoc(docToSave, projectName).then(() => projectName)
       })
+    })
+  })
+  .then(() => {
+    ['ember', 'ember-data'].map(project => {
+      const projRevFile = `tmp/rev-index/${project}.json`
+      let projRevFileContent = fs.readJsonSync(`tmp/json-docs/${project}/projects/${project}.json`)
+      projRevFileContent.meta = {
+        availableVersions: []
+      }
+      projRevFileContent.data.relationships['project-versions'].data.forEach(pV => projRevFileContent.meta.availableVersions.push(pV.id.replace(`${project}-`, '')))
+      fs.writeJsonSync(projRevFile, projRevFileContent)
     })
   })
   .then(syncToS3)
