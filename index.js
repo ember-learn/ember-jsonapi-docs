@@ -26,57 +26,57 @@ let docsVersionMsg = specificDocsVersion !== '' ? '. For version ' + specificDoc
 console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
 
 syncToLocal()
-  .then(() => fetchYuiDocs(projects, specificDocsVersion))
-  .then(() => readDocs(projects, specificDocsVersion))
-  .then(docs => {
-    return RSVP.map(projects, projectName => {
-      return RSVP.map(docs[projectName], doc => {
-        let docVersion = doc.version
-        console.log(`Starting to process ${projectName}-${docVersion}`)
-        return transformYuiObject([doc], projectName).then(markup).then(doc => {
-          let giantDocument = {
-            data: doc.data
+    .then(() => fetchYuiDocs(projects, specificDocsVersion))
+    .then(() => readDocs(projects, specificDocsVersion))
+    .then(docs => {
+      return RSVP.map(projects, projectName => {
+        return RSVP.map(docs[projectName], doc => {
+          let docVersion = doc.version
+          console.log(`Starting to process ${projectName}-${docVersion}`)
+          return transformYuiObject([doc], projectName).then(markup).then(doc => {
+            let giantDocument = {
+              data: doc.data
+            }
+            console.log('normalizing dependencies')
+            return normalizeEmberDependencies(giantDocument)
+          }).then(doc => {
+            return createClassesOnDisk(doc, projectName, docVersion)
+          }).then(doc => {
+            console.log(`Finished processing ${projectName}-${docVersion}`)
+            return getVersionIndex(doc, projectName)
+          }).then(doc => {
+            revProjVersionFiles(projectName, docVersion)
+            return doc
+          })
+        }).then((docs) => {
+          let [docToSave, ...remainingDocs] = docs.filter(doc => doc.data.id === projectName)
+
+          if (!docToSave) {
+            return Promise.resolve()
           }
-          console.log('normalizing dependencies')
-          return normalizeEmberDependencies(giantDocument)
-        }).then(doc => {
-          return createClassesOnDisk(doc, projectName, docVersion)
-        }).then(doc => {
-          console.log(`Finished processing ${projectName}-${docVersion}`)
-          return getVersionIndex(doc, projectName)
-        }).then(doc => {
-          revProjVersionFiles(projectName, docVersion)
-          return doc
+
+          let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`
+          if (fs.existsSync(existingDoc)) {
+            existingDoc = fs.readJsonSync(existingDoc)
+            docToSave.data.relationships['project-versions'].data = docToSave.data.relationships['project-versions'].data.concat(existingDoc.data.relationships['project-versions'].data)
+          }
+
+          remainingDocs.forEach(d => {
+            docToSave.data.relationships['project-versions'].data = docToSave.data.relationships['project-versions'].data.concat(d.data.relationships['project-versions'].data)
+          })
+          return saveDoc(docToSave, projectName).then(() => projectName)
         })
-      }).then((docs) => {
-        let [docToSave, ...remainingDocs] = docs.filter(doc => doc.data.id === projectName)
-
-        if (!docToSave) {
-          return Promise.resolve()
-        }
-
-        let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`
-        if (fs.existsSync(existingDoc)) {
-          existingDoc = fs.readJsonSync(existingDoc)
-          docToSave.data.relationships['project-versions'].data = docToSave.data.relationships['project-versions'].data.concat(existingDoc.data.relationships['project-versions'].data)
-        }
-
-        remainingDocs.forEach(d => {
-          docToSave.data.relationships['project-versions'].data = docToSave.data.relationships['project-versions'].data.concat(d.data.relationships['project-versions'].data)
-        })
-        return saveDoc(docToSave, projectName).then(() => projectName)
       })
     })
-  })
-  .then(() => {
-    ['ember', 'ember-data'].map(project => {
-      const projRevFile = `tmp/rev-index/${project}.json`
-      let projRevFileContent = fs.readJsonSync(`tmp/json-docs/${project}/projects/${project}.json`)
-      projRevFileContent.meta = {
-        availableVersions: []
-      }
-      projRevFileContent.data.relationships['project-versions'].data.forEach(pV => projRevFileContent.meta.availableVersions.push(pV.id.replace(`${project}-`, '')))
-      fs.writeJsonSync(projRevFile, projRevFileContent)
+    .then(() => {
+      ['ember', 'ember-data'].map(project => {
+        const projRevFile = `tmp/rev-index/${project}.json`
+        let projRevFileContent = fs.readJsonSync(`tmp/json-docs/${project}/projects/${project}.json`)
+        projRevFileContent.meta = {
+          availableVersions: []
+        }
+        projRevFileContent.data.relationships['project-versions'].data.forEach(pV => projRevFileContent.meta.availableVersions.push(pV.id.replace(`${project}-`, '')))
+        fs.writeJsonSync(projRevFile, projRevFileContent)
+      })
     })
-  })
-  .then(syncToS3)
+    .then(syncToS3)
