@@ -11,7 +11,7 @@ const normalizeEmberDependencies = require('./lib/normalize-ember-dependencies')
 const getVersionIndex = require('./lib/get-version-index')
 const saveDoc = require('./lib/save-document')
 const revProjVersionFiles = require('./lib/rev-docs')
-const { syncToLocal, syncToS3 } = require('./lib/s3-sync')
+const { downloadExistingDocsToLocal, uploadToS3 } = require('./lib/s3-sync')
 
 RSVP.on('error', function (reason) {
   console.log(reason)
@@ -25,7 +25,7 @@ let specificDocsVersion = argv.version ? argv.version : ''
 let docsVersionMsg = specificDocsVersion !== '' ? '. For version ' + specificDocsVersion : ''
 console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
 
-syncToLocal()
+downloadExistingDocsToLocal()
     .then(() => fetchYuiDocs(projects, specificDocsVersion))
     .then(() => readDocs(projects, specificDocsVersion))
     .then(docs => {
@@ -79,4 +79,4 @@ syncToLocal()
         fs.writeJsonSync(projRevFile, projRevFileContent)
       })
     })
-    .then(syncToS3)
+    .then(uploadToS3)
