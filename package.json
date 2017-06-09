@@ -6,7 +6,9 @@
     "engines": {
         "node": ">= 7"
     },
-    "cacheDirectories": ["tmp"],
+    "cacheDirectories": [
+        "tmp"
+    ],
     "scripts": {
         "autoformat": "standard --fix index.js lib/*.js",
         "start": "node --use-strict index.js",
@@ -15,7 +17,7 @@
     "author": "Stanley Stuart <stanley+npm@stan.li>",
     "license": "MIT",
     "devDependencies": {
-        "chai": "^4.0.1",
+        "chai": "^4.0.2",
         "mocha": "^3.4.2",
         "standard": "^10.0.2",
         "standard-format": "^2.2.4"
