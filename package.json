@@ -12,7 +12,8 @@
     "scripts": {
         "autoformat": "standard --fix index.js lib/*.js",
         "start": "node --use-strict index.js",
-        "test": "standard && mocha test"
+        "test": "standard && mocha test",
+        "greet": "echo 'hi'"
     },
     "author": "Stanley Stuart <stanley+npm@stan.li>",
     "license": "MIT",
