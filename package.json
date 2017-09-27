@@ -1,6 +1,6 @@
 {
     "name": "ember-jsonapi-docs-generator",
-    "version": "0.2.0",
+    "version": "1.0.0",
     "description": "Generates json api docs from ember's yuidocs",
     "main": "index.js",
     "engines": {
