@@ -22,6 +22,7 @@ cp -v tmp/rev-index/$PROJECT.json ../ember-api-docs/public/rev-index/
 cp -fv tmp/rev-index/$PROJECT-$VERSION.json ../ember-api-docs/public/rev-index/
 echo "🚚 💨  Copying json-docs structure to ember-api-docs app... 🚚 💨 "
 rm -rf ../ember-api-docs/public/json-docs/$PROJECT/$VERSION
+mkdir ../ember-api-docs/public/json-docs/
 mkdir ../ember-api-docs/public/json-docs/$PROJECT
 mkdir ../ember-api-docs/public/json-docs/$PROJECT/$VERSION
 cp -rf tmp/json-docs/$PROJECT/$VERSION/ ../ember-api-docs/public/json-docs/$PROJECT/$VERSION/
