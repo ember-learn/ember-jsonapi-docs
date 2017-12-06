@@ -34,5 +34,5 @@ Setting `export SKIP_S3_SYNC=yes` will stop the generator from syncing s3 conten
    - [ember-jsonapi-docs](https://github.com/ember-learn/ember-jsonapi-docs)
    - [ember-api-docs](https://github.com/ember-learn/ember-api-docs)
 2. Set up the project according to the instructions above in `Running the app`.
-3. From the `ember-jsonapi-docs` directory, run `.generate-local.sh yui ember 2.16.0`. This command runs the Ember documentation build, generates jsonapi output, and copies it to the `ember-api-docs` directory.
-4. Run the API app with the newly generated local data by running `API_HOST=http:localhost:4200 ember s` in the `ember-api-docs` directory.
+3. From the `ember-jsonapi-docs` directory, run `./generate-local.sh yui ember 2.16.0`. This command runs the Ember documentation build, generates jsonapi output, and copies it to the `ember-api-docs` directory.
+4. Run the API app with the newly generated local data by running `API_HOST=http://localhost:4200 ember s` in the `ember-api-docs` directory.
