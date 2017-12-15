@@ -9,6 +9,8 @@ if [ "$COMMAND" == 'yui' ]
         echo "🚚 💨  Copying docs output to ember-jsonapi-docs for version $1... 🚚 💨 "
         rm -rf ../ember-jsonapi-docs/tmp/s3-docs/v$VERSION
         rm -rf ../ember-jsonapi-docs/tmp/json-docs/$PROJECT/$VERSION
+        mkdir ../ember-jsonapi-docs/tmp
+        mkdir ../ember-jsonapi-docs/tmp/s3-docs
         mkdir ../ember-jsonapi-docs/tmp/s3-docs/v$VERSION
         cp -fv docs/data.json ../ember-jsonapi-docs/tmp/s3-docs/v$VERSION/ember-docs.json
 fi
