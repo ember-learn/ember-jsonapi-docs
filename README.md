@@ -29,10 +29,12 @@ Setting `export SKIP_S3_SYNC=yes` will stop the generator from syncing s3 conten
 
 ## Generating API Documentation and Testing API Docs Locally
 
-1. Clone the following 3 repositories into a single parent directory
+1. Clone the following 3 repositories into a single parent directory. Install dependencies for each app as described in their respective `README` files.
    - [ember.js](https://github.com/emberjs/ember.js)
    - [ember-jsonapi-docs](https://github.com/ember-learn/ember-jsonapi-docs)
    - [ember-api-docs](https://github.com/ember-learn/ember-api-docs)
-2. Set up the project according to the instructions above in `Running the app`.
-3. From the `ember-jsonapi-docs` directory, run `./generate-local.sh yui ember 2.16.0`. This command runs the Ember documentation build, generates jsonapi output, and copies it to the `ember-api-docs` directory.
-4. Run the API app with the newly generated local data by running `API_HOST=http://localhost:4200 ember s` in the `ember-api-docs` directory.
+1. Set up the project according to the instructions above in `Running the app`.
+1. From the `ember-jsonapi-docs` directory, run `./generate-local.sh yui ember 2.18.0`. This command runs the Ember documentation build, generates jsonapi output, and copies it to the `ember-api-docs` directory.
+   - _If you encounter an error like `ember-2.18.0 has already been indexed in json-docs`, then use a new unique version number like `2.18.1`, or whatever is appropriate._ 
+1. Run the API app with the newly generated local data by running `API_HOST=http://localhost:4200 ember s` in the `ember-api-docs` directory.
+
