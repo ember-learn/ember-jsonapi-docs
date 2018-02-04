@@ -38,12 +38,13 @@ Setting `export SKIP_S3_SYNC=yes` will stop the generator from syncing s3 conten
 These steps are only necessary if you are trying to run the ember-api-docs
 app with documentation pulled from a local copy of ember.js.
 
-1. Clone the following 3 repositories into a single parent directory. Install dependencies for each app as described in their respective `README` files.
+1. Clone the following 4 repositories into a single parent directory. Install dependencies for each app as described in their respective `README` files.
    - [ember.js](https://github.com/emberjs/ember.js)
+   - [data (ember data)](https://github.com/emberjs/data)
    - [ember-jsonapi-docs](https://github.com/ember-learn/ember-jsonapi-docs)
    - [ember-api-docs](https://github.com/ember-learn/ember-api-docs)
 1. Set up the project according to the instructions above in `Running the app`.
-1. From the `ember-jsonapi-docs` directory, run `./generate-local.sh yui ember 2.18.0`. This command runs the Ember documentation build, generates jsonapi output, and copies it to the `ember-api-docs` directory.
+1. From the `ember-jsonapi-docs` directory, run `./generate-local.sh yui ember 2.18.0`. This command runs the Ember documentation build, generates jsonapi output, and copies it to the `ember-api-docs` directory. To build ember data documentation, run `./generate-local.sh yui ember-data 2.17.2`.
    - _If you encounter an error like `ember-2.18.0 has already been indexed in json-docs`, then use a new unique version number like `2.18.1`, or whatever is appropriate. 
    - If your `rev-index/ember-X.X.X.json` file fails to generate, make sure you have all dependencies installed for the ember.js repo 
    - If you are debugging failed builds, periodically clear out the contents of the `tmp` directory, and run the script again. Past failed runs can cause subsequent runs to fail in unexpected ways._ 
