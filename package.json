@@ -52,10 +52,9 @@
   "engines": {
     "node": ">= 8"
   },
-  "cacheDirectories": [
-    "tmp"
-  ],
+  "cacheDirectories": ["tmp"],
   "resolutions": {
+    "aws-sdk": "~2.224.1",
     "graceful-fs": "^4.1.11"
   }
 }
