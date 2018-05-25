@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PROJECT=${2:-ember}
-VERSION=${3:-2.16.0}
+VERSION=${3:-3.1.1}
 COMMAND=${1:-json}
 
 if [ $COMMAND == 'yui' ] && [ ${2} == 'ember' ]
