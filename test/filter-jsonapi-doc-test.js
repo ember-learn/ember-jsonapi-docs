@@ -1,9 +1,9 @@
-let assert = require('chai').assert
-let _ = require('lodash')
-let classWithIncluded = require('../lib/filter-jsonapi-doc').classWithIncluded
+import { assert } from 'chai'
+import _ from 'lodash'
+import { classWithIncluded } from '../lib/filter-jsonapi-doc'
 
-describe('filter json api docs', function() {
-	describe('#classWithIncluded', function() {
+describe('filter json api docs', () => {
+	describe('#classWithIncluded', () => {
 		beforeEach(function() {
 			this.document = {
 				data: [

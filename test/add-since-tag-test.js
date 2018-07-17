@@ -1,12 +1,12 @@
-let addSinceTags = require('../lib/add-since-tags')
-let assert = require('chai').assert
-let _ = require('lodash')
+import addSinceTags from '../lib/add-since-tags'
+import { assert } from 'chai'
+import _ from 'lodash'
 
-describe('addSinceTags', function() {
+describe('addSinceTags', () => {
 	beforeEach(function() {
 		this.yuiDocSets = _.range(3).map(i => {
 			return {
-				version: 'v1.0.' + i,
+				version: `v1.0.${i}`,
 				data: {
 					classitems: [
 						{
@@ -27,8 +27,8 @@ describe('addSinceTags', function() {
 	})
 
 	it('adds a since tag to classitems', function() {
-		this.yuiDocSets.forEach(docSet => {
-			docSet.data.classitems.forEach(classItem => assert.equal(classItem.since, '1.0.0'))
+		this.yuiDocSets.forEach(({ data }) => {
+			data.classitems.forEach(({ since }) => assert.equal(since, '1.0.0'))
 		})
 	})
 })

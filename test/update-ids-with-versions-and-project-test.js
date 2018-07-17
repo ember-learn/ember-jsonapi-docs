@@ -1,8 +1,8 @@
-let updateWithIDs = require('../lib/update-with-versions-and-project')
-let assert = require('chai').assert
+import updateWithIDs from '../lib/update-with-versions-and-project'
+import { assert } from 'chai'
 
-describe('update with versions and project', function() {
-	describe('`data` in jsonapi document is an object', function() {
+describe('update with versions and project', () => {
+	describe('`data` in jsonapi document is an object', () => {
 		beforeEach(function() {
 			this.document = {
 				data: {
@@ -58,7 +58,7 @@ describe('update with versions and project', function() {
 		})
 	})
 
-	describe('when `data` is an array of objects in the jsonapi doc', function() {
+	describe('when `data` is an array of objects in the jsonapi doc', () => {
 		beforeEach(function() {
 			this.document = {
 				data: [

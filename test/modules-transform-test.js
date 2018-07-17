@@ -1,12 +1,12 @@
-let transformModules = require('../lib/modules-transform')
-let assert = require('chai').assert
-let _ = require('lodash')
+import transformModules from '../lib/modules-transform'
+import { assert } from 'chai'
+import _ from 'lodash'
 
-describe('transformModules', function() {
+describe('transformModules', () => {
 	beforeEach(function() {
 		this.yuiDocSets = _.range(3).map(i => {
 			return {
-				version: 'v1.0.' + i,
+				version: `v1.0.${i}`,
 				data: {
 					modules: [
 						{
@@ -73,17 +73,17 @@ describe('transformModules', function() {
 	})
 
 	it('adds a parent attribute to sub modules', function() {
-		this.yuiDocSets.forEach(docSet => {
-			let subModules = _.filter(docSet.data.modules, mod => mod.is_submodule)
-			subModules.forEach(moduleItem => {
-				assert.equal(moduleItem.parent, 'foo')
+		this.yuiDocSets.forEach(({ data }) => {
+			let subModules = _.filter(data.modules, ({ is_submodule }) => is_submodule)
+			subModules.forEach(({ parent }) => {
+				assert.equal(parent, 'foo')
 			})
 		})
 	})
 
 	it('publicclasses/privateclasses attributes are set correctly', function() {
-		this.yuiDocSets.forEach(docSet => {
-			let modules = docSet.data.modules
+		this.yuiDocSets.forEach(({ data }) => {
+			let modules = data.modules
 			assert.deepEqual(modules[0].publicclasses, [
 				'Testing.class.public-2',
 				'Testing.class.public-4',
