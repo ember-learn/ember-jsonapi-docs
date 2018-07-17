@@ -1,5 +1,3 @@
-'use strict'
-
 let transformModules = require('../lib/modules-transform')
 let assert = require('chai').assert
 let _ = require('lodash')
@@ -20,16 +18,16 @@ describe('transformModules', function() {
 								'Testing.class.public-2': 1,
 								'Testing.class.private-3': 1,
 								'Testing.class.public-4': 1,
-								'Testing.class.deprecated-3': 1
-							}
+								'Testing.class.deprecated-3': 1,
+							},
 						},
 						{
 							is_submodule: 1,
 							module: 'foo',
 							submodules: {},
 							classes: {
-								'Testing.class.private-1': 1
-							}
+								'Testing.class.private-1': 1,
+							},
 						},
 						{
 							is_submodule: 0,
@@ -37,38 +35,38 @@ describe('transformModules', function() {
 							submodules: {},
 							classes: {
 								'Testing.class.private-1': 1,
-								'Testing.class.public-2': 1
-							}
-						}
+								'Testing.class.public-2': 1,
+							},
+						},
 					],
 					classes: {
 						'Testing.class.private-1': {
 							file: 'testing/class/private/1.js',
 							access: 'private',
-							deprecated: false
+							deprecated: false,
 						},
 						'Testing.class.public-2': {
 							file: 'testing/class/public/2.js',
 							access: 'public',
-							deprecated: false
+							deprecated: false,
 						},
 						'Testing.class.private-3': {
 							file: 'testing/class/private/3.js',
 							access: 'private',
-							deprecated: false
+							deprecated: false,
 						},
 						'Testing.class.public-4': {
 							file: 'testing/class/public/4.js',
 							access: 'public',
-							deprecated: false
+							deprecated: false,
 						},
 						'Testing.class.deprecated-3': {
 							file: 'testing/class/deprecated/3.js',
 							access: 'public',
-							deprecated: true
-						}
-					}
-				}
+							deprecated: true,
+						},
+					},
+				},
 			}
 		})
 		transformModules(this.yuiDocSets)
@@ -88,12 +86,12 @@ describe('transformModules', function() {
 			let modules = docSet.data.modules
 			assert.deepEqual(modules[0].publicclasses, [
 				'Testing.class.public-2',
-				'Testing.class.public-4'
+				'Testing.class.public-4',
 			])
 			assert.deepEqual(modules[0].privateclasses, [
 				'Testing.class.private-1',
 				'Testing.class.private-3',
-				'Testing.class.deprecated-3'
+				'Testing.class.deprecated-3',
 			])
 			assert.isUndefined(modules[0].classes)
 

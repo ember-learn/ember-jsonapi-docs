@@ -1,5 +1,3 @@
-'use strict'
-
 let addSinceTags = require('../lib/add-since-tags')
 let assert = require('chai').assert
 let _ = require('lodash')
@@ -14,15 +12,15 @@ describe('addSinceTags', function() {
 						{
 							itemtype: 'method',
 							name: 'foo',
-							class: 'Foo'
+							class: 'Foo',
 						},
 						{
 							itemtype: 'method',
 							name: 'bar',
-							class: 'Foo'
-						}
-					]
-				}
+							class: 'Foo',
+						},
+					],
+				},
 			}
 		})
 		addSinceTags(this.yuiDocSets)

@@ -37,9 +37,7 @@ downloadExistingDocsToLocal()
 				return transformYuiObject([doc], projectName)
 					.then(markup)
 					.then(doc => {
-						let giantDocument = {
-							data: doc.data
-						}
+						let giantDocument = { data: doc.data }
 						console.log('normalizing dependencies')
 						return normalizeEmberDependencies(giantDocument)
 					})
@@ -78,17 +76,17 @@ downloadExistingDocsToLocal()
 			})
 		})
 	})
-	.then(() => {
-		;['ember', 'ember-data'].map(project => {
+	.then(() =>
+		['ember', 'ember-data'].map(project => {
 			const projRevFile = `tmp/rev-index/${project}.json`
 			let projRevFileContent = fs.readJsonSync(`tmp/json-docs/${project}/projects/${project}.json`)
 			projRevFileContent.meta = {
-				availableVersions: []
+				availableVersions: [],
 			}
 			projRevFileContent.data.relationships['project-versions'].data.forEach(pV =>
 				projRevFileContent.meta.availableVersions.push(pV.id.replace(`${project}-`, ''))
 			)
 			fs.writeJsonSync(projRevFile, projRevFileContent)
 		})
-	})
+	)
 	.then(uploadToS3)

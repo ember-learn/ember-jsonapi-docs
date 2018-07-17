@@ -1,5 +1,3 @@
-'use strict'
-
 let assert = require('chai').assert
 let _ = require('lodash')
 let classWithIncluded = require('../lib/filter-jsonapi-doc').classWithIncluded
@@ -13,13 +11,13 @@ describe('filter json api docs', function() {
 						id: 'Ember.Butt',
 						type: 'class',
 						relationships: {
-							methods: [{ id: 'Ember.Butt#Foo', type: 'method' }]
-						}
+							methods: [{ id: 'Ember.Butt#Foo', type: 'method' }],
+						},
 					},
 					{
 						id: 'NotAClass',
-						type: 'yoloswag'
-					}
+						type: 'yoloswag',
+					},
 				],
 				included: [
 					{
@@ -27,11 +25,11 @@ describe('filter json api docs', function() {
 						type: 'method',
 						relationships: {
 							class: {
-								data: { id: 'Ember.Butt', type: 'class' }
-							}
-						}
-					}
-				]
+								data: { id: 'Ember.Butt', type: 'class' },
+							},
+						},
+					},
+				],
 			}
 
 			this.response = classWithIncluded(this.document, 'Ember.Butt')
@@ -43,8 +41,8 @@ describe('filter json api docs', function() {
 				id: 'Ember.Butt',
 				type: 'class',
 				relationships: {
-					methods: [{ id: 'Ember.Butt#Foo', type: 'method' }]
-				}
+					methods: [{ id: 'Ember.Butt#Foo', type: 'method' }],
+				},
 			})
 		})
 
@@ -55,10 +53,10 @@ describe('filter json api docs', function() {
 					type: 'method',
 					relationships: {
 						class: {
-							data: { id: 'Ember.Butt', type: 'class' }
-						}
-					}
-				}
+							data: { id: 'Ember.Butt', type: 'class' },
+						},
+					},
+				},
 			])
 		})
 

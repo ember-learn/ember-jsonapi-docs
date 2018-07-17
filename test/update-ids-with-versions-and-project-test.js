@@ -1,5 +1,3 @@
-'use strict'
-
 let updateWithIDs = require('../lib/update-with-versions-and-project')
 let assert = require('chai').assert
 
@@ -11,36 +9,36 @@ describe('update with versions and project', function() {
 					id: 'Ember.CoreView',
 					type: 'class',
 					attributes: {
-						name: 'Ember.CoreView'
+						name: 'Ember.CoreView',
 					},
 					relationships: {
 						module: {
 							data: {
 								id: 'ember',
-								type: 'module'
-							}
-						}
-					}
+								type: 'module',
+							},
+						},
+					},
 				},
 				included: [
 					{
 						id: 'ember',
 						type: 'module',
 						attributes: {
-							name: 'ember'
+							name: 'ember',
 						},
 						relationships: {
 							classes: {
 								data: [
 									{
 										id: 'Ember.CoreView',
-										type: 'class'
-									}
-								]
-							}
-						}
-					}
-				]
+										type: 'class',
+									},
+								],
+							},
+						},
+					},
+				],
 			}
 
 			this.converted = updateWithIDs(this.document, 'ember', '1.1.0')
@@ -68,37 +66,37 @@ describe('update with versions and project', function() {
 						id: 'Ember.CoreView',
 						type: 'class',
 						attributes: {
-							name: 'Ember.CoreView'
+							name: 'Ember.CoreView',
 						},
 						relationships: {
 							module: {
 								data: {
 									id: 'ember',
-									type: 'module'
-								}
-							}
-						}
-					}
+									type: 'module',
+								},
+							},
+						},
+					},
 				],
 				included: [
 					{
 						id: 'ember',
 						type: 'module',
 						attributes: {
-							name: 'ember'
+							name: 'ember',
 						},
 						relationships: {
 							classes: {
 								data: [
 									{
 										id: 'Ember.CoreView',
-										type: 'class'
-									}
-								]
-							}
-						}
-					}
-				]
+										type: 'class',
+									},
+								],
+							},
+						},
+					},
+				],
 			}
 
 			this.converted = updateWithIDs(this.document, 'ember', '1.1.0')
