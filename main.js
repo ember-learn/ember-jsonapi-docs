@@ -1,5 +1,6 @@
 import RSVP from 'rsvp'
 import fs from 'fs-extra'
+import rimraf from 'rimraf'
 
 import markup from './lib/markup'
 import readDocs from './lib/read-docs'
@@ -29,6 +30,12 @@ export function apiDocsProcessor(projects, specificDocsVersion, ignorePreviously
 				return RSVP.map(docs[projectName], doc => {
 					let docVersion = doc.version
 					console.log(`Starting to process ${projectName}-${docVersion}`)
+
+					const existingFolder = `tmp/json-docs/${projectName}/${docVersion}`
+					if (fs.existsSync(existingFolder)) {
+						rimraf.sync(existingFolder)
+					}
+
 					return transformYuiObject([doc], projectName)
 						.then(markup)
 						.then(({ data }) => {
