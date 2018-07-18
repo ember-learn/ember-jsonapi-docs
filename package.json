@@ -52,8 +52,7 @@
 		"pretty-quick": "^1.6.0"
 	},
 	"resolutions": {
-		"aws-sdk": "~2.224.1",
-		"graceful-fs": "^4.1.11"
+		"aws-sdk": "~2.276.1"
 	},
 	"engines": {
 		"node": ">= 8"
