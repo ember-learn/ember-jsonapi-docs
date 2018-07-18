@@ -1,6 +1,5 @@
 import RSVP from 'rsvp'
 import fs from 'fs-extra'
-const argv = require('minimist')(process.argv.slice(2))
 
 import markup from './lib/markup'
 import readDocs from './lib/read-docs'
@@ -13,23 +12,18 @@ import saveDoc from './lib/save-document'
 import revProjVersionFiles from './lib/rev-docs'
 import { downloadExistingDocsToLocal, uploadToS3 } from './lib/s3-sync'
 
-export function apiDocsProcessor() {
+export function apiDocsProcessor(projects, specificDocsVersion, ignorePreviouslyIndexedDoc) {
 	RSVP.on('error', reason => {
 		console.log(reason)
 		process.exit(1)
 	})
 
-	let possibleProjects = ['ember', 'ember-data']
-	let projects =
-		argv.project && possibleProjects.includes(argv.project) ? [argv.project] : possibleProjects
-	let specificDocsVersion = argv.version ? argv.version : ''
-
 	let docsVersionMsg = specificDocsVersion !== '' ? `. For version ${specificDocsVersion}` : ''
 	console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
 
 	downloadExistingDocsToLocal()
-		.then(() => fetchYuiDocs(projects, specificDocsVersion))
-		.then(() => readDocs(projects, specificDocsVersion))
+		.then(() => fetchYuiDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc))
+		.then(() => readDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc))
 		.then(docs => {
 			return RSVP.map(projects, projectName => {
 				return RSVP.map(docs[projectName], doc => {
