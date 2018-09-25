@@ -20,7 +20,7 @@ elif [ "$COMMAND" == 'yui' ] && [ "${2}" == 'ember-data' ]
 then
   cd ../data
   echo "🏃 💨 Running ember data docs build 🏃 💨"
-  npm run production
+  npm run build:production
   echo "🚚 💨 Copying data docs output to ember-jsonapi-docs for version $1... 🚚 💨 "
   rm -rf ../ember-jsonapi-docs/tmp/s3-docs/v$VERSION/$PROJECT-docs.json
   rm -rf ../ember-jsonapi-docs/tmp/json-docs/$PROJECT/$VERSION
