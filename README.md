@@ -1,6 +1,6 @@
 # Ember JSON API Docs [![Build Status](https://travis-ci.org/ember-learn/ember-jsonapi-docs.svg?branch=master)](https://travis-ci.org/ember-learn/ember-jsonapi-docs)
 
-If are looking for the app behind https://emberjs.com/api/, visit
+If you are looking for the app behind https://emberjs.com/api/, visit
 [ember-api-docs](https://github.com/ember-learn/ember-api-docs) instead. This ember-jsonapi-docs
 repository is internal tooling that is not required to run the ember-api-docs app locally.
 
