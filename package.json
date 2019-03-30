@@ -58,7 +58,7 @@
 		"aws-sdk": "~2.276.1"
 	},
 	"engines": {
-		"node": ">= 8"
+		"node": "8"
 	},
 	"cacheDirectories": [
 		"tmp"
