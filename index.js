@@ -9,6 +9,7 @@ let specificDocsVersion = argv.version ? argv.version : ''
 
 let ignorePreviouslyIndexedDoc =
 	projects.length !== 0 && specificDocsVersion !== '' && argv.ignorePreviouslyIndexedDoc
+let runClean = !!argv.clean
 
 const { apiDocsProcessor } = require('./main.js')
-apiDocsProcessor(projects, specificDocsVersion, ignorePreviouslyIndexedDoc)
+apiDocsProcessor(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
