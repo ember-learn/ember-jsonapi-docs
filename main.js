@@ -13,7 +13,12 @@ import saveDoc from './lib/save-document'
 import revProjVersionFiles from './lib/rev-docs'
 import { downloadExistingDocsToLocal, uploadToS3 } from './lib/s3-sync'
 
-export function apiDocsProcessor(projects, specificDocsVersion, ignorePreviouslyIndexedDoc) {
+export function apiDocsProcessor(
+	projects,
+	specificDocsVersion,
+	ignorePreviouslyIndexedDoc,
+	runClean
+) {
 	RSVP.on('error', reason => {
 		console.log(reason)
 		process.exit(1)
@@ -23,8 +28,8 @@ export function apiDocsProcessor(projects, specificDocsVersion, ignorePreviously
 	console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
 
 	downloadExistingDocsToLocal()
-		.then(() => fetchYuiDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc))
-		.then(() => readDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc))
+		.then(() => fetchYuiDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc || runClean))
+		.then(() => readDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean))
 		.then(docs => {
 			return RSVP.map(projects, projectName => {
 				return RSVP.map(docs[projectName], doc => {

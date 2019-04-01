@@ -32,7 +32,7 @@ fi
 
 cd ../ember-jsonapi-docs
 echo "🏃 💨  Running ember-jsonapi-docs for version $VERSION 🏃 💨 "
-yarn start -- --project $PROJECT --version $VERSION
+yarn start --project $PROJECT --version $VERSION --ignorePreviouslyIndexedDoc
 echo "🚚 💨  Copying rev-index json file to ember-api-docs app... 🚚 💨 "
 rm -f ../ember-api-docs/public/rev-index/$PROJECT-$VERSION.json
 mkdir -p ../ember-api-docs/public/rev-index

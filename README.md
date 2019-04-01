@@ -43,6 +43,7 @@ You need an additional flag `AWS_SHOULD_PUBLISH=true` for publishing the docs.
 - First run `yarn start` so that you have all the docs from s3 on your local. This is important so that we don't loose other versions of docs that are already out there when the index files are generated
 - Then go to `./tmp/s3-docs/<the_version_you_want_to_replace>` and override the file there with the yuidoc file that you want to be processed. Ensure that the file name is same as the one that's already there.
 - Then run `yarn start --project=ember-data --version=3.2.0 --ignorePreviouslyIndexedDoc`. Make sure you enter the entire version(including patch version).
+- To run against all versions of ember and ember-data regardless of indexed version, run `node --max_old_space_size=8192 index.js --clean`
 
 ## Generating API Documentation and Testing API Docs Locally
 
@@ -56,7 +57,6 @@ app with documentation pulled from a local copy of ember.js.
     - [ember-api-docs](https://github.com/ember-learn/ember-api-docs)
 1.  Set up the project according to the instructions above in `Running the app`.
 1.  From the `ember-jsonapi-docs` directory, run `./generate-local.sh yui ember 2.18.0`. This command runs the Ember documentation build, generates jsonapi output, and copies it to the `ember-api-docs` directory. To build ember data documentation, run `./generate-local.sh yui ember-data 2.17.2`.
-    - \_If you encounter an error like `ember-2.18.0 has already been indexed in json-docs`, then use a new unique version number like `2.18.1`, or whatever is appropriate.
     - If your `rev-index/ember-X.X.X.json` file fails to generate, make sure you have all dependencies installed for the ember.js repo
     - If you are debugging failed builds, periodically clear out the contents of the `tmp` directory, and run the script again. Past failed runs can cause subsequent runs to fail in unexpected ways.\_
 1.  Run the API app with the newly generated local data by running `API_HOST=http://localhost:4200 ember s` in the `ember-api-docs` directory.
