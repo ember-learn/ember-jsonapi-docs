@@ -9,6 +9,11 @@
 	"repository": "git+https://github.com/ember-learn/ember-jsonapi-docs.git",
 	"license": "MIT",
 	"author": "Stanley Stuart <stanley+npm@stan.li>",
+	"contributors": [
+		"Todd Jordan",
+		"Sivakumar Kailasam <siva@rubberduck.engineering>",
+		"Ember.JS Learning team"
+	],
 	"main": "index.js",
 	"directories": {
 		"test": "test"
