@@ -20,7 +20,7 @@
 	},
 	"scripts": {
 		"greet": "echo 'hi'",
-		"server": "serve -l 5050 tmp",
+		"server": "http-server -p 5050 --cors tmp",
 		"start": "node index.js",
 		"test": "eslint lib/**/*.js index.js test/**.js && mocha -r esm test"
 	},
@@ -28,11 +28,12 @@
 		"cheerio": "^1.0.0-rc.2",
 		"compare-versions": "^3.4.0",
 		"download": "^7.1.0",
-		"esm": "^3.0.84",
+		"esm": "^3.2.25",
 		"fs-extra": "^7.0.0",
 		"glob": "^7.1.3",
 		"graceful-fs": "^4.1.11",
 		"highlight.js": "^9.12.0",
+		"http-server": "^0.11.1",
 		"human-size": "^1.1.0",
 		"inflected": "^2.0.4",
 		"lodash": "^4.17.11",
@@ -48,7 +49,6 @@
 		"s3": "^4.4.0",
 		"semver-extra": "^2.0.1",
 		"semver-utils": "^1.1.2",
-		"serve": "^11.0.1",
 		"yuidoc-to-jsonapi": "^0.4.1"
 	},
 	"devDependencies": {
@@ -67,7 +67,5 @@
 	"engines": {
 		"node": "8"
 	},
-	"cacheDirectories": [
-		"tmp"
-	]
+	"cacheDirectories": ["tmp"]
 }
