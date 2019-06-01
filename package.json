@@ -16,7 +16,8 @@
 	"scripts": {
 		"greet": "echo 'hi'",
 		"start": "node index.js",
-		"test": "eslint lib/**/*.js index.js test/**.js && mocha -r esm test"
+		"test": "eslint lib/**/*.js index.js test/**.js && mocha -r esm test",
+		"server": "serve -l 5050 tmp"
 	},
 	"dependencies": {
 		"cheerio": "^1.0.0-rc.2",
@@ -42,6 +43,7 @@
 		"s3": "^4.4.0",
 		"semver-extra": "^2.0.1",
 		"semver-utils": "^1.1.2",
+		"serve": "^11.0.1",
 		"yuidoc-to-jsonapi": "^0.4.1"
 	},
 	"devDependencies": {
@@ -60,7 +62,5 @@
 	"engines": {
 		"node": "8"
 	},
-	"cacheDirectories": [
-		"tmp"
-	]
+	"cacheDirectories": ["tmp"]
 }
