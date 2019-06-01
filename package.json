@@ -20,9 +20,9 @@
 	},
 	"scripts": {
 		"greet": "echo 'hi'",
+		"server": "serve -l 5050 tmp",
 		"start": "node index.js",
-		"test": "eslint lib/**/*.js index.js test/**.js && mocha -r esm test",
-		"server": "serve -l 5050 tmp"
+		"test": "eslint lib/**/*.js index.js test/**.js && mocha -r esm test"
 	},
 	"dependencies": {
 		"cheerio": "^1.0.0-rc.2",
@@ -67,5 +67,7 @@
 	"engines": {
 		"node": "8"
 	},
-	"cacheDirectories": ["tmp"]
+	"cacheDirectories": [
+		"tmp"
+	]
 }
