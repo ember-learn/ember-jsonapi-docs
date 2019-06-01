@@ -4,7 +4,7 @@ If you are looking for the app behind https://emberjs.com/api/, visit
 [ember-api-docs](https://github.com/ember-learn/ember-api-docs) instead. This ember-jsonapi-docs
 repository is internal tooling that is not required to run the ember-api-docs app locally.
 
-ember-jsonapi-docs is for turning code comments in [ember.js](https://github.com/emberjs/ember.js) into
+`ember-jsonapi-docs` is for turning code comments in [ember.js](https://github.com/emberjs/ember.js) into
 [json api](http://jsonapi.org/) compliant data for use in various applications seeking to use the Ember API.
 
 The script pulls yuidoc build output from all Ember versions from Amazon S3, converts it to json api format and creates an archive. It can also be run to build jsonapi docs from a local copy of ember.js.
@@ -12,7 +12,7 @@ The script pulls yuidoc build output from all Ember versions from Amazon S3, con
 ## Running the app
 
 1.  Fork/Clone [ember-jsonapi-docs](https://github.com/ember-learn/ember-jsonapi-docs)
-1.  Run `yarn` or `npm install` (Needs node 6+)
+1.  Run `yarn` or `npm install` (Needs node 8)
 1.  Set up AWS access
 
     ```shell
@@ -59,4 +59,5 @@ app with documentation pulled from a local copy of ember.js.
 1.  From the `ember-jsonapi-docs` directory, run `./generate-local.sh yui ember 2.18.0`. This command runs the Ember documentation build, generates jsonapi output, and copies it to the `ember-api-docs` directory. To build ember data documentation, run `./generate-local.sh yui ember-data 2.17.2`.
     - If your `rev-index/ember-X.X.X.json` file fails to generate, make sure you have all dependencies installed for the ember.js repo
     - If you are debugging failed builds, periodically clear out the contents of the `tmp` directory, and run the script again. Past failed runs can cause subsequent runs to fail in unexpected ways.\_
-1.  Run the API app with the newly generated local data by running `API_HOST=http://localhost:4200 ember s` in the `ember-api-docs` directory.
+1.  Run `yarn server` in this app to serve the content locally.
+1.  Run the API app with the newly generated local data by running `API_HOST=http://localhost:5050 ember s` in the `ember-api-docs` directory.
