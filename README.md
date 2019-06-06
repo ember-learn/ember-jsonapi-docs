@@ -32,7 +32,7 @@ The script pulls yuidoc build output from all Ember versions from Amazon S3, con
 
 ## To Generate docs for a specific project and/or version for development
 
-You can do this by passing `--project ember/ember-data --version 2.11.1` as an argument to the index script. e.g., `yarn start -- --project ember --version 2.11.0`.
+You can do this by passing `--project ember/ember-data --version 2.11.1` as an argument to the index script. e.g., `yarn start --project ember --version 2.11.0`.
 You need an additional flag `AWS_SHOULD_PUBLISH=true` for publishing the docs.
 
 ## To override a specific version of a doc with a different yuidoc from your machine (For core contributors)
@@ -56,8 +56,7 @@ app with documentation pulled from a local copy of ember.js.
     - [ember-jsonapi-docs](https://github.com/ember-learn/ember-jsonapi-docs)
     - [ember-api-docs](https://github.com/ember-learn/ember-api-docs)
 1.  Set up the project according to the instructions above in `Running the app`.
-1.  From the `ember-jsonapi-docs` directory, run `./generate-local.sh yui ember 2.18.0`. This command runs the Ember documentation build, generates jsonapi output, and copies it to the `ember-api-docs` directory. To build ember data documentation, run `./generate-local.sh yui ember-data 2.17.2`.
-    - If your `rev-index/ember-X.X.X.json` file fails to generate, make sure you have all dependencies installed for the ember.js repo
+1.  From the `ember-jsonapi-docs` directory, run `yarn gen --project ember --version 2.18.0`. This command runs the Ember documentation build, generates jsonapi output, copies it to the `ember-api-docs` directory & runs this app. To build ember data documentation, run `yarn gen --project ember-data --version 2.18.0`.
     - If you are debugging failed builds, periodically clear out the contents of the `tmp` directory, and run the script again. Past failed runs can cause subsequent runs to fail in unexpected ways.\_
 1.  Run `yarn server` in this app to serve the content locally.
-1.  Run the API app with the newly generated local data by running `API_HOST=http://localhost:5050 ember s` in the `ember-api-docs` directory.
+1.  Run the API app with the newly generated local data by running `yarn server` in this app & then run `yarn start:local` in the `ember-api-docs` directory.
