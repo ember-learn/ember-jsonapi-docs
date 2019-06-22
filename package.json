@@ -67,16 +67,18 @@
 		"pretty-quick": "^1.11.1"
 	},
 	"resolutions": {
-		"aws-sdk": "~2.276.1"
+		"aws-sdk": "~2.480.0",
+		"graceful-fs": "^4.1.15",
+		"natives": "1.1.6"
 	},
 	"engines": {
-		"node": "8"
+		"node": ">= 10 && <= 12"
 	},
 	"cacheDirectories": [
 		"tmp"
 	],
 	"volta": {
-		"node": "8.16.0",
+		"node": "12.4.0",
 		"yarn": "1.16.0"
 	}
 }
