@@ -12,12 +12,13 @@ The script pulls yuidoc build output from all Ember versions from Amazon S3, con
 ## Running the app
 
 1.  Fork/Clone [ember-jsonapi-docs](https://github.com/ember-learn/ember-jsonapi-docs)
-1.  Run `yarn` or `npm install` (Needs node 8)
+1.  Run `yarn`
+1.  Install the [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 1.  Set up AWS access
 
     ```shell
-    export AWS_ACCESS_KEY=xxxxxx
-    export AWS_SECRET_KEY=xxxxx
+    export AWS_ACCESS_KEY_ID=xxxxxx
+    export AWS_SECRET_ACCESS_KEY=xxxxx
     ```
 
     The app accesses builds.emberjs.com (an Amazon S3 bucket) in read-only mode, which is public. This requires any valid AWS credentials.
@@ -25,9 +26,8 @@ The script pulls yuidoc build output from all Ember versions from Amazon S3, con
     You can get your credentials by logging into your [AWS console](https://console.aws.amazon.com) and navigating to "_My Security Credentials_" under your profile name. You can generate a new pair under the "_Access Keys (Access Key ID and Secret Access Key)_" section.
 
 1.  To test your changes in the app run,
-    `node index.js`
-    Once complete, if no errors you should see a docs.tar file inside the `tmp` folder. The app tries to process all
-    ember & ember-data versions since 1.0 which takes high memory & time to complete. If you intend it, then run `node --max_old_space_size=8192 index.js`.
+    `yarn start`
+    The app tries to process all ember & ember-data versions since 1.0 which takes high memory & time to complete. If you intend it, then run `yarn start --max_old_space_size=8192`.
     You are setting your node max heap space to 8GB, so make sure you have that much space available on your machine.
 
 ## To Generate docs for a specific project and/or version for development
@@ -60,3 +60,7 @@ app with documentation pulled from a local copy of ember.js.
     - If you are debugging failed builds, periodically clear out the contents of the `tmp` directory, and run the script again. Past failed runs can cause subsequent runs to fail in unexpected ways.\_
 1.  Run `yarn server` in this app to serve the content locally.
 1.  Run the API app with the newly generated local data by running `yarn server` in this app & then run `yarn start:local` in the `ember-api-docs` directory.
+
+## Backing up docs before running major migrations
+
+If you plan to run a major migration run `yarn backup` so that all the content are safely backed up to a timestamped s3 folder.

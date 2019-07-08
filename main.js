@@ -11,8 +11,10 @@ import normalizeEmberDependencies from './lib/normalize-ember-dependencies'
 import getVersionIndex from './lib/get-version-index'
 import saveDoc from './lib/save-document'
 import revProjVersionFiles from './lib/rev-docs'
-import { downloadExistingDocsToLocal, uploadToS3 } from './lib/s3-sync'
+import { downloadExistingDocsToLocal, uploadDocsToS3 } from './lib/s3-sync'
 import fixBorkedYuidocFiles from './lib/fix-borked-yuidoc-files'
+
+process.on('unhandledRejection', e => (console.log(e), process.exit(e.exitCode)))
 
 export function apiDocsProcessor(
 	projects,
@@ -103,5 +105,9 @@ export function apiDocsProcessor(
 				fs.writeJsonSync(projRevFile, projRevFileContent)
 			})
 		)
-		.then(uploadToS3)
+		.then(uploadDocsToS3)
+		.then(() => {
+			console.log('\n\n\n')
+			console.log('Done!')
+		})
 }
