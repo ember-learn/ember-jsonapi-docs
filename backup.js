@@ -1,4 +1,4 @@
-import { backupExistingFolders } from './lib/s3'
+import { backupExistingFolders } from './lib/s3-sync'
 
 async () => {
 	await backupExistingFolders()
