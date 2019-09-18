@@ -14,8 +14,6 @@ import revProjVersionFiles from './lib/rev-docs'
 import { downloadExistingDocsToLocal, uploadDocsToS3 } from './lib/s3-sync'
 import fixBorkedYuidocFiles from './lib/fix-borked-yuidoc-files'
 
-process.on('unhandledRejection', e => (console.log(e), process.exit(e.exitCode)))
-
 export function apiDocsProcessor(
 	projects,
 	specificDocsVersion,

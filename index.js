@@ -1,5 +1,7 @@
 // eslint-disable-next-line
 require = require('esm')(module /*, options*/)
+require('hard-rejection')()
+
 const argv = require('minimist')(process.argv.slice(2))
 
 let possibleProjects = ['ember', 'ember-data']

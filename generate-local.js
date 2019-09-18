@@ -4,6 +4,7 @@ import execa from 'execa'
 import { copyFileSync, existsSync, mkdirpSync, removeSync } from 'fs-extra'
 import minimist from 'minimist'
 import path from 'path'
+import 'hard-rejection/register'
 
 const argv = minimist(process.argv.slice(2))
 
