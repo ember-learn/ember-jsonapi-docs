@@ -3,4 +3,3 @@ export const exit = function exit() {
 	console.log(...arguments)
 	process.exit(1)
 }
-
