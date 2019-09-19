@@ -6,14 +6,12 @@ import minimist from 'minimist'
 import path from 'path'
 import 'hard-rejection/register'
 
+import { exit } from './utils'
+
 const argv = minimist(process.argv.slice(2))
 
 const { project, version } = argv
 
-const exit = function exit() {
-	console.log(...arguments)
-	process.exit(1)
-}
 
 const runCmd = async (cmd, path) => {
 	console.log(chalk.underline(`Running '${chalk.green(cmd)}'`))

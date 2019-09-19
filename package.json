@@ -23,6 +23,7 @@
 		"gen": "node -r esm generate-local.js",
 		"greet": "echo 'hi'",
 		"server": "http-server -p 5050 --cors tmp",
+		"setup": "node -r esm setup-repositories.js",
 		"start": "node index.js",
 		"test": "eslint lib/**/*.js index.js test/**.js && mocha -r esm test"
 	},
