@@ -11,7 +11,7 @@ app with documentation pulled from a local copy of ember.js and/or ember-data.
    - [data (ember-data)](https://github.com/emberjs/data)
    - [ember-jsonapi-docs](https://github.com/ember-learn/ember-jsonapi-docs)
    - [ember-api-docs](https://github.com/ember-learn/ember-api-docs)
-1. Configure this project (ember-api-docs) according to the instructions in the README section in [`Running the app`](README.md#running-the-app).
+1. Configure this project (ember-api-docs) according to the [`Running the app`](README.md#running-the-app) instructions in the `README`.
 1. From the `ember-jsonapi-docs` directory, run `yarn gen --project ember --version 2.18.0`.
     - This command runs the Ember documentation build, generates jsonapi output, copies it to the `ember-api-docs` directory. To build ember-data documentation, run `yarn gen --project ember-data --version 2.18.0`.
 1. Run `yarn server` in this app. This serves a local API that `ember-api-docs` consumes.
