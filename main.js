@@ -14,7 +14,7 @@ import revProjVersionFiles from './lib/rev-docs'
 import { downloadExistingDocsToLocal, uploadDocsToS3 } from './lib/s3-sync'
 import fixBorkedYuidocFiles from './lib/fix-borked-yuidoc-files'
 
-export function apiDocsProcessor(
+export async function apiDocsProcessor(
 	projects,
 	specificDocsVersion,
 	ignorePreviouslyIndexedDoc,
@@ -28,13 +28,14 @@ export function apiDocsProcessor(
 	let docsVersionMsg = specificDocsVersion !== '' ? `. For version ${specificDocsVersion}` : ''
 	console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
 
-	downloadExistingDocsToLocal()
-		.then(() => fetchYuiDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc || runClean))
-		.then(async filesToProcess => {
-			await fs.mkdirp('tmp/s3-original-docs')
-			return await RSVP.Promise.all(filesToProcess.map(fixBorkedYuidocFiles))
-		})
-		.then(() => readDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean))
+	if (!ignorePreviouslyIndexedDoc) {
+		await downloadExistingDocsToLocal()
+		let filesToProcess = await fetchYuiDocs(projects, specificDocsVersion, runClean)
+		await fs.mkdirp('tmp/s3-original-docs')
+		await RSVP.Promise.all(filesToProcess.map(fixBorkedYuidocFiles))
+	}
+
+	await readDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
 		.then(docs => {
 			return RSVP.map(projects, projectName => {
 				return RSVP.map(docs[projectName], doc => {
