@@ -1,3 +1,5 @@
+const pretty = require('pretty-time')
+
 // eslint-disable-next-line
 require = require('esm')(module /*, options*/)
 require('hard-rejection')()
@@ -14,4 +16,10 @@ let ignorePreviouslyIndexedDoc =
 let runClean = !!argv.clean
 
 const { apiDocsProcessor } = require('./main.js')
-apiDocsProcessor(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
+
+;(async () => {
+	const hrstart = process.hrtime()
+	await apiDocsProcessor(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
+	const hrend = process.hrtime(hrstart)
+	console.info(pretty(hrend))
+})()
