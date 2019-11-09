@@ -28,7 +28,6 @@
 		"test": "eslint lib/**/*.js index.js test/**.js && mocha -r esm test"
 	},
 	"dependencies": {
-		"cheerio": "^1.0.0-rc.2",
 		"command-exists": "^1.2.8",
 		"compare-versions": "^3.5.1",
 		"download": "^7.1.0",
@@ -38,12 +37,10 @@
 		"fs-extra": "^8.1.0",
 		"glob": "^7.1.4",
 		"hard-rejection": "^2.1.0",
-		"highlight.js": "^9.15.10",
 		"http-server": "^0.11.1",
 		"inflected": "^2.0.4",
 		"keyfinder": "^1.0.0",
 		"lodash": "^4.17.15",
-		"marked": "^0.7.0",
 		"minimist": "^1.2.0",
 		"mkdir-promise": "^1.0.0",
 		"mkdirp": "^0.5.1",
