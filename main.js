@@ -28,7 +28,7 @@ export function apiDocsProcessor(
 	let docsVersionMsg = specificDocsVersion !== '' ? `. For version ${specificDocsVersion}` : ''
 	console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
 
-	downloadExistingDocsToLocal()
+	return downloadExistingDocsToLocal()
 		.then(() => fetchYuiDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc || runClean))
 		.then(async filesToProcess => {
 			await fs.mkdirp('tmp/s3-original-docs')
