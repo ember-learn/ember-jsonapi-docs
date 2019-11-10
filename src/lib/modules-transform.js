@@ -35,7 +35,7 @@ function isStaticMethod(item) {
 }
 
 function separateByClassName(result, value) {
-	(result[value.class] || (result[value.class] = [])).push(value)
+	;(result[value.class] || (result[value.class] = [])).push(value)
 	return result
 }
 
