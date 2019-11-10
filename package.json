@@ -1,34 +1,43 @@
 {
   "name": "ember-jsonapi-docs-generator",
-  "version": "2.0.0",
-  "description": "Generates json api docs from ember's yuidocs",
-  "homepage": "https://github.com/ember-learn/ember-jsonapi-docs#readme",
-  "bugs": {
-    "url": "https://github.com/ember-learn/ember-jsonapi-docs/issues"
-  },
-  "repository": "git+https://github.com/ember-learn/ember-jsonapi-docs.git",
+  "version": "3.0.0",
+  "description": "Generates API docs for the official ember projects",
+  "homepage": "https://github.com/ember-learn/ember-jsonapi-docs",
+  "bugs": "https://github.com/ember-learn/ember-jsonapi-docs/issues",
+  "repository": "ember-learn/ember-jsonapi-docs",
   "license": "MIT",
-  "author": "Stanley Stuart <stanley+npm@stan.li>",
+  "author": "Sivakumar Kailasam @sivakumar-kailasam",
   "contributors": [
-    "Todd Jordan",
     "Sivakumar Kailasam <siva@rubberduck.engineering>",
+    "Todd Jordan",
     "Ember.JS Learning team"
   ],
-  "main": "index.js",
+  "files": [
+    "/bin",
+    "/lib",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "bin": {
+    "ember-docgen": "./bin/run"
+  },
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "backup": "node -r esm backup.js",
-    "gen": "node -r esm generate-local.js",
-    "greet": "echo 'hi'",
-    "serve": "yarn server",
-    "server": "http-server -p 5050 --cors tmp",
-    "start": "node index.js",
-    "test": "eslint lib/**/*.js index.js test/**.js && mocha -r esm test"
+    "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
+    "postpack": "rm -f oclif.manifest.json",
+    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "posttest": "tslint -p test -t stylish",
+    "version": "oclif-dev readme && git add README.md"
   },
   "dependencies": {
     "@ember-learn/released-js-docs": "0.0.0",
+    "@oclif/command": "^1",
+    "@oclif/config": "^1",
+    "@oclif/plugin-help": "^2",
     "command-exists": "^1.2.8",
     "compare-versions": "^3.5.1",
     "download": "^7.1.0",
@@ -61,23 +70,42 @@
     "semver-compare": "^1.0.0",
     "semver-extra": "^3.0.0",
     "semver-utils": "^1.1.4",
+    "tslib": "^1",
     "unified": "^8.4.2",
     "yuidoc-to-jsonapi": "^0.4.1"
   },
   "devDependencies": {
+    "@oclif/dev-cli": "^1",
+    "@oclif/test": "^1",
+    "@oclif/tslint": "^3",
+    "@types/chai": "^4",
+    "@types/mocha": "^5",
+    "@types/node": "^10",
     "chai": "^4.2.0",
     "chalk": "^2.4.2",
     "eslint": "6.4.0",
     "eslint-plugin-node": "10.0.0",
     "eslint-plugin-prettier": "3.1.1",
+    "globby": "^10",
     "husky": "^3.0.5",
     "mocha": "^6.2.0",
+    "nyc": "^14",
     "prettier": "1.18.2",
     "pretty-quick": "^1.11.1",
     "pretty-time": "^1.1.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "ts-node": "^8",
+    "tslint": "^5",
+    "typescript": "^3.3"
   },
   "cacheDirectories": [
     "tmp"
-  ]
+  ],
+  "oclif": {
+    "commands": "./lib/commands",
+    "bin": "ember-docgen",
+    "plugins": [
+      "@oclif/plugin-help"
+    ]
+  }
 }
