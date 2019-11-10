@@ -1,5 +1,5 @@
-import _ from 'lodash'
-import RSVP from 'rsvp'
+import * as _ from 'lodash'
+import * as RSVP from 'rsvp'
 
 export default function addInheritedItems(docSets) {
 	docSets.forEach(versionData => {

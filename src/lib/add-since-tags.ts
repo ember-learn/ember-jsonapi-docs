@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import * as _ from 'lodash'
 import RSVP from 'rsvp'
 
 export default function addSinceTags(docSets) {

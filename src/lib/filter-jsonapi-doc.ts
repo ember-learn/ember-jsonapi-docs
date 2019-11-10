@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import * as _ from 'lodash'
 
 function byType(document, type) {
 	return _.filter(totalData(document), ['type', type])

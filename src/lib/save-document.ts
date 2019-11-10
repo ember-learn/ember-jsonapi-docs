@@ -1,7 +1,7 @@
-import fs from 'fs-extra'
-import RSVP from 'rsvp'
-import path from 'path'
-import mkdirp from 'mkdirp'
+import * as fs from 'fs-extra'
+import * as RSVP from 'rsvp'
+import * as path from 'path'
+import * as mkdirp from 'mkdirp'
 import { pluralize } from 'inflected'
 
 // updateOrCreate

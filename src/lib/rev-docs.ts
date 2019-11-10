@@ -1,11 +1,11 @@
-import revFile from 'rev-file'
-import fs from 'fs-extra'
-import ora from 'ora'
-import { Promise } from 'rsvp'
-import { basename as getFileName } from 'path'
-import { isArray } from 'lodash/lang'
+import * as fs from 'fs-extra'
+import * as glob from 'glob'
 import { singularize } from 'inflected'
-const glob = require('glob')
+import { isArray } from 'lodash/lang'
+import * as ora from 'ora'
+import { basename as getFileName } from 'path'
+import * as revFile from 'rev-file'
+import { Promise } from 'rsvp'
 
 function revProjVersionFiles(project, ver) {
 	let opProgress = ora(`Revving ${project}:${ver} files`).start()

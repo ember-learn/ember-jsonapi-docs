@@ -1,7 +1,7 @@
-import _ from 'lodash'
-import RSVP from 'rsvp'
+import * as _ from 'lodash'
+import * as RSVP from 'rsvp'
 import saveDoc from './save-document'
-import tojsonapi from 'yuidoc-to-jsonapi/lib/converter'
+import * as tojsonapi from 'yuidoc-to-jsonapi/lib/converter'
 import updateIDs from './update-with-versions-and-project'
 import { byType as findType } from './filter-jsonapi-doc'
 

@@ -1,5 +1,5 @@
-import fs from 'fs-extra'
-import rimraf from 'rimraf'
+import * as fs from 'fs-extra'
+import * as rimraf from 'rimraf'
 import createClassesOnDisk from './create-classes'
 import getVersionIndex from './get-version-index'
 import markup from './markup'
