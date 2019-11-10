@@ -11,15 +11,14 @@ let projects =
 	argv.project && possibleProjects.includes(argv.project) ? [argv.project] : possibleProjects
 let specificDocsVersion = argv.version ? argv.version : ''
 
-let ignorePreviouslyIndexedDoc =
-	projects.length !== 0 && specificDocsVersion !== '' && argv.ignorePreviouslyIndexedDoc
-let runClean = !!argv.clean
+const hardRejection = require('hard-rejection')
 
 const { apiDocsProcessor } = require('./main.js')
 
 ;(async () => {
+	hardRejection()
 	const hrstart = process.hrtime()
-	await apiDocsProcessor(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
+	await apiDocsProcessor(projects, specificDocsVersion)
 	const hrend = process.hrtime(hrstart)
 	console.info(pretty(hrend))
 })()
