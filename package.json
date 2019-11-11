@@ -27,8 +27,10 @@
 		"test": "test"
 	},
 	"scripts": {
+		"backup": "./bin/run backup",
 		"prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
 		"postpack": "rm -f oclif.manifest.json",
+		"start": "./bin/run full-run",
 		"test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
 		"posttest": "tslint -p test -t stylish",
 		"version": "oclif-dev readme && git add README.md"
