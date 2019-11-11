@@ -37,6 +37,7 @@ export default class FullRun extends Command {
 
 		await uploadDocsToS3()
 
-		console.info(prettyTime(process.hrtime(hrstart)))
+		let processExecTimeSummary = prettyTime(process.hrtime(hrstart))
+		console.info(`Done in ${processExecTimeSummary}`)
 	}
 }

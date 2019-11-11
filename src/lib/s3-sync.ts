@@ -75,7 +75,7 @@ export async function downloadExistingDocsToLocal() {
 	} */
 
 	// For parallel downloads
-	return await SafePromise.all(promises)
+	return SafePromise.all(promises)
 }
 
 export async function uploadDocsToS3() {
@@ -90,7 +90,7 @@ export async function uploadDocsToS3() {
 			options: ['--cache-control', 'max-age=365000000, immutable'],
 		})
 
-		await executeS3Sync({
+		return executeS3Sync({
 			from: 'tmp/rev-index',
 			to: `${apiDocsBucketUrl}/rev-index`,
 		})

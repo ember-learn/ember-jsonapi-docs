@@ -1,7 +1,7 @@
+import * as SafePromise from 'bluebird'
 import * as fs from 'fs-extra'
 import * as glob from 'glob'
 import * as path from 'path'
-import * as SafePromise from 'bluebird'
 
 export default function readDocs(projects, specificVersion = '') {
 	return projects.reduce(async (prevPromise, projectName) => {
@@ -27,5 +27,5 @@ export default function readDocs(projects, specificVersion = '') {
 		)
 
 		return { ...prevValue, [projectName]: docs }
-	}, Promise.resolve({}))
+	}, SafePromise.resolve({}))
 }

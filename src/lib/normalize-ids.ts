@@ -1,9 +1,9 @@
-import * as _ from 'lodash'
 import * as SafePromise from 'bluebird'
-import saveDoc from './save-document'
+import * as _ from 'lodash'
 import * as tojsonapi from 'yuidoc-to-jsonapi/lib/converter'
-import updateIDs from './update-with-versions-and-project'
 import { byType as findType } from './filter-jsonapi-doc'
+import saveDoc from './save-document'
+import updateIDs from './update-with-versions-and-project'
 
 function removeLongDocsBecauseEmber1HasWeirdDocs({ id }) {
 	let str = 'A Suite can'

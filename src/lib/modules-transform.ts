@@ -1,5 +1,5 @@
-import * as _ from 'lodash'
 import * as SafePromise from 'bluebird'
+import * as _ from 'lodash'
 
 function addSubModulesParentAttribute(moduleObj) {
 	moduleObj.parent = moduleObj.is_submodule ? moduleObj.module : null

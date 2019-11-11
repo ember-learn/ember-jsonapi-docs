@@ -1,6 +1,5 @@
-import * as fs from 'fs-extra'
 import * as SafePromise from 'bluebird'
-
+import * as fs from 'fs-extra'
 import saveDoc from './save-document'
 
 export async function filler1(projectName, docs) {

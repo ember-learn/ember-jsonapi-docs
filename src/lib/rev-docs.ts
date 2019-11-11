@@ -1,3 +1,4 @@
+import * as SafePromise from 'bluebird'
 import * as fs from 'fs-extra'
 import * as glob from 'glob'
 import { singularize } from 'inflected'
@@ -5,7 +6,6 @@ import { isArray } from 'lodash/lang'
 import * as ora from 'ora'
 import { basename as getFileName } from 'path'
 import * as revFile from 'rev-file'
-import * as SafePromise from 'bluebird'
 
 function revProjVersionFiles(project, ver) {
 	let opProgress = ora(`Revving ${project}:${ver} files`).start()

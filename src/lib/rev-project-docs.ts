@@ -2,7 +2,7 @@ import * as SafePromise from 'bluebird'
 import * as fs from 'fs-extra'
 
 export async function revProjectDocs(projects) {
-	return await SafePromise.map(projects, async project => {
+	return SafePromise.map(projects, async project => {
 		const projRevFile = `tmp/rev-index/${project}.json`
 
 		let projRevFileContent = await fs.readJson(`tmp/json-docs/${project}/projects/${project}.json`)

@@ -1,5 +1,5 @@
-import transformModules from './modules-transform'
 import addInheritedItems from './add-inherited-items'
+import transformModules from './modules-transform'
 import normalizeIDs from './normalize-ids'
 
 export default function transformYuiObject(docs, projName) {

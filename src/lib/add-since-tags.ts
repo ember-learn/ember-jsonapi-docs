@@ -1,5 +1,5 @@
-import * as _ from 'lodash'
 import * as SafePromise from 'bluebird'
+import * as _ from 'lodash'
 
 export default function addSinceTags(docSets) {
 	let versionIndex = Object.create(null)

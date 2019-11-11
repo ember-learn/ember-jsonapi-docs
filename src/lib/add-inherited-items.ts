@@ -11,9 +11,10 @@ export default function addInheritedItems(docSets) {
 		classes.forEach(klass => {
 			let parents = getParents(klass, classes)
 
-			for (let i = 0; i < parents.length; ++i) {
-				parents = parents.concat(getParents(parents[i], classes))
+			for (let parent of parents) {
+				parents = parents.concat(getParents(parent, classes))
 			}
+
 			parents.forEach(parent => {
 				if (!parent) return
 				let parentItems = classItems.filter(item => item.class === parent.name)
