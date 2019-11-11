@@ -5,7 +5,7 @@ import { isArray } from 'lodash/lang'
 import * as ora from 'ora'
 import { basename as getFileName } from 'path'
 import * as revFile from 'rev-file'
-import { Promise } from 'rsvp'
+import * as SafePromise from 'bluebird'
 
 function revProjVersionFiles(project, ver) {
 	let opProgress = ora(`Revving ${project}:${ver} files`).start()
@@ -60,7 +60,7 @@ function revProjVersionFiles(project, ver) {
 
 	fs.writeJsonSync(projVerRevFile, projVerRevContent)
 	opProgress.succeed('Revving done!')
-	Promise.resolve()
+	SafePromise.resolve()
 }
 
 export default revProjVersionFiles

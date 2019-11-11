@@ -1,6 +1,7 @@
 import * as fs from 'fs-extra'
 import * as glob from 'glob'
 import * as path from 'path'
+import * as SafePromise from 'bluebird'
 
 export default function readDocs(projects, specificVersion = '') {
 	return projects.reduce(async (prevPromise, projectName) => {
@@ -10,7 +11,7 @@ export default function readDocs(projects, specificVersion = '') {
 			`node_modules/@ember-learn/released-js-docs/dist/${projectName}/${specificVersion}*.json`
 		)
 
-		let docs = await Promise.all(
+		let docs = await SafePromise.all(
 			projectFiles.map(async projFile => {
 				let version = path.parse(projFile).name
 

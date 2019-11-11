@@ -1,5 +1,5 @@
 import * as _ from 'lodash'
-import RSVP from 'rsvp'
+import * as SafePromise from 'bluebird'
 
 export default function addSinceTags(docSets) {
 	let versionIndex = Object.create(null)
@@ -44,7 +44,7 @@ export default function addSinceTags(docSets) {
 
 	classes.forEach(klass => (klass.since = versionIndex['class'][klass.name][0]))
 
-	return RSVP.resolve(docSets)
+	return SafePromise.resolve(docSets)
 }
 
 function sortVersionIndex(versionIndex) {

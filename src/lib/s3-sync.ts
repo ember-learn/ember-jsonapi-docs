@@ -1,5 +1,6 @@
-import execa from 'execa'
-import commandExists from 'command-exists'
+import * as SafePromise from 'bluebird'
+import * as commandExists from 'command-exists'
+import * as execa from 'execa'
 
 const apiDocsBucketUrl = 's3://api-docs.emberjs.com'
 
@@ -74,7 +75,7 @@ export async function downloadExistingDocsToLocal() {
 	} */
 
 	// For parallel downloads
-	return await Promise.all(promises)
+	return await SafePromise.all(promises)
 }
 
 export async function uploadDocsToS3() {

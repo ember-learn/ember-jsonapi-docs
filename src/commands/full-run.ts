@@ -1,14 +1,13 @@
 import { Command, flags } from '@oclif/command'
+import * as SafePromise from 'bluebird'
 import 'hard-rejection/register'
 import * as prettyTime from 'pretty-time'
-import RSVP from 'rsvp'
 import { filler1 } from '../lib/filler1'
 import { filler2 } from '../lib/filler2'
-
+import readDocs from '../lib/read-docs'
 import { revProjectDocs } from '../lib/rev-project-docs'
 import { uploadDocsToS3 } from '../lib/s3-sync'
 import { supportedProjects } from '../lib/supported-projects'
-import readDocs from '../lib/read-docs'
 
 export default class FullRun extends Command {
 	static description = 'describe the command here'
@@ -25,10 +24,11 @@ export default class FullRun extends Command {
 
 	async run() {
 		const hrstart = process.hrtime()
+
 		let docs = await readDocs(supportedProjects)
 
-		await RSVP.map(supportedProjects, projectName =>
-			RSVP.map(docs[projectName], doc => filler2(projectName, doc)).then(docs =>
+		await SafePromise.map(supportedProjects, projectName =>
+			SafePromise.map(docs[projectName], doc => filler2(projectName, doc)).then(docs =>
 				filler1(projectName, docs)
 			)
 		)

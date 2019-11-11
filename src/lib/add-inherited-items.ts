@@ -1,5 +1,5 @@
+import * as SafePromise from 'bluebird'
 import * as _ from 'lodash'
-import * as RSVP from 'rsvp'
 
 export default function addInheritedItems(docSets) {
 	docSets.forEach(versionData => {
@@ -29,7 +29,7 @@ export default function addInheritedItems(docSets) {
 		})
 	})
 
-	return RSVP.resolve(docSets)
+	return SafePromise.resolve(docSets)
 }
 
 function getParents(klass, classes) {

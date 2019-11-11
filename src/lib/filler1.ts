@@ -1,11 +1,13 @@
 import * as fs from 'fs-extra'
+import * as SafePromise from 'bluebird'
+
 import saveDoc from './save-document'
 
 export async function filler1(projectName, docs) {
 	let [docToSave, ...remainingDocs] = docs.filter(({ data }) => data.id === projectName)
 
 	if (!docToSave) {
-		return Promise.resolve()
+		return SafePromise.resolve()
 	}
 
 	let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`

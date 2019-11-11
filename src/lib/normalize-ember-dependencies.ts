@@ -1,5 +1,5 @@
+import * as SafePromise from 'bluebird'
 import * as _ from 'lodash'
-import { Promise } from 'rsvp'
 import { byType } from './filter-jsonapi-doc'
 
 const missingDoc = ({ id, version }) => {
@@ -14,7 +14,7 @@ const missingDoc = ({ id, version }) => {
 }
 
 export default giantDocument => {
-	return new Promise(resolve => {
+	return new SafePromise(resolve => {
 		let nonEmberDocs = giantDocument.data.filter(({ relationships }) => relationships)
 
 		nonEmberDocs.forEach(({ relationships, attributes }) => {

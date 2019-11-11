@@ -1,10 +1,10 @@
-import RSVP from 'rsvp'
+import * as SafePromise from 'bluebird'
 import saveDoc from './save-document'
 
 export default (document, projectName, projectVersion) => {
 	let things = document.data
 
-	return RSVP.map(things, klass => {
+	return SafePromise.map(things, klass => {
 		if (!klass.id) {
 			console.log(klass)
 			console.log(new Error('WHAT').stack)

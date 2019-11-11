@@ -1,5 +1,5 @@
 import * as _ from 'lodash'
-import * as RSVP from 'rsvp'
+import * as SafePromise from 'bluebird'
 
 function addSubModulesParentAttribute(moduleObj) {
 	moduleObj.parent = moduleObj.is_submodule ? moduleObj.module : null
@@ -77,5 +77,5 @@ export default function transformModules(docSets) {
 		})
 	})
 
-	return RSVP.resolve(docSets)
+	return SafePromise.resolve(docSets)
 }

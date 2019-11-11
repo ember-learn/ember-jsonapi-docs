@@ -1,10 +1,10 @@
+import * as SafePromise from 'bluebird'
 import tojsonapi from 'yuidoc-to-jsonapi/lib/converter'
-import RSVP from 'rsvp'
 import saveDoc from './save-document'
 import updateIDs from './update-with-versions-and-project'
 
 export default function createProjectVersions(versions, projectName) {
-	return RSVP.map(versions, version => {
+	return SafePromise.map(versions, version => {
 		let jsonapidoc = updateIDs(tojsonapi(version.data), version.version)
 
 		let projectData = {

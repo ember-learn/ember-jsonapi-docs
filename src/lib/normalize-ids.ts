@@ -1,5 +1,5 @@
 import * as _ from 'lodash'
-import * as RSVP from 'rsvp'
+import * as SafePromise from 'bluebird'
 import saveDoc from './save-document'
 import * as tojsonapi from 'yuidoc-to-jsonapi/lib/converter'
 import updateIDs from './update-with-versions-and-project'
@@ -115,7 +115,7 @@ function normalizeIDs(pVersions, projectName) {
 		}
 	})
 
-	let versionDocs = RSVP.map(projectVersions, projectVersion => {
+	let versionDocs = SafePromise.map(projectVersions, projectVersion => {
 		let doc = { data: projectVersion }
 
 		let version = projectVersion.attributes.version

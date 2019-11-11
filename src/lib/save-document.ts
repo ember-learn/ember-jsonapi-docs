@@ -1,8 +1,8 @@
+import * as SafePromise from 'bluebird'
 import * as fs from 'fs-extra'
-import * as RSVP from 'rsvp'
-import * as path from 'path'
-import * as mkdirp from 'mkdirp'
 import { pluralize } from 'inflected'
+import * as mkdirp from 'mkdirp'
+import * as path from 'path'
 
 // updateOrCreate
 export default function saveDoc(document, projectName, version = '') {
@@ -17,7 +17,7 @@ export default function saveDoc(document, projectName, version = '') {
 
 	let json = JSON.stringify(document, null, 2)
 
-	return new RSVP.Promise((resolve, reject) => {
+	return new SafePromise((resolve, reject) => {
 		if (document.data.id.length > 50) {
 			// wtf ember 1.0 docs??
 			return resolve()
