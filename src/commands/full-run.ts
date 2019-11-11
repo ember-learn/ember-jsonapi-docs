@@ -1,23 +1,20 @@
 import { Command, flags } from '@oclif/command'
 import * as SafePromise from 'bluebird'
+import * as deepmerge from 'deepmerge'
 import 'hard-rejection/register'
 import * as prettyTime from 'pretty-time'
-import { filler1 } from '../lib/filler1'
 import { processProjectDoc } from '../lib/process-project-doc'
 import readDocs from '../lib/read-docs'
 import { revProjectDocs } from '../lib/rev-project-docs'
 import { uploadDocsToS3 } from '../lib/s3-sync'
+import saveDoc from '../lib/save-document'
 import { supportedProjects } from '../lib/supported-projects'
 
 export default class FullRun extends Command {
-	static description = 'describe the command here'
+	static description = 'Generates API docs for all versions of ember & ember-data'
 
 	static flags = {
 		help: flags.help({ char: 'h' }),
-		// // flag with a value (-n, --name=VALUE)
-		// name: flags.string({ char: 'n', description: 'name to print' }),
-		// // flag with no value (-f, --force)
-		// force: flags.boolean({ char: 'f' }),
 	}
 
 	static args = [{ name: 'file' }]
@@ -30,7 +27,7 @@ export default class FullRun extends Command {
 		await SafePromise.mapSeries(supportedProjects, projectName =>
 			SafePromise.map(docs[projectName], doc => processProjectDoc(projectName, doc), {
 				concurrency: 10,
-			}).then(docs => filler1(projectName, docs))
+			}).then(docs => saveDoc(deepmerge.all(docs), projectName))
 		)
 
 		await revProjectDocs(supportedProjects)
