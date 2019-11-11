@@ -1,4 +1,3 @@
-import * as SafePromise from 'bluebird'
 import * as commandExists from 'command-exists'
 import * as execa from 'execa'
 
@@ -22,7 +21,13 @@ const checkExecutableValidity = async () => {
 	}
 }
 
-const executeS3Sync = async ({ from, to = '', options = [] }, debug = false) => {
+interface ExecuteS3SyncOptions {
+	from: string
+	to: string
+	options?: string[]
+}
+
+const executeS3Sync = async ({ from, to, options = [] }: ExecuteS3SyncOptions, debug = false) => {
 	let args = ['s3', 'sync', from, to, ...options]
 
 	if (to.startsWith('s3://')) {
@@ -53,46 +58,21 @@ export async function backupExistingFolders() {
 	})
 }
 
-export async function downloadExistingDocsToLocal() {
-	const promises = [
-		executeS3Sync({
-			from: `${apiDocsBucketUrl}/rev-index`,
-			to: 'tmp/rev-index',
-		}),
-		executeS3Sync({
-			from: `${apiDocsBucketUrl}/s3-docs`,
-			to: 'tmp/s3-docs',
-		}),
-	]
-
-	/* if (process.env.AWS_SHOULD_PUBLISH === 'yes') {
-		promises.push(
-			executeS3Sync({
-				from: `${apiDocsBucketUrl}/json-docs`,
-				to: 'tmp/json-docs',
-			})
-		)
-	} */
-
-	// For parallel downloads
-	return SafePromise.all(promises)
-}
-
 export async function uploadDocsToS3() {
+	await checkExecutableValidity()
+
+	console.log('\n\n\n')
+	console.log('Uploading docs to s3, this should take a bit!')
+
 	// We want sequential uploads here
-	if (process.env.AWS_SHOULD_PUBLISH === 'yes') {
-		console.log('\n\n\n')
-		console.log('Uploading docs to s3, this should take a bit!')
+	await executeS3Sync({
+		from: 'tmp/json-docs',
+		to: `${apiDocsBucketUrl}/json-docs`,
+		options: ['--cache-control', 'max-age=365000000, immutable'],
+	})
 
-		await executeS3Sync({
-			from: 'tmp/json-docs',
-			to: `${apiDocsBucketUrl}/json-docs`,
-			options: ['--cache-control', 'max-age=365000000, immutable'],
-		})
-
-		return executeS3Sync({
-			from: 'tmp/rev-index',
-			to: `${apiDocsBucketUrl}/rev-index`,
-		})
-	}
+	return executeS3Sync({
+		from: 'tmp/rev-index',
+		to: `${apiDocsBucketUrl}/rev-index`,
+	})
 }

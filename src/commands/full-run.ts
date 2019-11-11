@@ -15,14 +15,17 @@ export default class FullRun extends Command {
 
 	static flags = {
 		help: flags.help({ char: 'h' }),
+		publish: flags.boolean(),
 	}
 
 	static args = [{ name: 'file' }]
 
 	async run() {
+		const { flags } = this.parse(FullRun)
+
 		const hrstart = process.hrtime()
 
-		let docs = await readDocs(supportedProjects)
+		let docs: any = await readDocs(supportedProjects)
 
 		await SafePromise.mapSeries(supportedProjects, projectName =>
 			SafePromise.map(docs[projectName], doc => processProjectDoc(projectName, doc), {
@@ -32,7 +35,9 @@ export default class FullRun extends Command {
 
 		await revProjectDocs(supportedProjects)
 
-		await uploadDocsToS3()
+		if (flags.publish) {
+			await uploadDocsToS3()
+		}
 
 		let processExecTimeSummary = prettyTime(process.hrtime(hrstart))
 		console.info(`Done in ${processExecTimeSummary}`)
