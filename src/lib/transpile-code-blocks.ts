@@ -1,11 +1,11 @@
-import fileExtension from 'file-extension'
-import createPlugin from 'gatsby-remark-vscode/src'
-import reparseHast from 'hast-util-raw'
-import mdastToHast from 'mdast-util-to-hast'
-import stringify from 'rehype-stringify'
-import remark from 'remark-parse'
-import unified from 'unified'
-import visit from 'unist-util-visit'
+import * as fileExtension from 'file-extension'
+import * as createPlugin from 'gatsby-remark-vscode/src'
+import * as reparseHast from 'hast-util-raw'
+import * as mdastToHast from 'mdast-util-to-hast'
+import * as stringify from 'rehype-stringify'
+import * as remark from 'remark-parse'
+import * as unified from 'unified'
+import * as visit from 'unist-util-visit'
 
 const processor = unified()
 	.use(remark)

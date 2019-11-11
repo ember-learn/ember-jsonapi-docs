@@ -1,32 +1,40 @@
-// import { transpileCodeBlock } from './transpile-code-blocks'
+import * as SafePromise from 'bluebird'
+import { transpileCodeBlock } from './transpile-code-blocks'
 
-export default doc => {
-	doc.data.forEach(({ id, attributes }) => {
-		console.log(`Generating markup for ${id}`)
+export default async (doc: any) => {
+	await SafePromise.map(
+		doc.data,
+		async (data: any) => {
+			let id: string = data.id
+			let attributes: any = data.attributes
 
-		let description = attributes.description
+			console.log(`Generating markup for ${id}`)
 
-		if (description) {
-			attributes.description = highlight(description)
-		}
+			let description = attributes.description
 
-		replaceDescriptionFor(attributes.methods)
-		replaceDescriptionFor(attributes.properties)
-		replaceDescriptionFor(attributes.events)
-	})
+			if (description) {
+				attributes.description = await highlight(description)
+			}
 
-	return doc
+			await replaceDescriptionFor(attributes.methods)
+			await replaceDescriptionFor(attributes.properties)
+			await replaceDescriptionFor(attributes.events)
+		},
+		{ concurrency: 10 }
+	)
+
+	return SafePromise.resolve(doc)
 }
 
-function replaceDescriptionFor(items = []) {
-	items.forEach(item => {
+async function replaceDescriptionFor(items = []) {
+	SafePromise.map(items, async (item: any) => {
 		let itemDescription = item.description
 		if (itemDescription) {
-			item.description = highlight(itemDescription)
+			item.description = await highlight(itemDescription)
 		}
 	})
 }
 
-function highlight(description) {
-	return description
+async function highlight(description: string) {
+	return transpileCodeBlock(description)
 }
