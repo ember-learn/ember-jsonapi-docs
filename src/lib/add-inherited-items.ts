@@ -1,36 +1,36 @@
 import * as SafePromise from 'bluebird'
 import * as _ from 'lodash'
 
-export default function addInheritedItems(docSets) {
-	docSets.forEach(versionData => {
-		let data = versionData.data
-		let classes = _.values(data.classes).filter(klass => klass && klass.name)
-		classes = classes.filter(removeLongDocsBecauseEmber1HasWeirdDocs)
-		let classItems = data.classitems.filter(({ itemtype }) => itemtype)
+export default function addInheritedItems(doc: any) {
+	// docSets.forEach(versionData => {
+	let { data } = doc
+	let classes = _.values(data.classes).filter(klass => klass && klass.name)
+	classes = classes.filter(removeLongDocsBecauseEmber1HasWeirdDocs)
+	let classItems = data.classitems.filter(({ itemtype }) => itemtype)
 
-		classes.forEach(klass => {
-			let parents = getParents(klass, classes)
+	classes.forEach(klass => {
+		let parents = getParents(klass, classes)
 
-			for (let parent of parents) {
-				parents = parents.concat(getParents(parent, classes))
-			}
+		for (let parent of parents) {
+			parents = parents.concat(getParents(parent, classes))
+		}
 
-			parents.forEach(parent => {
-				if (!parent) return
-				let parentItems = classItems.filter(item => item.class === parent.name)
-				parentItems = parentItems.map(item => {
-					item = _.clone(item)
-					item.inherited = true
-					item.inheritedFrom = item.class
-					item.class = klass.name
-					return item
-				})
-				data.classitems = data.classitems.concat(parentItems)
+		parents.forEach(parent => {
+			if (!parent) return
+			let parentItems = classItems.filter(item => item.class === parent.name)
+			parentItems = parentItems.map(item => {
+				item = _.clone(item)
+				item.inherited = true
+				item.inheritedFrom = item.class
+				item.class = klass.name
+				return item
 			})
+			data.classitems = data.classitems.concat(parentItems)
 		})
 	})
+	// })
 
-	return SafePromise.resolve(docSets)
+	return SafePromise.resolve(doc)
 }
 
 function getParents(klass, classes) {
@@ -46,7 +46,6 @@ function getParents(klass, classes) {
 		.filter(parent => parent)
 }
 
-function removeLongDocsBecauseEmber1HasWeirdDocs({ name }) {
-	let str = 'A Suite can'
-	return !name.includes(str)
+function removeLongDocsBecauseEmber1HasWeirdDocs({ name }: { name: string }) {
+	return !name.includes('A Suite can')
 }

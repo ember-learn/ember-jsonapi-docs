@@ -3,7 +3,7 @@ import * as SafePromise from 'bluebird'
 import 'hard-rejection/register'
 import * as prettyTime from 'pretty-time'
 import { filler1 } from '../lib/filler1'
-import { filler2 } from '../lib/filler2'
+import { processProjectDoc } from '../lib/process-project-doc'
 import readDocs from '../lib/read-docs'
 import { revProjectDocs } from '../lib/rev-project-docs'
 import { uploadDocsToS3 } from '../lib/s3-sync'
@@ -27,10 +27,10 @@ export default class FullRun extends Command {
 
 		let docs = await readDocs(supportedProjects)
 
-		await SafePromise.map(supportedProjects, projectName =>
-			SafePromise.map(docs[projectName], doc => filler2(projectName, doc)).then(docs =>
-				filler1(projectName, docs)
-			)
+		await SafePromise.mapSeries(supportedProjects, projectName =>
+			SafePromise.map(docs[projectName], doc => processProjectDoc(projectName, doc), {
+				concurrency: 10,
+			}).then(docs => filler1(projectName, docs))
 		)
 
 		await revProjectDocs(supportedProjects)

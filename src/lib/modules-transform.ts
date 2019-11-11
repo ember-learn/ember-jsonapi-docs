@@ -63,19 +63,19 @@ function cleanUpSubmodules({ submodules }) {
 	])(Object.keys(submodules))
 }
 
-export default function transformModules(docSets) {
-	docSets.forEach(({ data }) => {
-		let modules = _.values(data.modules)
-		let classes = data.classes
-		let classitems = data.classitems
-		modules.forEach(mod => {
-			addSubModulesParentAttribute(mod)
-			addPrivatePublicClassesAttributes(mod, classes)
-			mod.staticfunctions = separateFunctions(mod.name, classitems, isPublicStaticMethod)
-			mod.allstaticfunctions = separateFunctions(mod.name, classitems, isStaticMethod)
-			mod.submodules = cleanUpSubmodules(mod)
-		})
+export default function transformModules(doc) {
+	let { data } = doc
+
+	let modules = _.values(data.modules)
+	let classes = data.classes
+	let classitems = data.classitems
+	modules.forEach(mod => {
+		addSubModulesParentAttribute(mod)
+		addPrivatePublicClassesAttributes(mod, classes)
+		mod.staticfunctions = separateFunctions(mod.name, classitems, isPublicStaticMethod)
+		mod.allstaticfunctions = separateFunctions(mod.name, classitems, isStaticMethod)
+		mod.submodules = cleanUpSubmodules(mod)
 	})
 
-	return SafePromise.resolve(docSets)
+	return SafePromise.resolve(doc)
 }

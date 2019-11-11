@@ -69,7 +69,7 @@ describe('transformModules', () => {
 				},
 			}
 		})
-		transformModules(this.yuiDocSets)
+		this.yuiDocSets = this.yuiDocSets.map(transformModules)
 	})
 
 	it('adds a parent attribute to sub modules', function() {

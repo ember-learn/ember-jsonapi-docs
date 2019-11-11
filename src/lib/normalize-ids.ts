@@ -38,7 +38,7 @@ function filter176(project, version, { attributes }) {
 	return project !== 'ember' || parseInt(version.split('.')[1]) < 16 || attributes.name !== 'ember'
 }
 
-function normalizeIDs(pVersions, projectName) {
+function normalizeIDs(pVersions: any, projectName: string) {
 	let jsonapidocs = pVersions.map(({ data, version }) => {
 		Object.keys(data.modules).forEach(k => {
 			let modWithVer = data.modules[k]
@@ -115,13 +115,9 @@ function normalizeIDs(pVersions, projectName) {
 		}
 	})
 
-	let versionDocs = SafePromise.map(projectVersions, projectVersion => {
-		let doc = { data: projectVersion }
-
-		let version = projectVersion.attributes.version
-
-		return saveDoc(doc, projectName, version)
-	})
+	let versionDocs = SafePromise.map(projectVersions, projectVersion =>
+		saveDoc({ data: projectVersion }, projectName, projectVersion.attributes.version)
+	)
 
 	let doc = { data: jsonapidoc.data.concat(projectVersions) }
 	return versionDocs.then(() => doc)
