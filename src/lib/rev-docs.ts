@@ -1,14 +1,14 @@
 import * as SafePromise from 'bluebird'
+import { cli } from 'cli-ux'
 import * as fs from 'fs-extra'
 import * as glob from 'glob'
 import { singularize } from 'inflected'
-import { isArray } from 'lodash/lang'
-import * as ora from 'ora'
+import { isArray } from 'lodash'
 import { basename as getFileName } from 'path'
 import * as revFile from 'rev-file'
 
-function revProjVersionFiles(project, ver) {
-	let opProgress = ora(`Revving ${project}:${ver} files`).start()
+function revProjVersionFiles(project: string, ver: string) {
+	cli.action.start(`Revving ${project}:${ver} files`)
 	const projDocsDir = `tmp/json-docs/${project}`
 	const revIndexFolder = 'tmp/rev-index'
 
@@ -19,7 +19,7 @@ function revProjVersionFiles(project, ver) {
 		`${revIndexFolder}/${project}-${ver}.json`
 	)
 
-	opProgress.text = `Revving ${project}:${ver}`
+	cli.action.status = `Revving ${project}:${ver}`
 
 	const projVerRevFile = `${revIndexFolder}/${project}-${ver}.json`
 	let projVerRevContent = fs.readJsonSync(projVerRevFile)
@@ -27,12 +27,14 @@ function revProjVersionFiles(project, ver) {
 
 	Object.keys(projVerRevContent.data.relationships).forEach(k => {
 		if (isArray(projVerRevContent.data.relationships[k].data)) {
-			projVerRevContent.data.relationships[k].data.forEach(({ type, id }) => {
-				if (!projVerRevContent.meta[type]) {
-					projVerRevContent.meta[type] = {}
+			projVerRevContent.data.relationships[k].data.forEach(
+				({ type, id }: { type: string; id: string }) => {
+					if (!projVerRevContent.meta[type]) {
+						projVerRevContent.meta[type] = {}
+					}
+					projVerRevContent.meta[type][id] = ''
 				}
-				projVerRevContent.meta[type][id] = ''
-			})
+			)
 		} else if (k !== 'project') {
 			let d = projVerRevContent.data.relationships[k].data
 			if (!projVerRevContent.meta[d.type]) {
@@ -59,7 +61,7 @@ function revProjVersionFiles(project, ver) {
 		})
 
 	fs.writeJsonSync(projVerRevFile, projVerRevContent)
-	opProgress.succeed('Revving done!')
+	cli.action.stop('Revving done!')
 	SafePromise.resolve()
 }
 
