@@ -4,6 +4,7 @@ import execa from 'execa'
 import { copyFileSync, existsSync, mkdirpSync, removeSync } from 'fs-extra'
 import minimist from 'minimist'
 import path from 'path'
+import semverCompare from 'semver-compare'
 import 'hard-rejection/register'
 
 const argv = minimist(process.argv.slice(2))
@@ -59,7 +60,18 @@ const runCmd = async (cmd, path) => {
 
 		console.log('\n\n')
 
-		await runCmd(project === 'ember' ? 'yarn docs' : 'yarn build:production', projDirPath)
+		let command = ''
+		if (project === 'ember') {
+			command = 'yarn docs'
+		} else if (project === 'ember-data') {
+			if (semverCompare(version, '3.16.0') === -1) {
+				command = 'yarn build:production'
+			} else {
+				command = 'yarn workspace ember-data docs'
+			}
+		}
+
+		await runCmd(command, projDirPath)
 
 		const projYuiDocFile = `tmp/s3-docs/v${version}/${project}-docs.json`
 		removeSync(projYuiDocFile)
