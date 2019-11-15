@@ -59,7 +59,7 @@ const runCmd = async (cmd, path) => {
 
 		console.log('\n\n')
 
-		await runCmd(project === 'ember' ? 'yarn docs' : 'yarn build:production', projDirPath)
+		await runCmd(project === 'ember' ? 'yarn docs' : 'yarn workspace ember-data docs', projDirPath)
 
 		const projYuiDocFile = `tmp/s3-docs/v${version}/${project}-docs.json`
 		removeSync(projYuiDocFile)
