@@ -18,7 +18,8 @@ export async function apiDocsProcessor(
 	projects,
 	specificDocsVersion,
 	ignorePreviouslyIndexedDoc,
-	runClean
+	runClean,
+	noSync
 ) {
 	RSVP.on('error', reason => {
 		console.log(reason)
@@ -28,7 +29,7 @@ export async function apiDocsProcessor(
 	let docsVersionMsg = specificDocsVersion !== '' ? `. For version ${specificDocsVersion}` : ''
 	console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
 
-	if (!ignorePreviouslyIndexedDoc) {
+	if (!noSync) {
 		await downloadExistingDocsToLocal()
 		let filesToProcess = await fetchYuiDocs(projects, specificDocsVersion, runClean)
 		await fs.mkdirp('tmp/s3-original-docs')

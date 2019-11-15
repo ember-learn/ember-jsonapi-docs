@@ -88,5 +88,6 @@ const runCmd = async (cmd, path) => {
 		'--version',
 		version,
 		'--ignorePreviouslyIndexedDoc',
+		'--no-sync'
 	]).stdout.pipe(process.stdout)
 })()
