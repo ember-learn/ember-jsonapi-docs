@@ -11,7 +11,7 @@ export const downloadEmberCanaryDoc = async (config: any): Promise<string> => {
 
 	let { body } = await promisify(request.get)({ url: `/canary.json`, baseUrl, gzip: true })
 
-	const { assetPath, version } = JSON.parse(body)
+	const { assetPath } = JSON.parse(body)
 
 	const tmpFolder = fs.mkdtempSync(path.join(os.tmpdir(), config.name))
 
@@ -21,7 +21,7 @@ export const downloadEmberCanaryDoc = async (config: any): Promise<string> => {
 	await download(`${baseUrl}${assetPath}`, downloadPath, { extract: true })
 
 	const docFolder = `${config.dataDir}/canary/ember`
-	const docFile = `${docFolder}/${version}.json`
+	const docFile = `${docFolder}/canary.json`
 
 	fs.moveSync(`${downloadPath}/package/docs/data.json`, docFile, { overwrite: true })
 
