@@ -1,4 +1,6 @@
 import { Command, flags } from '@oclif/command'
+import 'hard-rejection/register'
+import * as prettyTime from 'pretty-time'
 import { downloadEmberCanaryDoc } from '../lib/download-ember-canary-doc'
 import { downloadEmberDataCanaryDoc } from '../lib/download-ember-data-canary-doc'
 
@@ -7,14 +9,22 @@ export default class Canary extends Command {
 
 	static flags = {
 		help: flags.help({ char: 'h' }),
+		publish: flags.boolean(),
 	}
 
-	static args = [{ name: 'file' }]
-
 	async run() {
-		// const { args, flags } = this.parse(Canary)
+		const hrstart = process.hrtime()
+
+		const { args, flags } = this.parse(Canary)
 		const emberDataCanaryDoc = await downloadEmberDataCanaryDoc(this.config)
-		console.log(emberDataCanaryDoc)
-		// const emberCanaryDoc = await downloadEmberCanaryDoc(this.config)		// console.log(emberCanaryDoc)
+
+		const emberCanaryDoc = await downloadEmberCanaryDoc(this.config)
+
+		if (flags.publish) {
+			// await uploadDocsToS3()
+		}
+
+		let processExecTimeSummary = prettyTime(process.hrtime(hrstart))
+		console.info(`Done in ${processExecTimeSummary}`)
 	}
 }
