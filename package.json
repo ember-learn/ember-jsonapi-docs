@@ -49,6 +49,7 @@
 		"command-exists": "^1.2.8",
 		"compare-versions": "^3.5.1",
 		"compression": "^1.7.4",
+		"conf-cli": "^0.1.9",
 		"deepmerge": "^4.2.2",
 		"download": "^7.1.0",
 		"execa": "^3.3.0",
@@ -61,6 +62,7 @@
 		"inflected": "^2.0.4",
 		"lodash": "^4.17.15",
 		"mdast-util-to-hast": "^7.0.0",
+		"pretty-time": "^1.1.0",
 		"rehype-stringify": "^6.0.1",
 		"remark-parse": "^7.0.2",
 		"request": "^2.88.0",
@@ -98,7 +100,6 @@
 		"nyc": "^14",
 		"prettier": "1.19.1",
 		"pretty-quick": "^2.0.1",
-		"pretty-time": "^1.1.0",
 		"ts-node": "^8",
 		"tslint": "^5",
 		"tslint-config-prettier": "^1.18.0",
@@ -111,7 +112,8 @@
 		"commands": "./lib/commands",
 		"bin": "ember-docgen",
 		"plugins": [
-			"@oclif/plugin-help"
+			"@oclif/plugin-help",
+			"conf-cli"
 		]
 	}
 }

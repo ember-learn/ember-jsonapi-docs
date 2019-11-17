@@ -9,21 +9,20 @@ import { processProjectDoc } from '../lib/process-project-doc'
 import readDocs from '../lib/read-docs'
 import { uploadDocsToS3 } from '../lib/s3-sync'
 import saveDoc from '../lib/save-document'
+import DocProcessorCmd from '../lib/classes/doc-processor-cmd'
 
-export default class Canary extends Command {
-	static description = 'describe the command here'
+export default class Canary extends DocProcessorCmd {
+	static description = 'Generate canary docs for all versions of ember & ember-data'
 
-	static flags = {
-		help: flags.help({ char: 'h' }),
-		publish: flags.boolean(),
-	}
+	static flags = DocProcessorCmd.flags
+	static args = DocProcessorCmd.args
 
 	async run() {
 		const hrstart = process.hrtime()
 
 		const { flags } = this.parse(Canary)
 
-		const projectsToProcess = ['ember', 'ember-data']
+		const { projectsToProcess } = this
 
 		let supportedProjects = new Map()
 		supportedProjects.set('ember', await downloadEmberCanaryDoc(this.config))
