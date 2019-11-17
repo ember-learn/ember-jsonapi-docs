@@ -1,7 +1,6 @@
 import * as SafePromise from 'bluebird'
 import * as fs from 'fs-extra'
 import { pluralize } from 'inflected'
-import * as mkdirp from 'mkdirp'
 import * as path from 'path'
 
 // updateOrCreate
@@ -23,7 +22,7 @@ export default function saveDoc(document, projectName, version = '') {
 			return resolve()
 		}
 
-		mkdirp.sync(path.dirname(documentPath))
+		fs.mkdirpSync(path.dirname(documentPath))
 		// console.log(`Saving ${documentPath}`) // good for debuggin
 
 		return fs.writeFile(documentPath, json, err => {
