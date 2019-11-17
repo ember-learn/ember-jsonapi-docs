@@ -20,7 +20,7 @@ export default class FullRun extends Command {
 	}
 
 	async run() {
-		const hrstart = process.hrtime()
+		const hrStartTime = process.hrtime()
 		const { flags } = this.parse(FullRun)
 
 		const getProjectFiles = (projectName: string) =>
@@ -40,7 +40,7 @@ export default class FullRun extends Command {
 			await uploadDocsToS3()
 		}
 
-		let processExecTimeSummary = prettyTime(process.hrtime(hrstart))
-		console.info(`Done in ${processExecTimeSummary}`)
+		let processExecTimeSummary = prettyTime(process.hrtime(hrStartTime))
+		this.log(`Done in ${processExecTimeSummary}`)
 	}
 }
