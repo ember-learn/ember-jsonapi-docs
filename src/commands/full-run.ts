@@ -18,12 +18,9 @@ export default class FullRun extends Command {
 		publish: flags.boolean(),
 	}
 
-	static args = [{ name: 'file' }]
-
 	async run() {
-		const { flags } = this.parse(FullRun)
-
 		const hrstart = process.hrtime()
+		const { flags } = this.parse(FullRun)
 
 		let docs: any = await readDocs(supportedProjects)
 
