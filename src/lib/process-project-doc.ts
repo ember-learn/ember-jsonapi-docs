@@ -1,6 +1,7 @@
 import * as fs from 'fs-extra'
 import * as rmfr from 'rmfr'
 import addInheritedItems from './add-inherited-items'
+import { AppStore } from './classes/app-store'
 import createClassesOnDisk from './create-classes'
 import getVersionIndex from './get-version-index'
 import markup from './markup'
@@ -13,7 +14,9 @@ export async function processProjectDoc(projectName: string, doc: any) {
 	let docVersion = doc.version
 	console.log(`Starting to process ${projectName}-${docVersion}`)
 
-	const existingFolder = `tmp/json-docs/${projectName}/${docVersion}`
+	const dataDir = AppStore.config.get('dataDir')
+
+	const existingFolder = `${dataDir}/json-docs/${projectName}/${docVersion}`
 
 	if (await fs.pathExists(existingFolder)) {
 		await rmfr(existingFolder)

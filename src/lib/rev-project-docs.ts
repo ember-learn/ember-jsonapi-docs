@@ -1,12 +1,17 @@
 import * as SafePromise from 'bluebird'
 import * as compareVersions from 'compare-versions'
 import * as fs from 'fs-extra'
+import { AppStore } from './classes/app-store'
 
 export async function revProjectDocs(projects) {
-	return SafePromise.map(projects, async project => {
-		const projRevFile = `tmp/rev-index/${project}.json`
+	const dataDir = AppStore.config.get('dataDir')
 
-		let projRevFileContent = await fs.readJson(`tmp/json-docs/${project}/projects/${project}.json`)
+	return SafePromise.map(projects, async project => {
+		const projRevFile = `${dataDir}/rev-index/${project}.json`
+
+		let projRevFileContent = await fs.readJson(
+			`${dataDir}/json-docs/${project}/projects/${project}.json`
+		)
 
 		projRevFileContent.meta = {
 			availableVersions: [],

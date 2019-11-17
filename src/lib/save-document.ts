@@ -2,11 +2,14 @@ import * as SafePromise from 'bluebird'
 import * as fs from 'fs-extra'
 import { pluralize } from 'inflected'
 import * as path from 'path'
+import { AppStore } from './classes/app-store'
 
 // updateOrCreate
-export default function saveDoc(document, projectName, version = '') {
+export default function saveDoc(document: any, projectName: string, version = '') {
+	const dataDir = AppStore.config.get('dataDir') as string
+
 	let documentPath = path.join(
-		'tmp',
+		dataDir,
 		'json-docs',
 		projectName,
 		version,

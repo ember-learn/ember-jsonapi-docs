@@ -1,5 +1,6 @@
 import * as commandExists from 'command-exists'
 import * as execa from 'execa'
+import { AppStore } from './classes/app-store'
 
 const apiDocsBucketUrl = 's3://api-docs.emberjs.com'
 
@@ -60,19 +61,20 @@ export async function backupExistingFolders() {
 
 export async function uploadDocsToS3() {
 	await checkExecutableValidity()
+	const dataDir = AppStore.config.get('dataDir')
 
 	console.log('\n\n\n')
 	console.log('Uploading docs to s3, this should take a bit!')
 
 	// We want sequential uploads here
 	await executeS3Sync({
-		from: 'tmp/json-docs',
+		from: `${dataDir}/json-docs`,
 		to: `${apiDocsBucketUrl}/json-docs`,
 		options: ['--cache-control', 'max-age=365000000, immutable'],
 	})
 
 	return executeS3Sync({
-		from: 'tmp/rev-index',
+		from: `${dataDir}/rev-index`,
 		to: `${apiDocsBucketUrl}/rev-index`,
 	})
 }

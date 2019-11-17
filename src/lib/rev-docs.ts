@@ -6,11 +6,14 @@ import { singularize } from 'inflected'
 import { isArray } from 'lodash'
 import { basename as getFileName } from 'path'
 import * as revFile from 'rev-file'
+import { AppStore } from './classes/app-store'
 
 function revProjVersionFiles(project: string, ver: string) {
+	const dataDir = AppStore.config.get('dataDir')
+
 	cli.action.start(`Revving ${project}:${ver} files`)
-	const projDocsDir = `tmp/json-docs/${project}`
-	const revIndexFolder = 'tmp/rev-index'
+	const projDocsDir = `${dataDir}/json-docs/${project}`
+	const revIndexFolder = `${dataDir}/rev-index`
 
 	fs.mkdirpSync(revIndexFolder)
 
