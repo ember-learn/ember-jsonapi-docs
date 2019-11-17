@@ -10,7 +10,8 @@ import { revProjectDocs } from '../lib/rev-project-docs'
 import { uploadDocsToS3 } from '../lib/s3-sync'
 import saveDoc from '../lib/save-document'
 
-const supportedProjects = ['ember', 'ember-data', 'ember-cli']
+// const supportedProjects = ['ember', 'ember-data', 'ember-cli']
+const supportedProjects = ['ember', 'ember-data']
 
 export default class FullRun extends Command {
 	static description = 'Generates API docs for all versions of ember & ember-data'
