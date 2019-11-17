@@ -26,14 +26,16 @@ export async function apiDocsProcessor(
 		process.exit(1)
 	})
 
-	let docsVersionMsg = specificDocsVersion !== '' ? `. For version ${specificDocsVersion}` : ''
-	console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
-
 	if (!noSync) {
+		let docsVersionMsg = specificDocsVersion !== '' ? `. For version ${specificDocsVersion}` : ''
+		console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
+
 		await downloadExistingDocsToLocal()
 		let filesToProcess = await fetchYuiDocs(projects, specificDocsVersion, runClean)
 		await fs.mkdirp('tmp/s3-original-docs')
 		await RSVP.Promise.all(filesToProcess.map(fixBorkedYuidocFiles))
+	} else {
+		console.log('Skipping downloading docs')
 	}
 
 	await readDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
