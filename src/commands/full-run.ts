@@ -1,6 +1,6 @@
 import { Command, flags } from '@oclif/command'
 import * as SafePromise from 'bluebird'
-import * as deepmerge from 'deepmerge'
+import * as deepMerge from 'deepmerge'
 import * as glob from 'glob'
 import 'hard-rejection/register'
 import * as prettyTime from 'pretty-time'
@@ -31,7 +31,7 @@ export default class FullRun extends Command {
 		await SafePromise.mapSeries(supportedProjects, projectName =>
 			SafePromise.map(docs[projectName], doc => processProjectDoc(projectName, doc), {
 				concurrency: 10,
-			}).then(docs => saveDoc(deepmerge.all(docs), projectName))
+			}).then(docs => saveDoc(deepMerge.all(docs), projectName))
 		)
 
 		await revProjectDocs(supportedProjects)
