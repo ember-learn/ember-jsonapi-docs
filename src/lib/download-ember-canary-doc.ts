@@ -6,7 +6,7 @@ import * as request from 'request'
 import * as rmfr from 'rmfr'
 import { promisify } from 'util'
 
-export const downloadEmberCanaryDocs = async (config: any): Promise<string> => {
+export const downloadEmberCanaryDoc = async (config: any): Promise<string> => {
 	let baseUrl = 'https://s3.amazonaws.com/builds.emberjs.com'
 
 	let { body } = await promisify(request.get)({ url: `/canary.json`, baseUrl, gzip: true })

@@ -1,5 +1,5 @@
 import { Command, flags } from '@oclif/command'
-import { downloadEmberCanaryDocs } from '../lib/download-ember-canary-docs'
+import { downloadEmberCanaryDoc } from '../lib/download-ember-canary-doc'
 
 export default class Canary extends Command {
 	static description = 'describe the command here'
@@ -12,7 +12,7 @@ export default class Canary extends Command {
 
 	async run() {
 		// const { args, flags } = this.parse(Canary)
-		const emberCanaryDoc = await downloadEmberCanaryDocs(this.config)
+		const emberCanaryDoc = await downloadEmberCanaryDoc(this.config.dataDir)
 		console.log(emberCanaryDoc)
 	}
 }
