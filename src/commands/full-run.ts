@@ -1,6 +1,7 @@
 import { Command, flags } from '@oclif/command'
 import * as SafePromise from 'bluebird'
 import * as deepmerge from 'deepmerge'
+import * as glob from 'glob'
 import 'hard-rejection/register'
 import * as prettyTime from 'pretty-time'
 import { processProjectDoc } from '../lib/process-project-doc'
@@ -22,7 +23,10 @@ export default class FullRun extends Command {
 		const hrstart = process.hrtime()
 		const { flags } = this.parse(FullRun)
 
-		let docs: any = await readDocs(supportedProjects)
+		const getProjectFiles = (projectName: string) =>
+			glob.sync(`node_modules/@ember-learn/released-js-docs/dist/${projectName}/*.json`)
+
+		let docs: any = await readDocs(supportedProjects, getProjectFiles)
 
 		await SafePromise.mapSeries(supportedProjects, projectName =>
 			SafePromise.map(docs[projectName], doc => processProjectDoc(projectName, doc), {
