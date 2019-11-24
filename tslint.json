@@ -1,6 +1,12 @@
 {
 	"extends": ["@oclif/tslint", "tslint-config-prettier"],
 	"rules": {
-		"no-console": false
+		"no-console": false,
+		"no-this-assignment": [
+			true,
+			{
+				"allow-destructuring": true
+			}
+		]
 	}
 }
