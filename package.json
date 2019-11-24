@@ -80,6 +80,7 @@
 		"@types/bluebird": "^3.5.29",
 		"@types/chai": "^4",
 		"@types/command-exists": "^1.2.0",
+		"@types/compression": "^1.0.1",
 		"@types/deepmerge": "^2.2.0",
 		"@types/fs-extra": "^8.0.1",
 		"@types/inflected": "^1.1.29",
