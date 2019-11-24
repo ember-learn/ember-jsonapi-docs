@@ -1,5 +1,6 @@
 import * as SafePromise from 'bluebird'
 import * as _ from 'lodash'
+
 import { byType } from './filter-jsonapi-doc'
 
 const missingDoc = ({ id, version }) => {

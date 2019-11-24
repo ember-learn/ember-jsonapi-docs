@@ -1,4 +1,5 @@
 import * as SafePromise from 'bluebird'
+
 import { transpileCodeBlock } from './transpile-code-blocks'
 
 export default async (doc: any) => {

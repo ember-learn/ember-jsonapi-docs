@@ -1,5 +1,6 @@
 import { Command, flags } from '@oclif/command'
 import 'hard-rejection/register'
+
 import { backupExistingFolders } from '../lib/s3-sync'
 
 export default class Backup extends Command {

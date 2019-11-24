@@ -1,6 +1,7 @@
 import * as SafePromise from 'bluebird'
 import * as compareVersions from 'compare-versions'
 import * as fs from 'fs-extra'
+
 import { AppStore } from './classes/app-store'
 
 export async function revProjectDocs(projects) {

@@ -1,5 +1,6 @@
 import * as commandExists from 'command-exists'
 import * as execa from 'execa'
+
 import { AppStore } from './classes/app-store'
 
 const apiDocsBucketUrl = 's3://api-docs.emberjs.com'

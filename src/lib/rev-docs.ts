@@ -6,6 +6,7 @@ import { singularize } from 'inflected'
 import { isArray } from 'lodash'
 import { basename as getFileName } from 'path'
 import * as revFile from 'rev-file'
+
 import { AppStore } from './classes/app-store'
 
 function revProjVersionFiles(project: string, ver: string) {
@@ -46,7 +47,7 @@ function revProjVersionFiles(project: string, ver: string) {
 			projVerRevContent.meta[d.type][d.id] = ''
 		}
 	})
-	projVerRevContent.meta['missing'] = {}
+	projVerRevContent.meta.missing = {}
 
 	const projVerDir = `${projDocsDir}/${ver}`
 	glob

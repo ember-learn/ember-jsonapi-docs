@@ -1,15 +1,15 @@
-import { Command, flags } from '@oclif/command'
 import * as SafePromise from 'bluebird'
 import * as deepMerge from 'deepmerge'
 import * as glob from 'glob'
 import 'hard-rejection/register'
 import * as prettyTime from 'pretty-time'
+
+import DocProcessorCmd from '../lib/classes/doc-processor-cmd'
 import { processProjectDoc } from '../lib/process-project-doc'
 import readDocs from '../lib/read-docs'
 import { revProjectDocs } from '../lib/rev-project-docs'
 import { uploadDocsToS3 } from '../lib/s3-sync'
 import saveDoc from '../lib/save-document'
-import DocProcessorCmd from '../lib/classes/doc-processor-cmd'
 
 export default class FullRun extends DocProcessorCmd {
 	static description = 'Generates API docs for all versions of ember & ember-data'
@@ -19,7 +19,7 @@ export default class FullRun extends DocProcessorCmd {
 
 	async run() {
 		const hrStartTime = process.hrtime()
-		const { flags, args } = this.parse(FullRun)
+		const { flags } = this.parse(FullRun)
 
 		const { projectsToProcess } = this
 

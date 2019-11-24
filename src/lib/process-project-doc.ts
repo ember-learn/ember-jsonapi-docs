@@ -1,5 +1,6 @@
 import * as fs from 'fs-extra'
 import * as rmfr from 'rmfr'
+
 import addInheritedItems from './add-inherited-items'
 import { AppStore } from './classes/app-store'
 import createClassesOnDisk from './create-classes'

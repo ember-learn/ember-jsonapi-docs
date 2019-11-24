@@ -1,15 +1,15 @@
-import { Command, flags } from '@oclif/command'
 import * as SafePromise from 'bluebird'
 import * as deepMerge from 'deepmerge'
 import 'hard-rejection/register'
 import * as prettyTime from 'pretty-time'
+
+import DocProcessorCmd from '../lib/classes/doc-processor-cmd'
 import { downloadEmberCanaryDoc } from '../lib/download-ember-canary-doc'
 import { downloadEmberDataCanaryDoc } from '../lib/download-ember-data-canary-doc'
 import { processProjectDoc } from '../lib/process-project-doc'
-import readDocs from '../lib/read-docs'
+import * as readDocs from '../lib/read-docs'
 import { uploadDocsToS3 } from '../lib/s3-sync'
 import saveDoc from '../lib/save-document'
-import DocProcessorCmd from '../lib/classes/doc-processor-cmd'
 
 export default class Canary extends DocProcessorCmd {
 	static description = 'Generate canary docs for all versions of ember & ember-data'

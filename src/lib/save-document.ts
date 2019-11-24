@@ -2,6 +2,7 @@ import * as SafePromise from 'bluebird'
 import * as fs from 'fs-extra'
 import { pluralize } from 'inflected'
 import * as path from 'path'
+
 import { AppStore } from './classes/app-store'
 
 // updateOrCreate
@@ -26,7 +27,7 @@ export default function saveDoc(document: any, projectName: string, version = ''
 		}
 
 		fs.mkdirpSync(path.dirname(documentPath))
-		// console.log(`Saving ${documentPath}`) // good for debuggin
+		// console.log(`Saving ${documentPath}`) // good for debugging
 
 		return fs.writeFile(documentPath, json, err => {
 			if (err) {

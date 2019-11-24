@@ -1,4 +1,5 @@
 import * as SafePromise from 'bluebird'
+
 import saveDoc from './save-document'
 
 export default (document, projectName, projectVersion) => {

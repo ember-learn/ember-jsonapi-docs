@@ -1,4 +1,5 @@
 import { Command, flags } from '@oclif/command'
+
 import { AppStore } from './app-store'
 
 export default abstract class DocProcessorCmd extends Command {
