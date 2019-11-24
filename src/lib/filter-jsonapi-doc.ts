@@ -1,21 +1,21 @@
 import * as _ from 'lodash'
 
-function byType(document, type) {
+function byType(document: any, type: string) {
 	return _.filter(totalData(document), ['type', type])
 }
 
-function totalData({ data, included }) {
+function totalData({ data, included }: any) {
 	return data.concat(included || [])
 }
 
-function hasBelongsTo(document, relationshipName, relationshipValue) {
+function hasBelongsTo(document: any, relationshipName: string, relationshipValue: any) {
 	return _.filter(totalData(document), [
 		`relationships.${relationshipName}.data.id`,
 		relationshipValue,
 	])
 }
 
-function classWithIncluded(document, klass) {
+function classWithIncluded(document: any, klass: any) {
 	let classDocument = _.filter(byType(document, 'class'), ['id', klass])[0]
 
 	let related = hasBelongsTo(document, 'class', klass)

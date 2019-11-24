@@ -6,7 +6,7 @@ export default function addInheritedItems(doc: any) {
 	let { data } = doc
 	let classes = _.values(data.classes).filter(klass => klass && klass.name)
 	classes = classes.filter(removeLongDocsBecauseEmber1HasWeirdDocs)
-	let classItems = data.classitems.filter(({ itemtype }) => itemtype)
+	let classItems = data.classitems.filter(({ itemtype }: any) => itemtype)
 
 	classes.forEach(klass => {
 		let parents = getParents(klass, classes)
@@ -17,8 +17,8 @@ export default function addInheritedItems(doc: any) {
 
 		parents.forEach(parent => {
 			if (!parent) return
-			let parentItems = classItems.filter(item => item.class === parent.name)
-			parentItems = parentItems.map(item => {
+			let parentItems = classItems.filter((item: any) => item.class === parent.name)
+			parentItems = parentItems.map((item: any) => {
 				item = _.clone(item)
 				item.inherited = true
 				item.inheritedFrom = item.class
@@ -33,8 +33,8 @@ export default function addInheritedItems(doc: any) {
 	return SafePromise.resolve(doc)
 }
 
-function getParents(klass, classes) {
-	let parents = []
+function getParents(klass: any, classes: any) {
+	let parents: any[] = []
 	if (klass.extends) {
 		parents = parents.concat([klass.extends])
 	}

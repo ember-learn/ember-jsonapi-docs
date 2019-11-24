@@ -1,15 +1,15 @@
 import * as SafePromise from 'bluebird'
 import * as _ from 'lodash'
 
-export default function addSinceTags(docSets) {
+export default function addSinceTags(docSets: any[]) {
 	let versionIndex = Object.create(null)
 
 	docSets.forEach(versionData => {
 		let data = versionData.data
 		let version = (versionData.version = versionData.version.replace('v', ''))
-		let classItems = data.classitems.filter(({ itemtype }) => itemtype)
+		let classItems = data.classitems.filter(({ itemtype }: any) => itemtype)
 
-		classItems.forEach(classItem => {
+		classItems.forEach((classItem: any) => {
 			let classItemName = `${classItem.class}#${classItem.name}`
 			classItem.version = version
 			createMethodEntry(versionIndex, classItemName, classItem.itemtype, version)
@@ -27,7 +27,7 @@ export default function addSinceTags(docSets) {
 
 	let classItems = classItemsWithItemType(docSets)
 
-	classItems.forEach(classItem => {
+	classItems.forEach((classItem: any) => {
 		let classItemName = `${classItem.class}#${classItem.name}`
 		let version = versionIndex[classItem.itemtype][classItemName][0]
 
@@ -42,12 +42,12 @@ export default function addSinceTags(docSets) {
 		.flatten()
 		.value()
 
-	classes.forEach(klass => (klass.since = versionIndex['class'][klass.name][0]))
+	classes.forEach(klass => (klass.since = versionIndex.class[klass.name][0]))
 
 	return SafePromise.resolve(docSets)
 }
 
-function sortVersionIndex(versionIndex) {
+function sortVersionIndex(versionIndex: any) {
 	let keys = Object.keys(versionIndex)
 
 	keys.forEach(key =>
@@ -55,14 +55,19 @@ function sortVersionIndex(versionIndex) {
 	)
 }
 
-const createMethodEntry = (versionIndex, method, itemType, version) => {
+const createMethodEntry = (
+	versionIndex: any,
+	method: string,
+	itemType: string,
+	version: string
+) => {
 	versionIndex[itemType] = versionIndex[itemType] || Object.create(null)
 	versionIndex[itemType][method] = versionIndex[itemType][method] || []
 	versionIndex[itemType][method].push(version)
 }
 
-const classItemsWithItemType = versions =>
+const classItemsWithItemType = (versions: string[]) =>
 	versions.reduce(
-		(memo, { data }) => memo.concat(data.classitems.filter(({ itemtype }) => itemtype)),
+		(memo, { data }: any) => memo.concat(data.classitems.filter(({ itemtype }: any) => itemtype)),
 		[]
 	)

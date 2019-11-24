@@ -62,7 +62,7 @@
 		"inflected": "^2.0.4",
 		"lodash": "^4.17.15",
 		"mdast-util-to-hast": "^7.0.0",
-		"pretty-time": "^1.1.0",
+		"pretty-hrtime": "^1.0.3",
 		"rehype-stringify": "^6.0.1",
 		"remark-parse": "^7.0.2",
 		"request": "^2.88.0",
@@ -71,8 +71,7 @@
 		"serve-handler": "^6.1.2",
 		"targz": "^1.0.1",
 		"tslib": "^1",
-		"unified": "^8.4.2",
-		"yuidoc-to-jsonapi": "^0.4.1"
+		"unified": "^8.4.2"
 	},
 	"devDependencies": {
 		"@oclif/dev-cli": "^1",
@@ -87,10 +86,11 @@
 		"@types/lodash": "^4.14.148",
 		"@types/mocha": "^5",
 		"@types/node": "^12",
-		"@types/pretty-time": "^1.1.0",
+		"@types/pretty-hrtime": "^1.0.0",
 		"@types/rmfr": "^2.0.0",
 		"@types/serve-handler": "^6.1.0",
 		"chai": "^4.2.0",
+		"conf": "^6.2.0",
 		"eslint": "6.6.0",
 		"eslint-plugin-node": "10.0.0",
 		"eslint-plugin-prettier": "3.1.1",
@@ -103,7 +103,8 @@
 		"ts-node": "^8",
 		"tslint": "^5",
 		"tslint-config-prettier": "^1.18.0",
-		"typescript": "^3.7"
+		"typescript": "^3.7",
+		"unist-util-visit": "^2.0.1"
 	},
 	"cacheDirectories": [
 		"tmp"

@@ -68,13 +68,15 @@ export async function transpileCodeBlock(text = '') {
 				defaultTheme: 'Monokai', // Required
 				// prefersDarkTheme: 'Monokai Dimmed', // Optional: used with `prefers-color-scheme: dark`
 				// prefersLightTheme: 'Quiet Light', // Optional: used with `prefers-color-scheme: light`
+				wrapperClassName: '',
 			},
 		}
 	)
 
-	visit(markdownAST, 'html', node => {
+	visit(markdownAST, 'html', (node: any) => {
 		if (node.meta && node.meta.includes(codeBlockStr)) {
 			try {
+				// tslint:disable-next-line:no-eval
 				let metaInfo = eval(`{() => (${node.meta}) }`)()
 				let dataInfo = ''
 				if (metaInfo && metaInfo.fileName) {

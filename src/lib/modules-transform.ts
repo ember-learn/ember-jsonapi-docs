@@ -1,11 +1,11 @@
 import * as SafePromise from 'bluebird'
 import * as _ from 'lodash'
 
-function addSubModulesParentAttribute(moduleObj) {
+function addSubModulesParentAttribute(moduleObj: any) {
 	moduleObj.parent = moduleObj.is_submodule ? moduleObj.module : null
 }
 
-function filterStaticAndDerived(classes, className) {
+function filterStaticAndDerived(classes: any, className: string) {
 	let included =
 		(_.has(classes, className) &&
 			!_.has(classes[className], 'static') &&
@@ -14,11 +14,11 @@ function filterStaticAndDerived(classes, className) {
 	return included
 }
 
-function addPrivatePublicClassesAttributes(module, classes) {
+function addPrivatePublicClassesAttributes(module: any, classes: any) {
 	let classNames = Object.keys(module.classes)
 	let applicableClassNames = _.filter(classNames, _.curry(filterStaticAndDerived)(classes))
 
-	let [privateclasses, publicclasses] = _.partition(applicableClassNames, className => {
+	let [privateclasses, publicclasses] = _.partition(applicableClassNames, (className: string) => {
 		return classes[className].access === 'private' || classes[className].deprecated === true
 	})
 	module.publicclasses = publicclasses
@@ -26,25 +26,25 @@ function addPrivatePublicClassesAttributes(module, classes) {
 	delete module.classes
 }
 
-function isPublicStaticMethod(item) {
+function isPublicStaticMethod(item: any) {
 	return item.itemtype === 'method' && item.access === 'public' && item.static === 1
 }
 
-function isStaticMethod(item) {
+function isStaticMethod(item: any) {
 	return item.itemtype === 'method' && item.static === 1
 }
 
-function separateByClassName(result, value) {
+function separateByClassName(result: any, value: any) {
 	;(result[value.class] || (result[value.class] = [])).push(value)
 	return result
 }
 
-function sortByName(items) {
+function sortByName(items: any[]) {
 	return _.sortBy(items, 'name')
 }
 
-function separateFunctions(moduleName, classitems, accessFilter) {
-	let matchesModule = ({ module }) => module === moduleName
+function separateFunctions(moduleName: string, classitems: any[], accessFilter: any) {
+	let matchesModule = ({ module }: any) => module === moduleName
 	return _.flow([
 		_.curryRight(_.filter)(matchesModule),
 		_.curryRight(_.filter)(accessFilter),
@@ -53,17 +53,17 @@ function separateFunctions(moduleName, classitems, accessFilter) {
 	])(classitems)
 }
 
-function cleanUpSubmodules({ submodules }) {
+function cleanUpSubmodules({ submodules }: any) {
 	return _.flow([
-		_.curryRight(_.filter)(item => item !== 'undefined'),
-		_.curryRight(_.reduce)((result, value) => {
+		_.curryRight(_.filter)((item: any) => item !== 'undefined'),
+		_.curryRight(_.reduce)((result: any, value: any) => {
 			result[value] = 1
 			return result
 		}, {}),
 	])(Object.keys(submodules))
 }
 
-export default function transformModules(doc) {
+export default function transformModules(doc: any) {
 	let { data } = doc
 
 	let modules = _.values(data.modules)
