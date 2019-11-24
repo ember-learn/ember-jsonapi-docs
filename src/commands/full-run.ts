@@ -2,7 +2,7 @@ import * as SafePromise from 'bluebird'
 import * as deepMerge from 'deepmerge'
 import * as glob from 'glob'
 import 'hard-rejection/register'
-import * as prettyTime from 'pretty-time'
+import * as prettyTime from 'pretty-hrtime'
 
 import DocProcessorCmd from '../lib/classes/doc-processor-cmd'
 import { processProjectDoc } from '../lib/process-project-doc'
