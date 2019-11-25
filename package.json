@@ -36,7 +36,7 @@
 	},
 	"husky": {
 		"hooks": {
-			"pre-commit": "pretty-quick --staged"
+			"pre-commit": "yarn posttest --fix && pretty-quick --staged"
 		}
 	},
 	"dependencies": {

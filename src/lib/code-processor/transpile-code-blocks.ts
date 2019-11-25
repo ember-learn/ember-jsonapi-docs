@@ -9,6 +9,7 @@ import * as unified from 'unified'
 import * as visit from 'unist-util-visit'
 
 import { AppStore } from '../classes/app-store'
+
 import { vscodePluginConfig } from './vscode-plugin-config'
 
 const processor = unified()
