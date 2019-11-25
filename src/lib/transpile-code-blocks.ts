@@ -1,11 +1,15 @@
 import * as fileExtension from 'file-extension'
+import * as fs from 'fs-extra'
 import * as createPlugin from 'gatsby-remark-vscode/src'
 import * as reparseHast from 'hast-util-raw'
 import * as mdastToHast from 'mdast-util-to-hast'
+import * as path from 'path'
 import * as stringify from 'rehype-stringify'
 import * as remark from 'remark-parse'
 import * as unified from 'unified'
 import * as visit from 'unist-util-visit'
+
+import { AppStore } from './classes/app-store'
 
 const processor = unified()
 	.use(remark)
@@ -15,13 +19,35 @@ const processor = unified()
 const markdownNode = { fileAbsolutePath: 'text.md' }
 const cache = new Map()
 
-/* let listOfExtensions = readJSONSync('node_modules/gatsby-remark-vscode/lib/grammars/manifest.json')
-
-listOfExtensions = uniq(
-	flatten(Object.values(listOfExtensions).map(({ languageNames }) => languageNames))
-) */
-
-// const listOfExtensions = ['js', 'hbs']
+const extensions: any[] = [
+	// {
+	// 	identifier: 'BeardedBear.beardedtheme',
+	// 	version: '1.6.2',
+	// },
+	// {
+	// 	identifier: 'emberjs.emberjs',
+	// 	version: '1.0.1',
+	// },
+	// {
+	// 	identifier: 'lifeart.vscode-glimmer-syntax',
+	// 	version: '0.0.18',
+	// },
+	// {
+	// 	identifier: 'lifeart.vscode-ember-unstable',
+	// 	version: '0.2.43',
+	// },
+]
+const extensionDataDirectory = path.join(__dirname, './code-processor/extensions/')
+const vscodePluginConfig = {
+	injectStyles: false,
+	extensions,
+	extensionDataDirectory,
+	colorTheme: {
+		defaultTheme: 'Solarized Dark', // Required
+		prefersDarkTheme: 'Solarized Dark', // Optional: used with `prefers-color-scheme: dark`
+		prefersLightTheme: 'Solarized Light', // Optional: used with `prefers-color-scheme: light`
+	},
+}
 
 const plugin = createPlugin()
 const codeBlockStr = 'wasCodeBlock: true'
@@ -37,7 +63,7 @@ export async function transpileCodeBlock(text = '') {
 	const markdownAST = processor.parse(Buffer.from(text))
 
 	visit(markdownAST, 'code', node => {
-		let originalContent = node.lang
+		let originalContent = node.lang as string
 
 		if (node.lang === 'javscript') {
 			node.lang = 'js'
@@ -59,19 +85,8 @@ export async function transpileCodeBlock(text = '') {
 		}
 	})
 
-	await plugin(
-		{ markdownAST, markdownNode, cache },
-		{
-			injectStyles: false,
-			extensions: [],
-			colorTheme: {
-				defaultTheme: 'Monokai', // Required
-				// prefersDarkTheme: 'Monokai Dimmed', // Optional: used with `prefers-color-scheme: dark`
-				// prefersLightTheme: 'Quiet Light', // Optional: used with `prefers-color-scheme: light`
-				wrapperClassName: '',
-			},
-		}
-	)
+	await plugin({ markdownAST, markdownNode, cache }, vscodePluginConfig)
+	const dataDir = AppStore.config.get('dataDir')
 
 	visit(markdownAST, 'html', (node: any) => {
 		if (node.meta && node.meta.includes(codeBlockStr)) {
@@ -80,18 +95,22 @@ export async function transpileCodeBlock(text = '') {
 				let metaInfo = eval(`{() => (${node.meta}) }`)()
 				let dataInfo = ''
 				if (metaInfo && metaInfo.fileName) {
-					dataInfo = `data-file-name="${metaInfo.fileName}" `
+					dataInfo += `data-file-name="${metaInfo.fileName}"`
 				}
-				dataInfo += ` data-language="${node.lang}"`
-				node.value = `<div class="vscode-highlight" ${dataInfo}>${node.value}</div>`
+
+				dataInfo += `data-language="${node.lang}"`
+
+				node.value = node.value.replace(/\<pre (.*?)\>/, function(str: string, attr: string) {
+					return str.replace(attr, `class="vscode-highlight" ${dataInfo}`)
+				})
 			} catch (err) {
 				console.log(err)
 			}
 		}
 
 		if (node.value.startsWith(styleTag)) {
-			// let styles = node.value.replace(styleTag, '').replace('</style>', '')
-			// fs.writeFileSync('styles.css', styles, 'utf-8')
+			let styles = node.value.replace(styleTag, '').replace('</style>', '')
+			fs.writeFileSync(`${dataDir}/styles.css`, styles, 'utf-8')
 			node.value = ''
 		}
 	})
