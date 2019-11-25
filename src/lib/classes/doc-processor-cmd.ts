@@ -1,7 +1,7 @@
 import { Command, flags } from '@oclif/command'
+import * as rmfr from 'rmfr'
 
 import { AppStore } from './app-store'
-import * as rmfr from 'rmfr'
 
 export default abstract class DocProcessorCmd extends Command {
 	static flags = {
