@@ -4,7 +4,7 @@ import * as glob from 'glob'
 import 'hard-rejection/register'
 import * as prettyTime from 'pretty-hrtime'
 
-import DocProcessorCmd from '../lib/classes/doc-processor-cmd'
+import { DocProcessorCmd } from '../lib/classes/doc-processor-cmd'
 import { processProjectDoc } from '../lib/process-project-doc'
 import readDocs from '../lib/read-docs'
 import { revProjectDocs } from '../lib/rev-project-docs'
@@ -13,9 +13,6 @@ import saveDoc from '../lib/save-document'
 
 export default class FullRun extends DocProcessorCmd {
 	static description = 'Generates API docs for all versions of ember & ember-data'
-
-	static flags = DocProcessorCmd.flags
-	static args = DocProcessorCmd.args
 
 	async run() {
 		const hrStartTime = process.hrtime()
@@ -37,7 +34,7 @@ export default class FullRun extends DocProcessorCmd {
 		await revProjectDocs(projectsToProcess)
 
 		if (flags.publish) {
-			await uploadDocsToS3()
+			await uploadDocsToS3(flags.s3Url)
 		}
 
 		let processExecTimeSummary = prettyTime(process.hrtime(hrStartTime))

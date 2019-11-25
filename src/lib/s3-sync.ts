@@ -3,8 +3,6 @@ import * as execa from 'execa'
 
 import { AppStore } from './classes/app-store'
 
-const apiDocsBucketUrl = 's3://api-docs.emberjs.com'
-
 const checkExecutableValidity = async () => {
 	if (!(await commandExists('aws'))) {
 		console.log(
@@ -45,7 +43,7 @@ const executeS3Sync = async ({ from, to, options = [] }: ExecuteS3SyncOptions, d
 	console.debug(stdout)
 }
 
-export async function backupExistingFolders() {
+export async function backupExistingFolders(apiDocsBucketUrl: string) {
 	await checkExecutableValidity()
 	const timestamp = new Date().toLocaleString().replace(/[/|:| |,]/g, '_')
 
@@ -60,7 +58,7 @@ export async function backupExistingFolders() {
 	})
 }
 
-export async function uploadDocsToS3() {
+export async function uploadDocsToS3(apiDocsBucketUrl: string) {
 	await checkExecutableValidity()
 	const dataDir = AppStore.config.get('dataDir')
 

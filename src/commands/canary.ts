@@ -3,7 +3,7 @@ import * as deepMerge from 'deepmerge'
 import 'hard-rejection/register'
 import * as prettyTime from 'pretty-hrtime'
 
-import DocProcessorCmd from '../lib/classes/doc-processor-cmd'
+import { DocProcessorCmd } from '../lib/classes/doc-processor-cmd'
 import { downloadEmberCanaryDoc } from '../lib/download-ember-canary-doc'
 import { downloadEmberDataCanaryDoc } from '../lib/download-ember-data-canary-doc'
 import { processProjectDoc } from '../lib/process-project-doc'
@@ -14,11 +14,8 @@ import saveDoc from '../lib/save-document'
 export default class Canary extends DocProcessorCmd {
 	static description = 'Generate canary docs for all versions of ember & ember-data'
 
-	static flags = DocProcessorCmd.flags
-	static args = DocProcessorCmd.args
-
 	async run() {
-		const hrstart = process.hrtime()
+		const hrStart = process.hrtime()
 
 		const { flags } = this.parse(Canary)
 
@@ -39,10 +36,10 @@ export default class Canary extends DocProcessorCmd {
 		)
 
 		if (flags.publish) {
-			await uploadDocsToS3()
+			await uploadDocsToS3(flags.s3Url)
 		}
 
-		let processExecTimeSummary = prettyTime(process.hrtime(hrstart))
+		let processExecTimeSummary = prettyTime(process.hrtime(hrStart))
 		console.info(`Done in ${processExecTimeSummary}`)
 	}
 }
