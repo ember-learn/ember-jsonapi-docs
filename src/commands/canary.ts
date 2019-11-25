@@ -14,6 +14,9 @@ import saveDoc from '../lib/save-document'
 export default class Canary extends DocProcessorCmd {
 	static description = 'Generate canary docs for all versions of ember & ember-data'
 
+	static flags = DocProcessorCmd.flags
+	static args = DocProcessorCmd.args
+
 	async run() {
 		const hrStart = process.hrtime()
 

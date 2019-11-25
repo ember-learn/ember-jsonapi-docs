@@ -14,6 +14,9 @@ import saveDoc from '../lib/save-document'
 export default class FullRun extends DocProcessorCmd {
 	static description = 'Generates API docs for all versions of ember & ember-data'
 
+	static flags = DocProcessorCmd.flags
+	static args = DocProcessorCmd.args
+
 	async run() {
 		const hrStartTime = process.hrtime()
 		const { flags } = this.parse(FullRun)
