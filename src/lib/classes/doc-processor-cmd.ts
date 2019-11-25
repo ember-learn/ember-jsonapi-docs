@@ -1,12 +1,15 @@
 import { Command, flags } from '@oclif/command'
 
 import { AppStore } from './app-store'
+import * as rmfr from 'rmfr'
 
 export default abstract class DocProcessorCmd extends Command {
 	static flags = {
 		help: flags.help({ char: 'h' }),
 
 		publish: flags.boolean(),
+
+		clear: flags.boolean(),
 	}
 
 	// const supportedProjects = ['ember', 'ember-data', 'ember-cli']
@@ -16,6 +19,13 @@ export default abstract class DocProcessorCmd extends Command {
 
 	async init() {
 		AppStore.init(this.config)
+		let {
+			flags: { clear },
+		} = this.parse(DocProcessorCmd)
+
+		if (clear) {
+			await rmfr(this.config.dataDir)
+		}
 	}
 
 	get projectsToProcess() {
