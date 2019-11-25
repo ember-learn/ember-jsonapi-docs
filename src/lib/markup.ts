@@ -1,6 +1,6 @@
 import * as SafePromise from 'bluebird'
 
-import { transpileCodeBlock } from './transpile-code-blocks'
+import { transpileCodeBlock } from './code-processor/transpile-code-blocks'
 
 export default async (doc: any) => {
 	await SafePromise.map(
