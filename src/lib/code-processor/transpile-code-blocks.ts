@@ -3,13 +3,13 @@ import * as fs from 'fs-extra'
 import * as createPlugin from 'gatsby-remark-vscode/src'
 import * as reparseHast from 'hast-util-raw'
 import * as mdastToHast from 'mdast-util-to-hast'
-import * as path from 'path'
 import * as stringify from 'rehype-stringify'
 import * as remark from 'remark-parse'
 import * as unified from 'unified'
 import * as visit from 'unist-util-visit'
 
 import { AppStore } from './classes/app-store'
+import { vscodePluginConfig } from './vscode-plugin-config'
 
 const processor = unified()
 	.use(remark)
@@ -19,43 +19,13 @@ const processor = unified()
 const markdownNode = { fileAbsolutePath: 'text.md' }
 const cache = new Map()
 
-const extensions: any[] = [
-	// {
-	// 	identifier: 'BeardedBear.beardedtheme',
-	// 	version: '1.6.2',
-	// },
-	// {
-	// 	identifier: 'emberjs.emberjs',
-	// 	version: '1.0.1',
-	// },
-	// {
-	// 	identifier: 'lifeart.vscode-glimmer-syntax',
-	// 	version: '0.0.18',
-	// },
-	// {
-	// 	identifier: 'lifeart.vscode-ember-unstable',
-	// 	version: '0.2.43',
-	// },
-]
-const extensionDataDirectory = path.join(__dirname, './code-processor/extensions/')
-const vscodePluginConfig = {
-	injectStyles: false,
-	extensions,
-	extensionDataDirectory,
-	colorTheme: {
-		defaultTheme: 'Solarized Dark', // Required
-		prefersDarkTheme: 'Solarized Dark', // Optional: used with `prefers-color-scheme: dark`
-		prefersLightTheme: 'Solarized Light', // Optional: used with `prefers-color-scheme: light`
-	},
-}
-
 const plugin = createPlugin()
 const codeBlockStr = 'wasCodeBlock: true'
 const styleTag = '<style class="vscode-highlight-styles">'
 
 const internalCache = new WeakMap()
 
-export async function transpileCodeBlock(text = '') {
+export async function transpileCodeBlock(text = '', pluginConfig = vscodePluginConfig) {
 	if (internalCache.get({ text })) {
 		return internalCache.get({ text })
 	}
@@ -85,7 +55,7 @@ export async function transpileCodeBlock(text = '') {
 		}
 	})
 
-	await plugin({ markdownAST, markdownNode, cache }, vscodePluginConfig)
+	await plugin({ markdownAST, markdownNode, cache }, pluginConfig)
 	const dataDir = AppStore.config.get('dataDir')
 
 	visit(markdownAST, 'html', (node: any) => {
