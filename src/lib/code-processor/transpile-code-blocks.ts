@@ -35,6 +35,7 @@ export async function transpileCodeBlock(text = '', pluginConfig = vscodePluginC
 	visit(markdownAST, 'code', node => {
 		let originalContent = node.lang as string
 
+		//NOTE: the typo in javscript is intentional
 		if (node.lang === 'javscript') {
 			node.lang = 'js'
 		}
