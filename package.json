@@ -41,12 +41,12 @@
 		}
 	},
 	"dependencies": {
-		"@ember-learn/released-js-docs": "2.0.0",
+		"@ember-learn/released-js-docs": "7.0.0",
 		"@oclif/command": "^1",
 		"@oclif/config": "^1",
 		"@oclif/plugin-help": "^2",
 		"bluebird": "^3.7.2",
-		"cli-ux": "^5.4.1",
+		"cli-ux": "^5.4.4",
 		"command-exists": "^1.2.8",
 		"compare-versions": "^3.5.1",
 		"compression": "^1.7.4",
@@ -80,16 +80,16 @@
 		"@types/bluebird": "^3.5.29",
 		"@types/chai": "^4",
 		"@types/command-exists": "^1.2.0",
-		"@types/compression": "^1.0.1",
+		"@types/compression": "^1.7.0",
 		"@types/deepmerge": "^2.2.0",
 		"@types/download": "^6.2.4",
-		"@types/eslint": "6.1.3",
+		"@types/eslint": "6.1.8",
 		"@types/eslint-plugin-prettier": "2.2.0",
 		"@types/fs-extra": "^8.0.1",
 		"@types/glob": "^7.1.1",
 		"@types/inflected": "^1.1.29",
 		"@types/lodash": "^4.14.149",
-		"@types/mocha": "^5",
+		"@types/mocha": "^7",
 		"@types/node": "^13",
 		"@types/prettier": "1.19.0",
 		"@types/pretty-hrtime": "^1.0.0",
@@ -101,14 +101,15 @@
 		"eslint": "6.8.0",
 		"eslint-plugin-node": "11.0.0",
 		"eslint-plugin-prettier": "3.1.2",
-		"globby": "^10",
-		"husky": "^3.1.0",
-		"mocha": "^6.2.2",
+		"globby": "^11",
+		"husky": "^4.2.1",
+		"mocha": "^7.0.1",
 		"nyc": "^15",
 		"prettier": "1.19.1",
+		"prettier-plugin-packagejson": "^2.0.10",
 		"pretty-quick": "^2.0.1",
 		"ts-node": "^8",
-		"tslint": "^5",
+		"tslint": "^6",
 		"tslint-config-prettier": "^1.18.0",
 		"typescript": "^3.7",
 		"unist-util-visit": "^2.0.1"
@@ -123,5 +124,9 @@
 			"@oclif/plugin-help",
 			"conf-cli"
 		]
+	},
+	"volta": {
+		"node": "12.15.0",
+		"yarn": "1.22.0"
 	}
 }
