@@ -1,3 +1,4 @@
+import { AppStore } from './../lib/classes/app-store'
 import * as SafePromise from 'bluebird'
 import * as deepMerge from 'deepmerge'
 import * as glob from 'glob'
@@ -35,6 +36,8 @@ export default class FullRun extends DocProcessorCmd {
 		)
 
 		await revProjectDocs(projectsToProcess)
+
+		this.log(`Published locally to ${AppStore.config.get('dataDir')}`)
 
 		if (flags.publish) {
 			await uploadDocsToS3(flags.s3Url)
