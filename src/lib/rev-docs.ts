@@ -27,27 +27,27 @@ function revProjVersionFiles(project: string, ver: string) {
 
 	const projVerRevFile = `${revIndexFolder}/${project}-${ver}.json`
 	let projVerRevContent = fs.readJsonSync(projVerRevFile)
-	projVerRevContent.meta = {}
+	projVerRevContent.data.attributes.revMap = {}
 
 	Object.keys(projVerRevContent.data.relationships).forEach(k => {
 		if (isArray(projVerRevContent.data.relationships[k].data)) {
 			projVerRevContent.data.relationships[k].data.forEach(
 				({ type, id }: { type: string; id: string }) => {
-					if (!projVerRevContent.meta[type]) {
-						projVerRevContent.meta[type] = {}
+					if (!projVerRevContent.data.attributes.revMap[type]) {
+						projVerRevContent.data.attributes.revMap[type] = {}
 					}
-					projVerRevContent.meta[type][id] = ''
+					projVerRevContent.data.attributes.revMap[type][id] = ''
 				}
 			)
 		} else if (k !== 'project') {
 			let d = projVerRevContent.data.relationships[k].data
-			if (!projVerRevContent.meta[d.type]) {
-				projVerRevContent.meta[d.type] = {}
+			if (!projVerRevContent.data.attributes.revMap[d.type]) {
+				projVerRevContent.data.attributes.revMap[d.type] = {}
 			}
-			projVerRevContent.meta[d.type][d.id] = ''
+			projVerRevContent.data.attributes.revMap[d.type][d.id] = ''
 		}
 	})
-	projVerRevContent.meta.missing = {}
+	projVerRevContent.data.attributes.revMap.missing = {}
 
 	const projVerDir = `${projDocsDir}/${ver}`
 	glob
@@ -59,7 +59,7 @@ function revProjVersionFiles(project: string, ver: string) {
 			let revFileName = revFile.sync(f)
 
 			fs.renameSync(f, revFileName)
-			projVerRevContent.meta[singularize(fileObjType)][entityName] = getFileName(
+			projVerRevContent.data.attributes.revMap[singularize(fileObjType)][entityName] = getFileName(
 				revFileName
 			).replace('.json', '')
 		})
