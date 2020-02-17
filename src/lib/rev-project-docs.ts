@@ -14,13 +14,15 @@ export async function revProjectDocs(projects) {
 			`${dataDir}/json-docs/${project}/projects/${project}.json`
 		)
 
-		projRevFileContent.data.attributes.availableVersions = []
+		projRevFileContent.data.attributes['available-versions'] = []
 
 		projRevFileContent.data.relationships['project-versions'].data.forEach(({ id }) =>
-			projRevFileContent.data.attributes.availableVersions.push(id.replace(`${project}-`, ''))
+			projRevFileContent.data.attributes['available-versions'].push(id.replace(`${project}-`, ''))
 		)
 
-		projRevFileContent.data.attributes.availableVersions = projRevFileContent.data.attributes.availableVersions
+		projRevFileContent.data.attributes['available-versions'] = projRevFileContent.data.attributes[
+			'available-versions'
+		]
 			.sort(compareVersions)
 			.reverse()
 
