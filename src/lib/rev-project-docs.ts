@@ -20,9 +20,9 @@ export async function revProjectDocs(projects) {
 			projRevFileContent.data.attributes.availableVersions.push(id.replace(`${project}-`, ''))
 		)
 
-		projRevFileContent.data.attributes.availableVersions = projRevFileContent.data.attributes.availableVersions.sort(
-			compareVersions
-		)
+		projRevFileContent.data.attributes.availableVersions = projRevFileContent.data.attributes.availableVersions
+			.sort(compareVersions)
+			.reverse()
 
 		return fs.writeJson(projRevFile, projRevFileContent)
 	})
