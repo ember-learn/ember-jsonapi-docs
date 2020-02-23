@@ -29,6 +29,8 @@ export default class Serve extends Command {
 			// More details here: https://github.com/zeit/serve-handler#options
 			await compressionHandler(request, response)
 
+			response.setHeader('Access-Control-Allow-Origin', '*')
+
 			return handler(request, response, { public: this.config.dataDir })
 		})
 
