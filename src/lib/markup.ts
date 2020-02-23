@@ -11,10 +11,10 @@ export default async (doc: any) => {
 
 			console.log(`Generating markup for ${id}`)
 
-			let description = attributes.description
+			let { description } = attributes
 
 			if (description) {
-				attributes.description = await highlight(description)
+				attributes.description = await transpileCodeBlock(description)
 			}
 
 			await replaceDescriptionFor(attributes.methods)
@@ -29,13 +29,9 @@ export default async (doc: any) => {
 
 async function replaceDescriptionFor(items = []) {
 	SafePromise.map(items, async (item: any) => {
-		let itemDescription = item.description
-		if (itemDescription) {
-			item.description = await highlight(itemDescription)
+		let { description } = item
+		if (description) {
+			item.description = await transpileCodeBlock(description)
 		}
 	})
-}
-
-async function highlight(description: string) {
-	return transpileCodeBlock(description)
 }

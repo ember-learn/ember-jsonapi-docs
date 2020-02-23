@@ -1,17 +1,21 @@
-import * as download from 'download'
+import download = require('download')
 import * as fs from 'fs-extra'
+import got from 'got'
 import * as os from 'os'
 import * as path from 'path'
-import * as request from 'request'
 import * as rmfr from 'rmfr'
+import * as stream from 'stream'
 import { promisify } from 'util'
+
+const pipeline = promisify(stream.pipeline)
 
 export const downloadEmberCanaryDoc = async (config: any): Promise<string> => {
 	let baseUrl = 'https://s3.amazonaws.com/builds.emberjs.com'
 
-	let { body } = await promisify(request.get)({ url: `/canary.json`, baseUrl, gzip: true })
-
-	const { assetPath } = JSON.parse(body)
+	let { assetPath } = await got(`${baseUrl}/canary.json`, {
+		resolveBodyOnly: true,
+		responseType: 'json',
+	})
 
 	const tmpFolder = fs.mkdtempSync(path.join(os.tmpdir(), config.name))
 
