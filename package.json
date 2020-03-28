@@ -12,12 +12,6 @@
 		"Todd Jordan",
 		"Ember.JS Learning team"
 	],
-	"files": [
-		"/bin",
-		"/lib",
-		"/npm-shrinkwrap.json",
-		"/oclif.manifest.json"
-	],
 	"main": "lib/index.js",
 	"types": "lib/index.d.ts",
 	"bin": {
@@ -26,6 +20,12 @@
 	"directories": {
 		"test": "test"
 	},
+	"files": [
+		"/bin",
+		"/lib",
+		"/npm-shrinkwrap.json",
+		"/oclif.manifest.json"
+	],
 	"scripts": {
 		"lint:fix": "tslint -p test -t stylish --fix",
 		"prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
@@ -41,7 +41,7 @@
 		}
 	},
 	"dependencies": {
-		"@ember-learn/released-js-docs": "17.0.0",
+		"@ember-learn/released-js-docs": "20.0.0",
 		"@oclif/command": "^1",
 		"@oclif/config": "^1",
 		"@oclif/plugin-help": "^2",
@@ -55,10 +55,10 @@
 		"download": "^7.1.0",
 		"execa": "^4.0.0",
 		"file-extension": "^4.0.5",
-		"fs-extra": "^8.1.0",
+		"fs-extra": "^9.0.0",
 		"gatsby-remark-vscode": "^1.4.0",
 		"glob": "^7.1.6",
-		"got": "^10.6.0",
+		"got": "^10.7.0",
 		"hard-rejection": "^2.1.0",
 		"hast-util-raw": "^5.0.2",
 		"inflected": "^2.0.4",
@@ -91,21 +91,21 @@
 		"@types/lodash": "^4.14.149",
 		"@types/mocha": "^7",
 		"@types/node": "^13",
-		"@types/prettier": "1.19.0",
+		"@types/prettier": "1.19.1",
 		"@types/pretty-hrtime": "^1.0.0",
 		"@types/rmfr": "^2.0.0",
 		"@types/serve-handler": "^6.1.0",
 		"chai": "^4.2.0",
 		"conf": "^6.2.1",
 		"eslint": "6.8.0",
-		"eslint-plugin-node": "11.0.0",
+		"eslint-plugin-node": "11.1.0",
 		"eslint-plugin-prettier": "3.1.2",
 		"globby": "^11",
 		"husky": "^4.2.3",
-		"mocha": "^7.1.0",
+		"mocha": "^7.1.1",
 		"nyc": "^15",
-		"prettier": "1.19.1",
-		"prettier-plugin-packagejson": "^2.0.10",
+		"prettier": "2.0.2",
+		"prettier-plugin-packagejson": "^2.1.2",
 		"pretty-quick": "^2.0.1",
 		"request": "^2.88.2",
 		"ts-node": "^8",
