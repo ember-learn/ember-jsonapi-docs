@@ -1,4 +1,3 @@
-import { AppStore } from './../lib/classes/app-store'
 import * as SafePromise from 'bluebird'
 import * as deepMerge from 'deepmerge'
 import * as glob from 'glob'
@@ -11,6 +10,8 @@ import readDocs from '../lib/read-docs'
 import { revProjectDocs } from '../lib/rev-project-docs'
 import { uploadDocsToS3 } from '../lib/s3-sync'
 import saveDoc from '../lib/save-document'
+
+import { AppStore } from './../lib/classes/app-store'
 
 export default class FullRun extends DocProcessorCmd {
 	static description = 'Generates API docs for all versions of ember & ember-data'

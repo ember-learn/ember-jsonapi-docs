@@ -3,7 +3,7 @@ import { assert } from 'chai'
 
 describe('update with versions and project', () => {
 	describe('`data` in jsonapi document is an object', () => {
-		beforeEach(function() {
+		beforeEach(function () {
 			this.document = {
 				data: {
 					id: 'Ember.CoreView',
@@ -44,7 +44,7 @@ describe('update with versions and project', () => {
 			this.converted = updateWithIDs(this.document, 'ember', '1.1.0')
 		})
 
-		it('adds the project name and version to the IDs', function() {
+		it('adds the project name and version to the IDs', function () {
 			assert.equal(this.converted.data.id, 'ember-1.1.0-Ember.CoreView')
 			assert.equal(this.converted.included[0].id, 'ember-1.1.0-ember')
 			assert.equal(
@@ -53,13 +53,13 @@ describe('update with versions and project', () => {
 			)
 		})
 
-		it('adds the id to relationships', function() {
+		it('adds the id to relationships', function () {
 			assert.equal(this.converted.data.relationships.module.data.id, 'ember-1.1.0-ember')
 		})
 	})
 
 	describe('when `data` is an array of objects in the jsonapi doc', () => {
-		beforeEach(function() {
+		beforeEach(function () {
 			this.document = {
 				data: [
 					{
@@ -102,7 +102,7 @@ describe('update with versions and project', () => {
 			this.converted = updateWithIDs(this.document, 'ember', '1.1.0')
 		})
 
-		it('adds the project name and version to the IDs', function() {
+		it('adds the project name and version to the IDs', function () {
 			assert.equal(this.converted.data[0].id, 'ember-1.1.0-Ember.CoreView')
 			assert.equal(this.converted.included[0].id, 'ember-1.1.0-ember')
 			assert.equal(
@@ -111,7 +111,7 @@ describe('update with versions and project', () => {
 			)
 		})
 
-		it('adds the id to relationships', function() {
+		it('adds the id to relationships', function () {
 			assert.equal(this.converted.data[0].relationships.module.data.id, 'ember-1.1.0-ember')
 		})
 	})

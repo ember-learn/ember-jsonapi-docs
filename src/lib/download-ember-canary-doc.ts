@@ -4,10 +4,6 @@ import got from 'got'
 import * as os from 'os'
 import * as path from 'path'
 import * as rmfr from 'rmfr'
-import * as stream from 'stream'
-import { promisify } from 'util'
-
-const pipeline = promisify(stream.pipeline)
 
 export const downloadEmberCanaryDoc = async (config: any): Promise<string> => {
 	let baseUrl = 'https://s3.amazonaws.com/builds.emberjs.com'

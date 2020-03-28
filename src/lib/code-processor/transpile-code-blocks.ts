@@ -72,7 +72,7 @@ export async function transpileCodeBlock(text = '', pluginConfig = vscodePluginC
 
 				dataInfo += `data-language="${node.lang}"`
 
-				node.value = node.value.replace(/\<pre (.*?)\>/, function(str: string, attr: string) {
+				node.value = node.value.replace(/\<pre (.*?)\>/, function (str: string, attr: string) {
 					return str.replace(attr, `class="vscode-highlight" ${dataInfo}`)
 				})
 			} catch (err) {
