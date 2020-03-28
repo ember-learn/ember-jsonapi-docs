@@ -11,7 +11,14 @@ export default async (doc: any) => {
 
 			console.log(`Generating markup for ${id}`)
 
-			let { description } = attributes
+			let { description, example } = attributes
+
+			if (example) {
+				let transpiledExamples = await Promise.all(
+					example.map((code: string) => transpileCodeBlock(code))
+				)
+				attributes.example = transpiledExamples
+			}
 
 			if (description) {
 				attributes.description = await transpileCodeBlock(description)
@@ -29,9 +36,16 @@ export default async (doc: any) => {
 
 async function replaceDescriptionFor(items = []) {
 	SafePromise.map(items, async (item: any) => {
-		let { description } = item
+		let { description, example } = item
 		if (description) {
 			item.description = await transpileCodeBlock(description)
+		}
+
+		if (example) {
+			let transpiledExamples = await Promise.all(
+				example.map((code: string) => transpileCodeBlock(code))
+			)
+			item.example = transpiledExamples
 		}
 	})
 }
