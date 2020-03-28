@@ -1,6 +1,6 @@
 {
 	"name": "ember-jsonapi-docs-generator",
-	"version": "3.0.1",
+	"version": "3.1.0",
 	"description": "Generates API docs for the official ember projects",
 	"homepage": "https://github.com/ember-learn/ember-jsonapi-docs",
 	"bugs": "https://github.com/ember-learn/ember-jsonapi-docs/issues",
