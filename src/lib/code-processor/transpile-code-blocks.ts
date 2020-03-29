@@ -58,7 +58,8 @@ export async function transpileCodeBlock(text = '', pluginConfig = vscodePluginC
 	})
 
 	await plugin({ markdownAST, markdownNode, cache }, pluginConfig)
-	const dataDir = AppStore.config.get('dataDir')
+
+	const dataDir = AppStore?.config?.get('dataDir') ?? process.cwd()
 
 	visit(markdownAST, 'html', (node: any) => {
 		if (node.meta && node.meta.includes(codeBlockStr)) {
@@ -66,15 +67,16 @@ export async function transpileCodeBlock(text = '', pluginConfig = vscodePluginC
 				// tslint:disable-next-line:no-eval
 				let metaInfo = eval(`{() => (${node.meta}) }`)()
 				let dataInfo = ''
+
 				if (metaInfo && metaInfo.fileName) {
-					dataInfo += `data-file-name="${metaInfo.fileName}"`
+					dataInfo = `data-file-name="${metaInfo.fileName}" `
 				}
 
-				dataInfo += `data-language="${node.lang}"`
+				dataInfo += `data-language="${node.lang}" `
 
-				node.value = node.value.replace(/\<pre (.*?)\>/, function (str: string, attr: string) {
-					return str.replace(attr, `class="vscode-highlight" ${dataInfo}`)
-				})
+				node.value = node.value.replace(/\<pre (.*?)\>/, (str: string, attr: string) =>
+					str.replace(attr, `${attr} ${dataInfo}`)
+				)
 			} catch (err) {
 				console.log(err)
 			}

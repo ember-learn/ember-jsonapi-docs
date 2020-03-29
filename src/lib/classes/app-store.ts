@@ -12,7 +12,7 @@ export class AppStore {
 	}
 
 	public static get config() {
-		return AppStore.instance.config
+		return AppStore?.instance?.config
 	}
 
 	private static instance: AppStore
