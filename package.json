@@ -41,7 +41,7 @@
 		}
 	},
 	"dependencies": {
-		"@ember-learn/released-js-docs": "20.0.0",
+		"@ember-learn/released-js-docs": "21.0.0",
 		"@oclif/command": "^1",
 		"@oclif/config": "^1",
 		"@oclif/plugin-help": "^2",

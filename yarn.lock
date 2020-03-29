@@ -130,10 +130,10 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
-"@ember-learn/released-js-docs@20.0.0":
-  version "20.0.0"
-  resolved "https://registry.yarnpkg.com/@ember-learn/released-js-docs/-/released-js-docs-20.0.0.tgz#723dcf727810a0fba2072d8c6fd6a90a9ef0cb7b"
-  integrity sha512-KZavaBaJD+i5dn//1ASbsPw+kgElOLcIxBU7daTrmZsVxoIDB3wvS4StLISg4up2aBRbuKjsBdXXOP/8W/wDVw==
+"@ember-learn/released-js-docs@21.0.0":
+  version "21.0.0"
+  resolved "https://registry.yarnpkg.com/@ember-learn/released-js-docs/-/released-js-docs-21.0.0.tgz#76a09a7916e5c3896d668891ea0d9f76cfd032ea"
+  integrity sha512-/Ram11D0tRbvmueGtxaRoCny3R677MsWcxOmoFuBLjd+QRWjKsGi0qbD0EgkJiw2lgF3NgQeOCyeXuukxnkQGA==
 
 "@fimbul/bifrost@^0.21.0":
   version "0.21.0"
