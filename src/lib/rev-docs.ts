@@ -27,27 +27,27 @@ function revProjVersionFiles(project: string, ver: string) {
 
 	const projVerRevFile = `${revIndexFolder}/${project}-${ver}.json`
 	let projVerRevContent = fs.readJsonSync(projVerRevFile)
-	projVerRevContent.data.attributes.revMap = {}
+	projVerRevContent.data.attributes['rev-map'] = {}
 
 	Object.keys(projVerRevContent.data.relationships).forEach(k => {
 		if (isArray(projVerRevContent.data.relationships[k].data)) {
 			projVerRevContent.data.relationships[k].data.forEach(
 				({ type, id }: { type: string; id: string }) => {
-					if (!projVerRevContent.data.attributes.revMap[type]) {
-						projVerRevContent.data.attributes.revMap[type] = {}
+					if (!projVerRevContent.data.attributes['rev-map'][type]) {
+						projVerRevContent.data.attributes['rev-map'][type] = {}
 					}
-					projVerRevContent.data.attributes.revMap[type][id] = ''
+					projVerRevContent.data.attributes['rev-map'][type][id] = ''
 				}
 			)
 		} else if (k !== 'project') {
 			let d = projVerRevContent.data.relationships[k].data
-			if (!projVerRevContent.data.attributes.revMap[d.type]) {
-				projVerRevContent.data.attributes.revMap[d.type] = {}
+			if (!projVerRevContent.data.attributes['rev-map'][d.type]) {
+				projVerRevContent.data.attributes['rev-map'][d.type] = {}
 			}
-			projVerRevContent.data.attributes.revMap[d.type][d.id] = ''
+			projVerRevContent.data.attributes['rev-map'][d.type][d.id] = ''
 		}
 	})
-	projVerRevContent.data.attributes.revMap.missing = {}
+	projVerRevContent.data.attributes['rev-map'].missing = {}
 
 	const projVerDir = `${projDocsDir}/${ver}`
 	glob
@@ -59,9 +59,9 @@ function revProjVersionFiles(project: string, ver: string) {
 			let revFileName = revFile.sync(f)
 
 			fs.renameSync(f, revFileName)
-			projVerRevContent.data.attributes.revMap[singularize(fileObjType)][entityName] = getFileName(
-				revFileName
-			).replace('.json', '')
+			projVerRevContent.data.attributes['rev-map'][singularize(fileObjType)][
+				entityName
+			] = getFileName(revFileName).replace('.json', '')
 		})
 
 	fs.writeJsonSync(projVerRevFile, projVerRevContent)
