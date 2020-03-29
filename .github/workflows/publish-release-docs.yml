@@ -2,30 +2,28 @@ name: Generate release docs
 
 on:
   push:
-    branches: [ master, next-gen ]
+    branches: [master, next-gen]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-      
-    - uses: volta-cli/action@v1
-    
-    - name: Set up build cache (yarn)
-      uses: actions/cache@preview
-      with:
-        path: ~/.cache/yarn
-        key: ${{ runner.os }}-yarn
+      - uses: actions/checkout@v2
 
-    - run: yarn
-    
-    - run: yarn test
-    
-    - run: yarn start full-run --publish
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      
+      - uses: volta-cli/action@v1
+
+      - name: Set up build cache (yarn)
+        uses: actions/cache@preview
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn
+
+      - run: yarn
+
+      - run: yarn test
+
+      - run: yarn start full-run --publish
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
