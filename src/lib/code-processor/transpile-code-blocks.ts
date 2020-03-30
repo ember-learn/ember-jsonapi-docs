@@ -91,14 +91,14 @@ export async function transpileCodeBlock(text = '', pluginConfig = vscodePluginC
 			} catch (err) {
 				console.log(err)
 			}
+		}
 
-			const dataDir = AppStore.config.get('dataDir')
+		const dataDir = AppStore.config.get('dataDir')
 
-			if (node.value.startsWith(styleTag)) {
-				let styles = node.value.replace(styleTag, '').replace('</style>', '\n\n /* ------- */')
-				fs.appendFileSync(`${dataDir}/styles.css`, styles, 'utf-8')
-				node.value = ''
-			}
+		if (node.value.startsWith(styleTag)) {
+			let styles = node.value.replace(styleTag, '').replace('</style>', '\n\n /* ------- */')
+			fs.appendFileSync(`${dataDir}/styles.css`, styles, 'utf-8')
+			node.value = ''
 		}
 	})
 
