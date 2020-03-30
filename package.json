@@ -56,7 +56,7 @@
 		"execa": "^4.0.0",
 		"file-extension": "^4.0.5",
 		"fs-extra": "^9.0.0",
-		"gatsby-remark-vscode": "^1.4.0",
+		"gatsby-remark-vscode": "^2.0.3",
 		"glob": "^7.1.6",
 		"got": "^10.7.0",
 		"hard-rejection": "^2.1.0",

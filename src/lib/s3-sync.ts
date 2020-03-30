@@ -65,12 +65,6 @@ export async function uploadDocsToS3(apiDocsBucketUrl: string) {
 	console.log('\n\n\n')
 	console.log('Uploading docs to s3, this should take a bit!')
 
-	// We want sequential uploads here
-	await executeS3Sync({
-		from: `${dataDir}/styles.css`,
-		to: `${apiDocsBucketUrl}/styles.css`,
-	})
-
 	await executeS3Sync({
 		from: `${dataDir}/json-docs`,
 		to: `${apiDocsBucketUrl}/json-docs`,

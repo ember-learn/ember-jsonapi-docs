@@ -1,5 +1,4 @@
 import * as fileExtension from 'file-extension'
-import * as fs from 'fs-extra'
 import * as createPlugin from 'gatsby-remark-vscode/src'
 import * as reparseHast from 'hast-util-raw'
 import * as mdastToHast from 'mdast-util-to-hast'
@@ -8,8 +7,6 @@ import * as remark from 'remark-parse'
 import * as unified from 'unified'
 import * as visit from 'unist-util-visit'
 
-import { AppStore } from '../classes/app-store'
-
 import { vscodePluginConfig } from './vscode-plugin-config'
 
 const processor = unified()
@@ -17,18 +14,29 @@ const processor = unified()
 	// @ts-ignore
 	.use(stringify, { sanitize: false })
 
-const markdownNode = { fileAbsolutePath: 'text.md' }
+const dummySha = () => Math.floor(Math.random() * Math.floor(100))
+
 const cache = new Map()
 
 const plugin = createPlugin()
 const codeBlockStr = 'wasCodeBlock: true'
-const styleTag = '<style class="vscode-highlight-styles">'
 
 const internalCache = new WeakMap()
+
+const createNodeId = (key: string) => key
+const noop = () => {}
+
+const actions = { createNode: noop, createParentChildLink: noop }
 
 export async function transpileCodeBlock(text = '', pluginConfig = vscodePluginConfig) {
 	if (internalCache.get({ text })) {
 		return internalCache.get({ text })
+	}
+
+	const markdownNode = {
+		fileAbsolutePath: 'text.md',
+		id: dummySha(),
+		internal: { contentDigest: dummySha() },
 	}
 
 	const markdownAST = processor.parse(Buffer.from(text))
@@ -57,9 +65,7 @@ export async function transpileCodeBlock(text = '', pluginConfig = vscodePluginC
 		}
 	})
 
-	await plugin({ markdownAST, markdownNode, cache }, pluginConfig)
-
-	const dataDir = AppStore?.config?.get('dataDir') ?? process.cwd()
+	await plugin({ markdownAST, markdownNode, cache, actions, createNodeId }, pluginConfig)
 
 	visit(markdownAST, 'html', (node: any) => {
 		if (node.meta && node.meta.includes(codeBlockStr)) {
@@ -80,12 +86,6 @@ export async function transpileCodeBlock(text = '', pluginConfig = vscodePluginC
 			} catch (err) {
 				console.log(err)
 			}
-		}
-
-		if (node.value.startsWith(styleTag)) {
-			let styles = node.value.replace(styleTag, '').replace('</style>', '')
-			fs.writeFileSync(`${dataDir}/styles.css`, styles, 'utf-8')
-			node.value = ''
 		}
 	})
 

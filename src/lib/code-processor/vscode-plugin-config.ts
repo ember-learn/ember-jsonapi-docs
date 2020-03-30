@@ -1,33 +1,36 @@
+import * as fs from 'fs-extra'
 import * as path from 'path'
 
-const extensions: any[] = [
-	// {
-	// 	identifier: 'BeardedBear.beardedtheme',
-	// 	version: '1.6.2',
-	// },
-	// {
-	// 	identifier: 'emberjs.emberjs',
-	// 	version: '1.0.1',
-	// },
-	// {
-	// 	identifier: 'lifeart.vscode-glimmer-syntax',
-	// 	version: '0.0.18',
-	// },
-	// {
-	// 	identifier: 'lifeart.vscode-ember-unstable',
-	// 	version: '0.2.43',
-	// },
-]
+//TODO: download extensions at the beginning of the build
+// sample url: https://marketplace.visualstudio.com/_apis/public/gallery/publishers/teabyii/vsextensions/ayu/0.18.0/vspackage
+const extensionsFolder = path.join(__dirname, 'extensions')
 
-const extensionDataDirectory = path.join(__dirname, './extensions/')
+const extensions: any[] = fs
+	.readdirSync(extensionsFolder)
+	.filter(fileName => !fileName.startsWith('.'))
+	.map(fileName => path.join(extensionsFolder, fileName))
 
 export const vscodePluginConfig = {
 	injectStyles: false,
+
+	theme: {
+		default: 'Ayu Mirage Bordered',
+		dark: 'Ayu Mirage Bordered',
+		light: 'Ayu Light Bordered',
+
+		parentSelector: {
+			// Any CSS selector will work!
+			'html[data-theme=dark]': 'Ayu Mirage Bordered',
+			'html[data-theme=light]': 'Ayu Light Bordered',
+			// 'html[data-theme=hc]': 'Ayu Mirage Bordered',
+		},
+	},
+
 	extensions,
-	extensionDataDirectory,
-	colorTheme: {
-		defaultTheme: 'Solarized Dark', // Required
-		prefersDarkTheme: 'Solarized Dark', // Optional: used with `prefers-color-scheme: dark`
-		prefersLightTheme: 'Solarized Light', // Optional: used with `prefers-color-scheme: light`
+
+	languageAliases: {
+		text: 'mdtxt',
+		cli: 'sh',
+		handelbars: 'handlebars',
 	},
 }

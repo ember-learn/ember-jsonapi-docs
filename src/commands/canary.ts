@@ -18,6 +18,8 @@ export default class Canary extends DocProcessorCmd {
 	static args = DocProcessorCmd.args
 
 	async run() {
+		console.warn('This still needs a way to generate css styles w/o clashing with the release docs')
+
 		const hrStart = process.hrtime()
 
 		const { flags } = this.parse(Canary)
