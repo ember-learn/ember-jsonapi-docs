@@ -65,7 +65,13 @@ export async function uploadDocsToS3(apiDocsBucketUrl: string) {
 	console.log('\n\n\n')
 	console.log('Uploading docs to s3, this should take a bit!')
 
-	await executeS3Sync({ from: `${dataDir}/styles.css`, to: `${apiDocsBucketUrl}/` })
+	const { stdout } = await execa('aws', [
+		's3',
+		'cp',
+		`${dataDir}/styles.css`,
+		`${apiDocsBucketUrl}/`,
+	])
+	console.debug(stdout)
 
 	await executeS3Sync({
 		from: `${dataDir}/json-docs`,
