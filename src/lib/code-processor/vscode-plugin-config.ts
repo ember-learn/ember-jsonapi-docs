@@ -15,13 +15,13 @@ export const vscodePluginConfig = {
 
 	theme: {
 		default: 'Ayu Mirage Bordered',
-		dark: 'Ayu Mirage Bordered',
-		light: 'Ayu Light Bordered',
+		// dark: 'Ayu Mirage Bordered',
+		// light: 'Ayu Light Bordered',
 
 		parentSelector: {
 			// Any CSS selector will work!
-			'html[data-theme=dark]': 'Ayu Mirage Bordered',
-			'html[data-theme=light]': 'Ayu Light Bordered',
+			// 'html[data-theme=dark]': 'Ayu Mirage Bordered',
+			// 'html[data-theme=light]': 'Ayu Light Bordered',
 			// 'html[data-theme=hc]': 'Ayu Mirage Bordered',
 		},
 	},

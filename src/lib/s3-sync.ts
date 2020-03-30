@@ -66,6 +66,11 @@ export async function uploadDocsToS3(apiDocsBucketUrl: string) {
 	console.log('Uploading docs to s3, this should take a bit!')
 
 	await executeS3Sync({
+		from: `${dataDir}/styles.css`,
+		to: `${apiDocsBucketUrl}/styles.css`,
+	})
+
+	await executeS3Sync({
 		from: `${dataDir}/json-docs`,
 		to: `${apiDocsBucketUrl}/json-docs`,
 		options: ['--cache-control', 'max-age=365000000, immutable'],

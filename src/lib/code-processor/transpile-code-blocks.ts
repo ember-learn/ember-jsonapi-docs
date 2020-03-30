@@ -1,4 +1,5 @@
 import * as fileExtension from 'file-extension'
+import * as fs from 'fs-extra'
 import * as createPlugin from 'gatsby-remark-vscode/src'
 import * as reparseHast from 'hast-util-raw'
 import * as mdastToHast from 'mdast-util-to-hast'
@@ -6,6 +7,8 @@ import * as stringify from 'rehype-stringify'
 import * as remark from 'remark-parse'
 import * as unified from 'unified'
 import * as visit from 'unist-util-visit'
+
+import { AppStore } from '../classes/app-store'
 
 import { vscodePluginConfig } from './vscode-plugin-config'
 
@@ -27,6 +30,8 @@ const createNodeId = (key: string) => key
 const noop = () => {}
 
 const actions = { createNode: noop, createParentChildLink: noop }
+
+const styleTag = '<style class="grvsc-styles">'
 
 export async function transpileCodeBlock(text = '', pluginConfig = vscodePluginConfig) {
 	if (internalCache.get({ text })) {
@@ -85,6 +90,14 @@ export async function transpileCodeBlock(text = '', pluginConfig = vscodePluginC
 				)
 			} catch (err) {
 				console.log(err)
+			}
+
+			const dataDir = AppStore.config.get('dataDir')
+
+			if (node.value.startsWith(styleTag)) {
+				let styles = node.value.replace(styleTag, '').replace('</style>', '\n\n /* ------- */')
+				fs.appendFileSync(`${dataDir}/styles.css`, styles, 'utf-8')
+				node.value = ''
 			}
 		}
 	})
