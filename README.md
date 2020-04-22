@@ -1,66 +1,144 @@
 # Ember JSON API Docs [![Build Status](https://travis-ci.org/ember-learn/ember-jsonapi-docs.svg?branch=master)](https://travis-ci.org/ember-learn/ember-jsonapi-docs)
 
-If you are looking for the app behind https://emberjs.com/api/, visit
-[ember-api-docs](https://github.com/ember-learn/ember-api-docs) instead. This ember-jsonapi-docs
-repository is internal tooling that is not required to run the ember-api-docs app locally.
+This is an internal tool for generating API docs for the Ember.js framework and exposing it through [JSON:API](http://jsonapi.org/) for various applications (e.g. https://api.emberjs.com/). The tool allows you to:
 
-`ember-jsonapi-docs` is for turning code comments in [ember.js](https://github.com/emberjs/ember.js) into
-[json api](http://jsonapi.org/) compliant data for use in various applications seeking to use the Ember API.
+- Generate API docs from [YUIDoc](http://yui.github.io/yuidoc/syntax/index.html) comments in the [emberjs/ember.js](https://github.com/emberjs/ember.js/) and [emberjs/data](https://github.com/emberjs/data) repositories in [YUIDoc](http://yui.github.io/yuidoc/) and [JSON:API](http://jsonapi.org/) formats.
+- Publish docs to an Amazon S3 bucket (`s3://api-docs.emberjs.com`).
+- Expose API docs in the JSON:API format through API.
 
-The script pulls yuidoc build output from all Ember versions from Amazon S3, converts it to json api format and creates an archive. It can also be run to build jsonapi docs from a local copy of ember.js.
+All the generated files are stored in the `tmp` folder under the project root:
 
-## Running the app
+```
+tmp
+├── json-docs   // JSON:API-comlaint docs generated locally from YUIDoc files in `s3-docs`.
+├── rev-index   // Rev index files used for generating JSON:API-comlaint docs.
+├── s3-docs     // YUIDoc docs generated locally or downloaded from s3://api-docs.emberjs.com.
+```
 
-1. Fork/Clone [ember-jsonapi-docs](https://github.com/ember-learn/ember-jsonapi-docs)
-1. Run `yarn`
-1. Install the [aws cli](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
-1. Set up AWS access
+> ℹ️ **NOTE:** If you are looking for the app behind https://api.emberjs.com/, visit [ember-api-docs](https://github.com/ember-learn/ember-api-docs) instead.
 
-   ```shell
-   export AWS_ACCESS_KEY_ID=xxxxxx
-   export AWS_SECRET_ACCESS_KEY=xxxxx
-   ```
+## Prerequisites
 
-   The app accesses builds.emberjs.com (an Amazon S3 bucket) in read-only mode, which is public. This requires any valid AWS credentials.
+1. Install the latest [Node.js](https://nodejs.org/) LTS.
+2. Install [AWS CLI version 2](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html).
+3. Create an account in [AWS Management Console](https://console.aws.amazon.com). [Create a New Access Key](https://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html) (access key ID and secret access key) in *My Security Credentials* under your profile name to be able to access public AWS S3 buckets.
 
-   You can get your credentials by logging into your [AWS console](https://console.aws.amazon.com) and navigating to "_My Security Credentials_" under your profile name. You can generate a new pair under the "_Access Keys (Access Key ID and Secret Access Key)_" section.
+## Quickstart
 
-1. To test your changes in the app run,
-   `yarn start`
-   The app tries to process all ember & ember-data versions since 1.0 which takes high memory & time to complete. If you intend it, then run `yarn start --max_old_space_size=8192`.
-   You are setting your node max heap space to 8GB, so make sure you have that much space available on your machine.
+### Generate Docs from Ember Source
 
-## To Generate docs for a specific project and/or version for development
+You can generate docs from your local copies of [emberjs/ember.js](https://github.com/emberjs/ember.js/) and [emberjs/data](https://github.com/emberjs/data) repositories and serve them locally as [JSON:API](http://jsonapi.org/).
 
-You can do this by passing `--project ember/ember-data --version 2.11.1` as an argument to the index script. e.g., `yarn start --project ember --version 2.11.0`.
-You need an additional flag `AWS_SHOULD_PUBLISH=true` for publishing the docs.
+```bash
+# Clone Ember.js and Ember Data repositories.
+git clone https://github.com/emberjs/ember.js/
+git clone https://github.com/emberjs/data
 
-## To override a specific version of a doc with a different yuidoc from your machine (For core contributors)
+# Clone the repository into the same root folder.
+git clone https://github.com/ember-learn/ember-jsonapi-docs
+cd ember-jsonapi-docs
 
-- Read this section first!
-  - We assume you have the keys to the kingdom before you start doing this (AWS keys to publish to api-docs.emberjs.com & all necessary env variables that need to be set) 😄
-  - In its present form this should be used only when there aren't new docs out there that are yet to be processed. As in if ember 3.3 is released but isn't indexed yet you should wait for this app to finish processing it via the cron job we have on heroku before you can proceed to modify any of the existing docs from your machine.
-- First run `yarn start` so that you have all the docs from s3 on your local. This is important so that we don't loose other versions of docs that are already out there when the index files are generated
-- Then go to `./tmp/s3-docs/<the_version_you_want_to_replace>` and override the file there with the yuidoc file that you want to be processed. Ensure that the file name is same as the one that's already there.
-- Then run `yarn start --project=ember-data --version=3.2.0 --ignorePreviouslyIndexedDoc`. Make sure you enter the entire version(including patch version).
-- To run against all versions of ember and ember-data regardless of indexed version, run `node --max_old_space_size=8192 index.js --clean`
+# Install the dependencies.
+yarn
 
-## Generating API Documentation and Testing API Docs Locally
+# Generate docs for a particular project/release.
+yarn gen --project ember --version 3.17.0
+yarn gen --project ember-data --version 3.17.0
 
-These steps are only necessary if you are trying to run the ember-api-docs
-app with documentation pulled from a local copy of ember.js.
+# Run API locally.
+yarn serve
+```
 
-1. Clone the following 4 repositories into a single parent directory. Install dependencies for each app as described in their respective `README` files.
-   - [ember.js](https://github.com/emberjs/ember.js)
-   - [data (ember data)](https://github.com/emberjs/data)
-   - [ember-jsonapi-docs](https://github.com/ember-learn/ember-jsonapi-docs)
-   - [ember-api-docs](https://github.com/ember-learn/ember-api-docs)
-1. Set up the project according to the instructions above in `Running the app`.
-1. From the `ember-jsonapi-docs` directory, run `yarn gen --project ember --version 2.18.0`. This command runs the Ember documentation build, generates jsonapi output, copies it to the `ember-api-docs` directory & runs this app. To build ember data documentation, run `yarn gen --project ember-data --version 2.18.0`.
-   - If you are debugging failed builds, periodically clear out the contents of the `tmp` directory, and run the script again. Past failed runs can cause subsequent runs to fail in unexpected ways.
-1. Run `yarn server` in this app to serve the content locally.
-1. Run the API app with the newly generated local data by running `yarn server` in this app & then run `yarn start:local` in the `ember-api-docs` directory.
+> ✅ **TIP:** If you are debugging failed builds, periodically clear out the contents of the `tmp` directory, and run the script again. Past failed runs can cause subsequent runs to fail in unexpected ways.
 
-## Backing up docs before running major migrations
+### Generate Docs from YUIDoc Files Stored in AWS
 
-If you plan to run a major migration run `yarn backup` so that all the content are safely backed up to a timestamped s3 folder.
+All [Ember.js](https://github.com/emberjs/ember.js/) and [Ember.js Data](https://github.com/emberjs/data) releases have already generated docs in a public Amazon S3 bucket (`s3://api-docs.emberjs.com`). You can download them and serve locally as [JSON:API](http://jsonapi.org/).
+
+> ⚠️ **WARNING:** The app tries to process all Ember.js and Ember Data versions since 1.0 which takes high memory & time to complete.
+
+```bash
+# Clone the repository.
+git clone https://github.com/ember-learn/ember-jsonapi-docs
+cd ember-jsonapi-docs
+
+# Install the dependencies.
+yarn
+
+# Set environment variables to get access to s3://api-docs.emberjs.com.
+# Use Access Keys generated in step 3 in "Prerequisites".
+export AWS_ACCESS_KEY_ID=xxxxxx
+export AWS_SECRET_ACCESS_KEY=xxxxx
+
+# Download YUIDoc docs and index files for all projects/releases from s3://api-docs.emberjs.com.
+# Then, generate JSON:API-comlaint docs from the downloaded files.
+yarn start --sync --max_old_space_size=8192
+
+# At this point, you can also generate JSON:API-comlaint docs only for 
+# a particular project/release.
+yarn start --project ember --version 3.17.0
+yarn start --project ember-data --version 3.17.0
+
+# Run API locally.
+yarn serve
+```
+
+## Overriding a specific version of YUIDoc file with a local copy (for core contributors).
+
+To proceed, you need AWS Access Keys to publish to [api-docs.emberjs.com](http://api-docs.emberjs.com/) and all necessary environemnt variables set.
+
+> ⚠️ **WARNING:** In its present form this should be used only when there aren't new docs out there that are yet to be processed. For example, if Ember 3.17 is released but isn't indexed yet you should wait for this app to finish processing it via the cron job on Heroku before you can proceed to modify any of the existing docs from your machine.
+
+```bash
+# Set environment variables.
+export AWS_ACCESS_KEY_ID=xxxxxx
+export AWS_SECRET_ACCESS_KEY=xxxxx
+
+# Download YUIDoc docs and index files for all releases from s3://api-docs.emberjs.com.
+# This is important so that we don't loose other versions of docs that 
+# are already out there when the index files are generated.
+yarn start --sync --max_old_space_size=8192
+
+# Go to the folder and and replace a YUIDoc file that you want to be processed.
+# Ensure that the file name is same as the one that's already there.
+cd tmp/s3-docs/<VERSION_TO_REPLACE>
+
+# Set an environment variable to enable publishing to s3://api-docs.emberjs.com.
+export AWS_SHOULD_PUBLISH=yes
+
+# Regenerate JSON:API-comlaint docs only for a particular project/release and 
+# publish them to s3://api-docs.emberjs.com...
+yarn start --project ember --version <VERSION_TO_REPLACE> --ignorePreviouslyIndexedDoc
+yarn start --project ember-data --version <VERSION_TO_REPLACE> --ignorePreviouslyIndexedDoc
+
+# OR
+# Regenerate JSON:API-comlaint docs for ALL projects/releases regardless of indexed version and 
+# publish them to s3://api-docs.emberjs.com.
+yarn start --clean --max_old_space_size=8192
+```
+
+## Backing Up Docs
+
+If you plan to run a major migration, back up all the content to a timestamped folder in the Amazon S3 bucket.
+
+```bash
+yarn backup
+```
+
+## FAQ
+
+### Can I use API from the [ember-api-docs](https://github.com/ember-learn/ember-api-docs) app?
+
+Yes, follow one of the quickstarts and then run the `ember-api-docs` application using the following commands.
+
+```bash
+# Clone the repository with the "ember-api-docs" app.
+git clone https://github.com/ember-learn/ember-api-docs
+cd ember-api-docs
+
+# Install the dependencies.
+yarn
+
+# Run the application side by side with a locally running API.
+yarn start:local
+```
