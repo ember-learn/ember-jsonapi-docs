@@ -1,6 +1,6 @@
 # Ember JSON API Docs [![Build Status](https://travis-ci.org/ember-learn/ember-jsonapi-docs.svg?branch=master)](https://travis-ci.org/ember-learn/ember-jsonapi-docs)
 
-An internal tool for generating API docs for the Ember.js framework and exposing it through [JSON:API](http://jsonapi.org/) for various applications (e.g. https://api.emberjs.com/). The tool allows to:
+This is an internal tool for generating API docs for the Ember.js framework and exposing it through [JSON:API](http://jsonapi.org/) for various applications (e.g. https://api.emberjs.com/). The tool allows you to:
 
 - Generate API docs from [YUIDoc](http://yui.github.io/yuidoc/syntax/index.html) comments in the [emberjs/ember.js](https://github.com/emberjs/ember.js/) and [emberjs/data](https://github.com/emberjs/data) repositories in [YUIDoc](http://yui.github.io/yuidoc/) and [JSON:API](http://jsonapi.org/) formats.
 - Publish docs to an Amazon S3 bucket (`s3://api-docs.emberjs.com`).
