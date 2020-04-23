@@ -30,24 +30,27 @@ tmp
 You can generate docs from your local copies of [emberjs/ember.js](https://github.com/emberjs/ember.js/) and [emberjs/data](https://github.com/emberjs/data) repositories and serve them locally as [JSON:API](http://jsonapi.org/).
 
 ```bash
-# Clone Ember.js and Ember Data repositories.
+# Clone Ember.js and Ember Data repositories into the same root folder.
 git clone https://github.com/emberjs/ember.js/
 git clone https://github.com/emberjs/data
 
-# Clone the repository into the same root folder.
+# Clone this repository into the same root folder.
 git clone https://github.com/ember-learn/ember-jsonapi-docs
 cd ember-jsonapi-docs
 
 # Install the dependencies.
 yarn
 
-# Generate docs for a particular project/release.
+# Generate docs for a particular project from its local repository.
+# Version should match the one in `package.json` of a target project.
 yarn gen --project ember --version 3.17.0
 yarn gen --project ember-data --version 3.17.0
 
 # Run API locally.
 yarn serve
 ```
+
+> ℹ️ **NOTE:** `--version` should match the one in the `package.json` of a target Ember project. If `package.json` uses a release name (e.g. `beta` or `canary`), omit it and use only numbers. For example, if the `package.json` says `3.19.0-beta.2`, use `3.19.0`.
 
 > ✅ **TIP:** If you are debugging failed builds, periodically clear out the contents of the `tmp` directory, and run the script again. Past failed runs can cause subsequent runs to fail in unexpected ways.
 
@@ -82,6 +85,8 @@ yarn start --project ember-data --version 3.17.0
 # Run API locally.
 yarn serve
 ```
+
+> ℹ️ **NOTE:** If docs for a particular version are missing in `s3://api-docs.emberjs.com`, the tool downloads them from npm (e.g. https://unpkg.com/ember-source@3.17.0/docs/data.json) as a fallback.
 
 ## Overriding a specific version of YUIDoc file with a local copy (for core contributors).
 
