@@ -122,6 +122,16 @@ yarn start --project ember-data --version <VERSION_TO_REPLACE> --ignorePreviousl
 yarn start --clean --max_old_space_size=8192
 ```
 
+## Running from GitHub
+
+```
+git clone git@github.com:ember-learn/ember-api-docs-data.git
+git clone git@github.com:emberjs/ember.js.git && cd ember.js && yarn install
+git clone git@github.com:ember-learn/ember-jsonapi-docs.git && cd ember-jsonapi-docs.git && yarn install
+yarn gen --project ember --version "3.24.0"
+yarn start --project ember --version "3.24.0"
+```
+
 ## Backing Up Docs
 
 If you plan to run a major migration, back up all the content to a timestamped folder in the Amazon S3 bucket.

@@ -1,10 +1,12 @@
 import chalk from 'chalk'
 import commandExists from 'command-exists'
 import execa from 'execa'
-import { copyFileSync, existsSync, mkdirpSync, removeSync } from 'fs-extra'
+import { copyFileSync, ensureDirSync, ensureFileSync, existsSync, mkdirpSync, removeSync } from 'fs-extra'
 import minimist from 'minimist'
 import path from 'path'
 import 'hard-rejection/register'
+
+const docsPath = '../ember-api-docs-data';
 
 const argv = minimist(process.argv.slice(2))
 
@@ -61,7 +63,9 @@ const runCmd = async (cmd, path) => {
 
 		await runCmd(project === 'ember' ? 'yarn docs' : 'yarn workspace ember-data docs', projDirPath)
 
-		const projYuiDocFile = `tmp/s3-docs/v${version}/${project}-docs.json`
+		let destination = `${docsPath}/s3-docs/v${version}/${project}-docs.json`
+		ensureFileSync(destination)
+		const projYuiDocFile = destination;
 		removeSync(projYuiDocFile)
 		removeSync(`tmp/json-docs/${project}/${version}`)
 
