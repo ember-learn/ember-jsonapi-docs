@@ -49,7 +49,7 @@ export async function apiDocsProcessor(
 					let docVersion = doc.version
 					console.log(`Starting to process ${projectName}-${docVersion}`)
 
-					const existingFolder = `tmp/json-docs/${projectName}/${docVersion}`
+					const existingFolder = `${docsPath}/json-docs/${projectName}/${docVersion}`
 					if (fs.existsSync(existingFolder)) {
 						// delete the folder
 						rimraf.sync(existingFolder)
@@ -83,7 +83,7 @@ export async function apiDocsProcessor(
 						return Promise.resolve()
 					}
 
-					let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`
+					let existingDoc = `${docsPath}/json-docs/${projectName}/projects/${projectName}.json`
 					if (fs.existsSync(existingDoc)) {
 						existingDoc = fs.readJsonSync(existingDoc)
 						docToSave.data.relationships['project-versions'].data = docToSave.data.relationships[
@@ -104,7 +104,7 @@ export async function apiDocsProcessor(
 			['ember', 'ember-data'].map(project => {
 				const projRevFile = `${docsPath}/rev-index/${project}.json`
 				let projRevFileContent = fs.readJsonSync(
-					`tmp/json-docs/${project}/projects/${project}.json`
+					`${docsPath}/json-docs/${project}/projects/${project}.json`
 				)
 				projRevFileContent.meta = {
 					availableVersions: [],

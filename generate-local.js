@@ -67,7 +67,7 @@ const runCmd = async (cmd, path) => {
 		ensureFileSync(destination)
 		const projYuiDocFile = destination;
 		removeSync(projYuiDocFile)
-		removeSync(`tmp/json-docs/${project}/${version}`)
+		removeSync(`${docsPath}/json-docs/${project}/${version}`)
 
 		mkdirpSync(`tmp/s3-docs/v${version}`)
 
