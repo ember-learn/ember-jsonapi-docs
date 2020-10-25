@@ -17,7 +17,6 @@ const docsPath = '../ember-api-docs-data';
 export async function apiDocsProcessor(
 	projects,
 	specificDocsVersion,
-	ignorePreviouslyIndexedDoc,
 	runClean,
 ) {
 	RSVP.on('error', reason => {
@@ -31,8 +30,8 @@ export async function apiDocsProcessor(
 
 	await RSVP.Promise.all(filesToProcess.map(fixBorkedYuidocFiles))
 
-	console.log(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
-	await readDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
+	console.log(projects, specificDocsVersion, runClean)
+	await readDocs(projects, specificDocsVersion, runClean)
 		.then(docs => {
 			return RSVP.map(projects, projectName => {
 				return RSVP.map(docs[projectName], doc => {

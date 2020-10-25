@@ -55,6 +55,10 @@ const runCmd = async (cmd, path) => {
 		}
 	}
 
+	// If someone enters the project version as `v3.20.0` instead of `3.20.0`,
+	// handle it gracefully.
+	version = version.replace('v', '');
+
 	let buildDocs = async projDirPath => {
 		checkIfProjectDirExists(projDirPath)
 		await runCmd('yarn', projDirPath)
@@ -68,8 +72,6 @@ const runCmd = async (cmd, path) => {
 		const projYuiDocFile = destination;
 		removeSync(projYuiDocFile)
 		removeSync(`${docsPath}/json-docs/${project}/${version}`)
-
-		mkdirpSync(`tmp/s3-docs/v${version}`)
 
 		const yuiDocFile = path.join(
 			projDirPath,
@@ -91,7 +93,6 @@ const runCmd = async (cmd, path) => {
 		project,
 		'--version',
 		version,
-		'--ignorePreviouslyIndexedDoc',
 		'--no-sync'
 	]).stdout.pipe(process.stdout)
 })()
