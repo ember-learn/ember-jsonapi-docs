@@ -1,0 +1,77 @@
+name: Generate new docs
+
+on:
+  workflow-dispatch:
+    inputs:
+      project:
+        description: 'ember or ember-data'     
+        required: true
+      version:
+        description: 'The version to build, i.e. 3.20.0'     
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Clone the project repo
+        run: |
+          set -euo pipefail
+          if [$INPUT_PROJECT -eq 'ember']
+          then
+            git clone https://github.com/emberjs/ember.js
+            cd ember.js
+            git checkout "v$INPUT_VERSION"
+          elif [$INPUT_PROJECT -eq 'ember-data']
+          then
+            git clone https://github.com/emberjs/data
+            cd data
+            git checkout "v$INPUT_VERSION"
+          else
+            echo "Please specify either ember or ember-data for the project."
+          fi
+
+      - name: Clone ember-api-docs-data
+        run: git clone https://github.com/ember-learn/ember-api-docs-data
+      
+      - name: yarn install
+        run: yarn install
+
+      - name: Generate s3-docs
+        working-directory: ember-jsonapi-docs
+        run: yarn gen --project $INPUT_PROJECT --version $INPUT_VERSION
+
+      - name: Generate json-docs
+        working-directory: ember-jsonapi-docs
+        run: yarn start --project $INPUT_PROJECT --version $INPUT_VERSION
+  
+  pull-request:
+    name: Open a pull request in ember-api-docs-data
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Git
+        run: |
+          git config --global user.name "Tomster"
+          git config --global user.email "tomster@emberjs.com"
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.GUIDES_SOURCE_DEPLOY_KEY }}
+
+      - name: commit the changes
+        run: cd .. && git add . && git commit -m "${INPUT_PROJECT}-${INPUT_VERSION}"
+
+      - name: Push
+        working-directory: ember-api-docs-data
+        run: |
+          set -euo pipefail
+          IFS=$'\n\t'
+          if git diff --exit-code HEAD~; then
+            echo "Nothing to push"
+          else
+            git push -u origin "${INPUT_PROJECT}-${INPUT_VERSION}"
+          fi
