@@ -1,7 +1,7 @@
 name: Generate new docs
 
 on:
-  workflow-dispatch:
+  workflow_dispatch:
     inputs:
       project:
         description: 'ember or ember-data'     
