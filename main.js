@@ -4,14 +4,12 @@ import rimraf from 'rimraf'
 
 import markup from './lib/markup'
 import readDocs from './lib/read-docs'
-// import fetchYuiDocs from './lib/fetch-yui-docs'
 import createClassesOnDisk from './lib/create-classes'
 import transformYuiObject from './lib/transform-yui-object'
 import normalizeEmberDependencies from './lib/normalize-ember-dependencies'
 import getVersionIndex from './lib/get-version-index'
 import saveDoc from './lib/save-document'
 import revProjVersionFiles from './lib/rev-docs'
-// import { downloadExistingDocsToLocal, uploadDocsToS3 } from './lib/s3-sync'
 import fixBorkedYuidocFiles from './lib/fix-borked-yuidoc-files'
 
 const docsPath = '../ember-api-docs-data';
@@ -21,29 +19,21 @@ export async function apiDocsProcessor(
 	specificDocsVersion,
 	ignorePreviouslyIndexedDoc,
 	runClean,
-	noSync
 ) {
 	RSVP.on('error', reason => {
 		console.log(reason)
 		process.exit(1)
 	})
 
-	// if (!noSync) {
-	// 	let docsVersionMsg = specificDocsVersion !== '' ? `. For version ${specificDocsVersion}` : ''
-	// 	console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
+	let filesToProcess = projects.map(project => {
+		return `${docsPath}/s3-docs/v${specificDocsVersion}/${project}-docs.json`
+	})
 
-	// 	// await downloadExistingDocsToLocal()
-	// 	let filesToProcess = await fetchYuiDocs(projects, specificDocsVersion, runClean)
-	// 	await fs.mkdirp(`${docsPath}/s3-original-docs`)
-	// 	await RSVP.Promise.all(filesToProcess.map(fixBorkedYuidocFiles))
-	// } else {
-	// 	console.log('Skipping downloading docs')
-	// }
-	//          array     string v3.24.0           ???                      bool false
+	await RSVP.Promise.all(filesToProcess.map(fixBorkedYuidocFiles))
+
 	console.log(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
 	await readDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
 		.then(docs => {
-			console.log('It has this many docs', docs.ember.length)
 			return RSVP.map(projects, projectName => {
 				return RSVP.map(docs[projectName], doc => {
 					let docVersion = doc.version
@@ -113,12 +103,9 @@ export async function apiDocsProcessor(
 					projRevFileContent.meta.availableVersions.push(id.replace(`${project}-`, ''))
 				)
 
-				if (project === 'ember') console.log('Rev has 3.24.0', projRevFileContent.meta.availableVersions.indexOf('3.24.0') !== -1);
-
 				fs.writeJsonSync(projRevFile, projRevFileContent)
 			})
 		)
-		// .then(uploadDocsToS3)
 		.then(() => {
 			console.log('\n\n\n')
 			console.log('Done!')
