@@ -38,7 +38,7 @@
 		"fs-extra": "^8.1.0",
 		"glob": "^7.1.4",
 		"hard-rejection": "^2.1.0",
-		"highlight.js": "^9.15.10",
+		"highlight.js": "^10.1.2",
 		"http-server": "^0.11.1",
 		"inflected": "^2.0.4",
 		"keyfinder": "^1.0.0",
