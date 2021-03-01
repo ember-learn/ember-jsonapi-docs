@@ -25,7 +25,9 @@
 		"server": "http-server -p 5050 --cors tmp",
 		"serve": "yarn server",
 		"start": "node index.js",
-		"test": "eslint lib/**/*.js index.js test/**.js && mocha -r esm test"
+		"test:mocha": "mocha -r esm test",
+		"lint": "eslint lib/**/*.js index.js test/**.js",
+		"test": "yarn lint && yarn test:mocha"
 	},
 	"dependencies": {
 		"cheerio": "^1.0.0-rc.2",
