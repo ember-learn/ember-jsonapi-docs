@@ -18,7 +18,7 @@ function desc(path) {
 function mark(path) {
 	let data = [
 		desc(path)
-	];
+	]
 	let result = markup({data})
 	let content = result.data[0].attributes.description
 	maybeWrite(content, path)
