@@ -18,7 +18,7 @@ const exit = function exit() {
 }
 
 const runCmd = async (cmd, path) => {
-	console.log(chalk.underline(`Running '${chalk.green(cmd)}'`))
+	console.log(chalk.underline(`Running '${chalk.green(cmd)}' in ${path}`))
 	const executedCmd = await execa(cmd, { cwd: path, shell: true })
 
 	if (executedCmd.failed) {
