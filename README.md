@@ -73,4 +73,7 @@ yarn install
 yarn start:local
 ```
 
+_Note: you don't need to check out any special branch on ember-api-docs.
+`yarn start:local` looks for files served on port 5050_
+
 Visit the app in your browser at [http://localhost:4200](http://localhost:4200)
