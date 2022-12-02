@@ -15,38 +15,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Clone ember-jsonapi-docs
+        uses: actions/checkout@v2
+        with:
+          path: ember-jsonapi-docs # This puts all the cloned projects side-by-side, which seems to be what the README suggests and seems less confusing to me when reading the remaining steps
 
-      - name: Clone the project repo
-        run: |
-          set -euo pipefail
-          if [$INPUT_PROJECT -eq 'ember']
-          then
-            git clone https://github.com/emberjs/ember.js
-            cd ember.js
-            git checkout "v$INPUT_VERSION"
-          elif [$INPUT_PROJECT -eq 'ember-data']
-          then
-            git clone https://github.com/emberjs/data
-            cd data
-            git checkout "v$INPUT_VERSION"
-          else
-            echo "Please specify either ember or ember-data for the project."
-          fi
+      - name: Clone ember.js
+        uses: actions/checkout@v2
+        if: ${{ github.event.inputs.project == "ember" }}
+        with:
+          repository: emberjs/ember.js
+          path: ember.js
+          ref: v${{ github.event.inputs.version }}
+
+      - name: Clone ember-data
+        uses: actions/checkout@v2
+        if: ${{ github.event.inputs.project == "ember-data" }}
+        with:
+          repository: emberjs/data
+          path: data
+          ref: v${{ github.event.inputs.version }}
 
       - name: Clone ember-api-docs-data
         run: git clone https://github.com/ember-learn/ember-api-docs-data
       
-      - name: yarn install
+      - name: Install dependencies
+        working-directory: ember-jsonapi-docs
         run: yarn install
 
       - name: Generate s3-docs
         working-directory: ember-jsonapi-docs
-        run: yarn gen --project $INPUT_PROJECT --version $INPUT_VERSION
+        run: yarn gen --project "${{ github.event.inputs.project }}" --version "${{ github.event.inputs.version }}"
 
       - name: Generate json-docs
         working-directory: ember-jsonapi-docs
-        run: yarn start --project $INPUT_PROJECT --version $INPUT_VERSION
+        run: yarn start --project "${{ github.event.inputs.project }}" --version "${{ github.event.inputs.version }}"
   
   pull-request:
     name: Open a pull request in ember-api-docs-data
@@ -62,8 +65,13 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.GUIDES_SOURCE_DEPLOY_KEY }}
 
-      - name: commit the changes
-        run: cd .. && git add . && git commit -m "${INPUT_PROJECT}-${INPUT_VERSION}"
+      - name: Stage changes
+        working-directory:  ember-api-docs-data
+        run: git add .
+
+      - name: Commit changes
+        working-directory:  ember-api-docs-data
+        run: git commit -m "${{ github.event.inputs.project }}-{{ github.event.inputs.version }}"
 
       - name: Push
         working-directory: ember-api-docs-data
