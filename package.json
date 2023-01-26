@@ -22,6 +22,7 @@
 		"backup": "node -r esm backup.js",
 		"gen": "node -r esm generate-local.js",
 		"greet": "echo 'hi'",
+		"upload-tmp-to-aws": "node -r esm lib/upload-tmp-to-aws.js",
 		"server": "http-server -p 5050 --cors tmp",
 		"serve": "yarn server",
 		"start": "node index.js",
