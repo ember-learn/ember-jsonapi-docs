@@ -137,13 +137,16 @@ yarn backup
 Yes, follow one of the quickstarts and then run the `ember-api-docs` application using the following commands.
 
 ```bash
+# Start your local server for this repository
+yarn serve
+
 # Clone the repository with the "ember-api-docs" app.
 git clone https://github.com/ember-learn/ember-api-docs
 cd ember-api-docs
 
 # Install the dependencies.
-yarn
+npm install
 
 # Run the application side by side with a locally running API.
-yarn start:local
+npm run start:local
 ```
