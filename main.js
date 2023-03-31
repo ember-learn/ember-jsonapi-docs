@@ -55,9 +55,10 @@ async function transformProject(project, projectName) {
 	let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`
 	if (fs.existsSync(existingDoc)) {
 		existingDoc = fs.readJsonSync(existingDoc)
-		docToSave.data.relationships['project-versions'].data = docToSave.data.relationships[
-			'project-versions'
-		].data.concat(existingDoc.data.relationships['project-versions'].data)
+		const newData = docToSave.data.relationships['project-versions'].data
+		const oldData = existingDoc.data.relationships['project-versions'].data
+		const updatedData = mergeById(newData, oldData)
+		docToSave.data.relationships['project-versions'].data = updatedData
 	}
 
 	remainingDocs.forEach(({ data }) => {
@@ -107,12 +108,14 @@ export async function apiDocsProcessor(
 				let projRevFileContent = fs.readJsonSync(
 					`tmp/json-docs/${project}/projects/${project}.json`
 				)
+				const availableVersions = []
 				projRevFileContent.meta = {
-					availableVersions: [],
+					availableVersions,
 				}
 				projRevFileContent.data.relationships['project-versions'].data.forEach(({ id }) =>
-					projRevFileContent.meta.availableVersions.push(id.replace(`${project}-`, ''))
+					availableVersions.push(id.replace(`${project}-`, ''))
 				)
+				console.log({ project, availableVersions })
 				fs.writeJsonSync(projRevFile, projRevFileContent)
 			})
 		)
@@ -121,4 +124,23 @@ export async function apiDocsProcessor(
 			console.log('\n\n\n')
 			console.log('Done!')
 		})
+}
+
+function mergeById(arr1, arr2) {
+	const seen = new Set()
+	const result = []
+	let maxLen = arr1.length > arr2.length ? arr1.length : arr2.length
+	for (let i = 0; i < maxLen; i++) {
+		if (i < arr1.length && !seen.has(arr1[i].id)) {
+			result.push(arr1[i])
+			seen.add(arr1[i].id)
+
+		}
+		if (i < arr2.length && !seen.has(arr2[i].id)) {
+			result.push(arr2[i])
+			seen.add(arr2[i].id)
+		}
+	}
+
+	return result
 }

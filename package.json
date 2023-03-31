@@ -37,6 +37,7 @@
 		"ember-rfc176-data": "^0.3.12",
 		"esm": "^3.2.25",
 		"execa": "^2.0.4",
+    "chalk": "^4.1.2",
 		"fs-extra": "^8.1.0",
 		"glob": "^7.1.4",
 		"hard-rejection": "^2.1.0",
