@@ -8,7 +8,7 @@ import 'hard-rejection/register'
 
 const argv = minimist(process.argv.slice(2))
 
-const { project, version } = argv
+const { project, version, install, build } = argv
 
 const exit = function exit() {
 	console.log(...arguments)
@@ -16,15 +16,21 @@ const exit = function exit() {
 }
 
 const runCmd = async (cmd, path) => {
-	console.log(chalk.underline(`Running '${chalk.green(cmd)}'`))
-	const executedCmd = await execa(cmd, { cwd: path, shell: true })
+	console.log(chalk.underline(`Running '${chalk.green(cmd)}' in '${path}'`))
+	try {
+		const executedCmd = await execa(`cd ${path} && ${cmd}`, { shell: true })
 
-	if (executedCmd.failed) {
-		console.error(executedCmd.stderr)
+		if (executedCmd.failed) {
+			console.error(executedCmd.stdout)
+			console.error(executedCmd.stderr)
+			process.exit(1)
+
+		}
+		console.log(executedCmd.stdout + '\n')
+	} catch (error) {
+		console.log(error)
 		process.exit(1)
 	}
-
-	console.log(executedCmd.stdout + '\n')
 }
 ;(async () => {
 	if (!project || !version) {
@@ -55,11 +61,15 @@ const runCmd = async (cmd, path) => {
 
 	let buildDocs = async projDirPath => {
 		checkIfProjectDirExists(projDirPath)
-		await runCmd('yarn', projDirPath)
 
-		console.log('\n\n')
+		if (install) {
+			await runCmd(project === 'ember' ? 'yarn' : 'pnpm install', projDirPath)
+			console.log('\n\n')
+		}
 
-		await runCmd(project === 'ember' ? 'yarn docs' : 'yarn workspace ember-data docs', projDirPath)
+		if (build) {
+			await runCmd(project === 'ember' ? 'yarn docs' : 'pnpm build:docs', projDirPath)
+		}
 
 		const projYuiDocFile = `tmp/s3-docs/v${version}/${project}-docs.json`
 		removeSync(projYuiDocFile)
