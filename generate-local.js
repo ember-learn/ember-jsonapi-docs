@@ -6,6 +6,8 @@ import minimist from 'minimist'
 import path from 'path'
 import 'hard-rejection/register'
 
+import { apiDocsProcessor } from './main'
+
 const argv = minimist(process.argv.slice(2))
 
 const { project, version, install, build } = argv
@@ -91,13 +93,5 @@ const runCmd = async (cmd, path) => {
 
 	await buildDocs(dirMap[project])
 
-	await execa('yarn', [
-		'start',
-		'--project',
-		project,
-		'--version',
-		version,
-		'--ignorePreviouslyIndexedDoc',
-		'--no-sync'
-	]).stdout.pipe(process.stdout)
+	await apiDocsProcessor([project], [version], true, false, true)
 })()

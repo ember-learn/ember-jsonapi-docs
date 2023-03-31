@@ -14,6 +14,68 @@ import revProjVersionFiles from './lib/rev-docs'
 import { downloadExistingDocsToLocal, uploadDocsToS3 } from './lib/s3-sync'
 import fixBorkedYuidocFiles from './lib/fix-borked-yuidoc-files'
 
+async function transformObject(doc, projectName, docVersion) {
+	try {
+		const object = await transformYuiObject([doc], projectName)
+		const { data } = markup(object)
+		const giantDocument = { data }
+		console.log('normalizing dependencies')
+		let transformed = await normalizeEmberDependencies(giantDocument)
+		transformed = await createClassesOnDisk(transformed, projectName, docVersion)
+		console.log(`Finished processing ${projectName}-${docVersion}`)
+		transformed = getVersionIndex(transformed, projectName)
+		revProjVersionFiles(projectName, docVersion)
+		return transformed
+	} catch (e) {
+		console.log(e)
+		throw e
+	}
+}
+
+async function transformProject(project, projectName) {
+	const docs = await RSVP.map(project, doc => {
+		let docVersion = doc.version
+		console.log(`Starting to process ${projectName}-${docVersion}`)
+
+		const existingFolder = `tmp/json-docs/${projectName}/${docVersion}`
+		if (fs.existsSync(existingFolder)) {
+			rimraf.sync(existingFolder)
+		}
+
+		return transformObject(doc, projectName, docVersion)
+	}).catch((e) => {
+		console.log(e)
+		console.error('wat')
+	})
+
+	let [docToSave, ...remainingDocs] = docs.filter(({ data }) => data.id === projectName)
+
+	if (!docToSave) {
+		return Promise.resolve()
+	}
+
+	let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`
+	if (fs.existsSync(existingDoc)) {
+		existingDoc = fs.readJsonSync(existingDoc)
+		docToSave.data.relationships['project-versions'].data = docToSave.data.relationships[
+			'project-versions'
+		].data.concat(existingDoc.data.relationships['project-versions'].data)
+	}
+
+	remainingDocs.forEach(({ data }) => {
+		docToSave.data.relationships['project-versions'].data = docToSave.data.relationships[
+			'project-versions'
+		].data.concat(data.relationships['project-versions'].data)
+	})
+	return saveDoc(docToSave, projectName).then(() => projectName)
+}
+
+function transformProjectsDeep(projects, docs) {
+	return RSVP.map(projects, projectName => {
+		return transformProject(docs[projectName], projectName)
+	})
+}
+
 export async function apiDocsProcessor(
 	projects,
 	specificDocsVersion,
@@ -38,62 +100,12 @@ export async function apiDocsProcessor(
 		console.log('Skipping downloading docs')
 	}
 
+	const _transformProjectsDeep = transformProjectsDeep.bind(null, projects)
+
 	await readDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
-		.then(docs => {
-			return RSVP.map(projects, projectName => {
-				return RSVP.map(docs[projectName], doc => {
-					let docVersion = doc.version
-					console.log(`Starting to process ${projectName}-${docVersion}`)
-
-					const existingFolder = `tmp/json-docs/${projectName}/${docVersion}`
-					if (fs.existsSync(existingFolder)) {
-						rimraf.sync(existingFolder)
-					}
-
-					return transformYuiObject([doc], projectName)
-						.then(markup)
-						.then(({ data }) => {
-							let giantDocument = { data }
-							console.log('normalizing dependencies')
-							return normalizeEmberDependencies(giantDocument)
-						})
-						.then(doc => {
-							return createClassesOnDisk(doc, projectName, docVersion)
-						})
-						.then(doc => {
-							console.log(`Finished processing ${projectName}-${docVersion}`)
-							return getVersionIndex(doc, projectName)
-						})
-						.then(doc => {
-							revProjVersionFiles(projectName, docVersion)
-							return doc
-						})
-				}).then(docs => {
-					let [docToSave, ...remainingDocs] = docs.filter(({ data }) => data.id === projectName)
-
-					if (!docToSave) {
-						return Promise.resolve()
-					}
-
-					let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`
-					if (fs.existsSync(existingDoc)) {
-						existingDoc = fs.readJsonSync(existingDoc)
-						docToSave.data.relationships['project-versions'].data = docToSave.data.relationships[
-							'project-versions'
-						].data.concat(existingDoc.data.relationships['project-versions'].data)
-					}
-
-					remainingDocs.forEach(({ data }) => {
-						docToSave.data.relationships['project-versions'].data = docToSave.data.relationships[
-							'project-versions'
-						].data.concat(data.relationships['project-versions'].data)
-					})
-					return saveDoc(docToSave, projectName).then(() => projectName)
-				})
-			})
-		})
+		.then(_transformProjectsDeep)
 		.then(() =>
-			['ember', 'ember-data'].map(project => {
+			projects.map(project => {
 				const projRevFile = `tmp/rev-index/${project}.json`
 				let projRevFileContent = fs.readJsonSync(
 					`tmp/json-docs/${project}/projects/${project}.json`
