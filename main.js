@@ -1,4 +1,3 @@
-import RSVP from 'rsvp'
 import fs from 'fs-extra'
 import rimraf from 'rimraf'
 
@@ -33,7 +32,8 @@ async function transformObject(doc, projectName, docVersion) {
 }
 
 async function transformProject(project, projectName) {
-	const docs = await RSVP.map(project, doc => {
+	const docs = []
+	for (const doc of project) {
 		let docVersion = doc.version
 		console.log(`Starting to process ${projectName}-${docVersion}`)
 
@@ -42,16 +42,14 @@ async function transformProject(project, projectName) {
 			rimraf.sync(existingFolder)
 		}
 
-		return transformObject(doc, projectName, docVersion)
-	}).catch((e) => {
-		console.log(e)
-		console.error('wat')
-	})
+		const transformed = await transformObject(doc, projectName, docVersion)
+		docs.push(transformed)
+	}
 
 	let [docToSave, ...remainingDocs] = docs.filter(({ data }) => data.id === projectName)
 
 	if (!docToSave) {
-		return Promise.resolve()
+		return void 0
 	}
 
 	let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`
@@ -67,13 +65,17 @@ async function transformProject(project, projectName) {
 			'project-versions'
 		].data.concat(data.relationships['project-versions'].data)
 	})
-	return saveDoc(docToSave, projectName).then(() => projectName)
+	await saveDoc(docToSave, projectName)
+	return projectName
 }
 
-function transformProjectsDeep(projects, docs) {
-	return RSVP.map(projects, projectName => {
-		return transformProject(docs[projectName], projectName)
-	})
+async function transformProjectsDeep(projects, docs) {
+	const built = []
+	for (const projectName of projects) {
+		const transformed = await transformProject(docs[projectName], projectName)
+		built.push(transformed)
+	}
+	return built
 }
 
 export async function apiDocsProcessor(
@@ -83,11 +85,6 @@ export async function apiDocsProcessor(
 	runClean,
 	noSync
 ) {
-	RSVP.on('error', reason => {
-		console.log(reason)
-		process.exit(1)
-	})
-
 	if (!noSync) {
 		let docsVersionMsg = specificDocsVersion !== '' ? `. For version ${specificDocsVersion}` : ''
 		console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
@@ -95,7 +92,7 @@ export async function apiDocsProcessor(
 		await downloadExistingDocsToLocal()
 		let filesToProcess = await fetchYuiDocs(projects, specificDocsVersion, runClean)
 		await fs.mkdirp('tmp/s3-original-docs')
-		await RSVP.Promise.all(filesToProcess.map(fixBorkedYuidocFiles))
+		await Promise.all(filesToProcess.map(fixBorkedYuidocFiles))
 	} else {
 		console.log('Skipping downloading docs')
 	}
