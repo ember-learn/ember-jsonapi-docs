@@ -27,7 +27,8 @@
 		"start": "node index.js",
 		"test:mocha": "mocha -r esm test",
 		"lint": "eslint lib/**/*.js index.js test/**.js",
-		"test": "yarn lint && yarn test:mocha"
+		"test": "yarn lint && yarn test:mocha",
+		"upload-to-aws": "node -r esm upload-tmp-to-aws.js"
 	},
 	"dependencies": {
 		"cheerio": "^1.0.0-rc.2",
