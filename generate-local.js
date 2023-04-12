@@ -26,7 +26,6 @@ const runCmd = async (cmd, path) => {
 			console.error(executedCmd.stdout)
 			console.error(executedCmd.stderr)
 			process.exit(1)
-
 		}
 		console.log(executedCmd.stdout + '\n')
 	} catch (error) {
@@ -93,5 +92,5 @@ const runCmd = async (cmd, path) => {
 
 	await buildDocs(dirMap[project])
 
-	await apiDocsProcessor([project], [version], true, false, true)
+	await apiDocsProcessor([project], [version], true, false, true, true)
 })()

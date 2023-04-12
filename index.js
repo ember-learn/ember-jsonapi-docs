@@ -13,6 +13,14 @@ let ignorePreviouslyIndexedDoc =
 	projects.length !== 0 && specificDocsVersion !== '' && argv.ignorePreviouslyIndexedDoc
 let runClean = !!argv.clean
 let noSync = !argv.sync
+let skipDownload = !!argv.skipDownload
 
 const { apiDocsProcessor } = require('./main.js')
-apiDocsProcessor(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean, noSync)
+apiDocsProcessor(
+	projects,
+	specificDocsVersion,
+	ignorePreviouslyIndexedDoc,
+	runClean,
+	noSync,
+	skipDownload
+)

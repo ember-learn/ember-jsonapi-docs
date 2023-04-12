@@ -84,18 +84,23 @@ export async function apiDocsProcessor(
 	specificDocsVersion,
 	ignorePreviouslyIndexedDoc,
 	runClean,
-	noSync
+	noSync,
+	skipDownload
 ) {
-	if (!noSync) {
+	if (!noSync && !skipDownload) {
 		let docsVersionMsg = specificDocsVersion !== '' ? `. For version ${specificDocsVersion}` : ''
 		console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
 
 		await downloadExistingDocsToLocal()
+	} else {
+		console.log('Skipping downloading docs')
+	}
+	if (!noSync) {
 		let filesToProcess = await fetchYuiDocs(projects, specificDocsVersion, runClean)
 		await fs.mkdirp('tmp/s3-original-docs')
 		await Promise.all(filesToProcess.map(fixBorkedYuidocFiles))
 	} else {
-		console.log('Skipping downloading docs')
+		console.log('Skipping docs sync')
 	}
 
 	const _transformProjectsDeep = transformProjectsDeep.bind(null, projects)
@@ -134,7 +139,6 @@ function mergeById(arr1, arr2) {
 		if (i < arr1.length && !seen.has(arr1[i].id)) {
 			result.push(arr1[i])
 			seen.add(arr1[i].id)
-
 		}
 		if (i < arr2.length && !seen.has(arr2[i].id)) {
 			result.push(arr2[i])
