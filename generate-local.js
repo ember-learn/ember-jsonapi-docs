@@ -57,11 +57,17 @@ const runCmd = async (cmd, path, args = []) => {
 
 	let buildDocs = async projDirPath => {
 		checkIfProjectDirExists(projDirPath)
-		await runCmd('volta', projDirPath, ['yarn'])
+
+		if (project === 'ember') {
+			await runCmd('volta', projDirPath, ['run', 'yarn'])
+		} else {
+			await runCmd('corepack', projDirPath, ['pnpm', 'install'])
+		}
+
 
 		console.log('\n\n')
 
-		await runCmd(project === 'ember' ? 'volta yarn docs' : 'volta yarn workspace ember-data docs', projDirPath)
+		await runCmd(project === 'ember' ? 'volta run yarn docs' : 'corepack pnpm run build:docs', projDirPath)
 
 		let destination = `${docsPath}/s3-docs/v${version}/${project}-docs.json`
 		ensureFileSync(destination)
@@ -84,6 +90,7 @@ const runCmd = async (cmd, path, args = []) => {
 	await buildDocs(dirMap[project])
 
 	await execa('volta', [
+		'run',
 		'yarn',
 		'start',
 		'--project',
