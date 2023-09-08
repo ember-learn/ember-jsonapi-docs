@@ -1210,12 +1210,6 @@ has@^1.0.1, has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-hasha@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/hasha/-/hasha-3.0.0.tgz#52a32fab8569d41ca69a61ff1a214f8eb7c8bd39"
-  dependencies:
-    is-stream "^1.0.1"
-
 he@1.2.0, he@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
@@ -1473,7 +1467,7 @@ is-retry-allowed@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-retry-allowed/-/is-retry-allowed-1.1.0.tgz#11a060568b67339444033d0125a61a20d564fb34"
 
-is-stream@^1.0.1, is-stream@^1.1.0:
+is-stream@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
 
@@ -1881,10 +1875,6 @@ mocha@^6.2.0:
     yargs "13.2.2"
     yargs-parser "13.0.0"
     yargs-unparser "1.5.0"
-
-modify-filename@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/modify-filename/-/modify-filename-1.1.0.tgz#9a2dec83806fbb2d975f22beec859ca26b393aa1"
 
 mri@^1.1.0:
   version "1.1.1"
@@ -2463,24 +2453,6 @@ restore-cursor@^2.0.0:
   dependencies:
     onetime "^2.0.0"
     signal-exit "^3.0.2"
-
-rev-file@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/rev-file/-/rev-file-3.0.0.tgz#9bb027bee2efb820d14885c85f8c2934f458ce0b"
-  dependencies:
-    hasha "^3.0.0"
-    rev-hash "^2.0.0"
-    rev-path "^1.0.0"
-
-rev-hash@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/rev-hash/-/rev-hash-2.0.0.tgz#7720a236ed0c258df3e64bec03ec048b05b924c4"
-
-rev-path@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/rev-path/-/rev-path-1.0.0.tgz#d4ccb436ac3370c4607175ce88eafc5c65c5d653"
-  dependencies:
-    modify-filename "^1.0.0"
 
 rimraf@2.6.3:
   version "2.6.3"
