@@ -29,7 +29,7 @@ Then, in `ember.js` and/or `ember-data` repositories, check out the version
 tags you want to generate docs for. For example:
 
 ```sh
-get fetch --all
+git fetch --all
 git checkout v5.2.0
 ```
 
