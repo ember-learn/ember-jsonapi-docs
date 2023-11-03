@@ -3,22 +3,23 @@ module.exports = {
 		es6: true,
 		node: true,
 	},
-	extends: 'eslint:recommended',
+	extends: ['eslint:recommended', 'plugin:prettier/recommended', 'plugin:n/recommended'],
 	parserOptions: {
-		ecmaVersion: 2018,
+		ecmaVersion: 2020,
 		sourceType: 'module',
 	},
 	rules: {
-		indent: ['error', 'tab'],
-		'linebreak-style': ['error', 'unix'],
-		quotes: ['error', 'single'],
-		semi: ['error', 'never'],
-		'no-console': ['off'],
+		'n/no-process-exit': 0,
 	},
-	globals: {
-		describe: true,
-		it: true,
-		beforeEach: true,
-		afterEach: true,
-	},
+	overrides: [
+		{
+			files: 'test/**/*',
+			env: {
+				mocha: true,
+			},
+			rules: {
+				'n/no-unpublished-import': 0,
+			},
+		},
+	],
 }

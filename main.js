@@ -1,15 +1,15 @@
 import fs from 'fs-extra'
 import rimraf from 'rimraf'
 
-import markup from './lib/markup'
-import readDocs from './lib/read-docs'
-import createClassesOnDisk from './lib/create-classes'
-import transformYuiObject from './lib/transform-yui-object'
-import normalizeEmberDependencies from './lib/normalize-ember-dependencies'
-import getVersionIndex from './lib/get-version-index'
-import saveDoc from './lib/save-document'
-import revProjVersionFiles from './lib/rev-docs'
-import fixBorkedYuidocFiles from './lib/fix-borked-yuidoc-files'
+import markup from './lib/markup.js'
+import readDocs from './lib/read-docs.js'
+import createClassesOnDisk from './lib/create-classes.js'
+import transformYuiObject from './lib/transform-yui-object.js'
+import normalizeEmberDependencies from './lib/normalize-ember-dependencies.js'
+import getVersionIndex from './lib/get-version-index.js'
+import saveDoc from './lib/save-document.js'
+import revProjVersionFiles from './lib/rev-docs.js'
+import fixBorkedYuidocFiles from './lib/fix-borked-yuidoc-files.js'
 
 const docsPath = '../ember-api-docs-data'
 
@@ -93,18 +93,18 @@ export async function apiDocsProcessor(projects, specificDocsVersion, runClean) 
 			projects.map(project => {
 				const projRevFile = `${docsPath}/rev-index/${project}.json`
 				let projRevFileContent = fs.readJsonSync(
-					`${docsPath}/json-docs/${project}/projects/${project}.json`
+					`${docsPath}/json-docs/${project}/projects/${project}.json`,
 				)
 				const availableVersions = []
 				projRevFileContent.meta = {
 					availableVersions,
 				}
 				projRevFileContent.data.relationships['project-versions'].data.forEach(({ id }) =>
-					availableVersions.push(id.replace(`${project}-`, ''))
+					availableVersions.push(id.replace(`${project}-`, '')),
 				)
 				console.log({ project, availableVersions })
 				fs.writeJsonSync(projRevFile, projRevFileContent, { spaces: 2 })
-			})
+			}),
 		)
 		.then(() => {
 			console.log('\n\n\n')

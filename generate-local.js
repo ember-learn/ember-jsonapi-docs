@@ -4,7 +4,6 @@ import execa from 'execa'
 import { copyFileSync, ensureFileSync, existsSync, removeSync } from 'fs-extra'
 import minimist from 'minimist'
 import path from 'path'
-import 'hard-rejection/register'
 
 const docsPath = '../ember-api-docs-data'
 
@@ -17,7 +16,7 @@ const exit = function exit() {
 	process.exit(1)
 }
 
-async function  runCmd (cmd, path, args = []) {
+async function runCmd(cmd, path, args = []) {
 	console.log(chalk.underline(`Running '${chalk.green(cmd)}' in ${path}`))
 	const executedCmd = await execa(cmd, args, { cwd: path, shell: true, stdio: 'inherit' })
 
@@ -30,11 +29,11 @@ async function  runCmd (cmd, path, args = []) {
 	console.log(executedCmd.stdout + '\n')
 }
 
-(async () => {
+;(async () => {
 	if (!project || !version) {
 		exit(
 			chalk.red('Both project and version args are required.\n'),
-			chalk.yellow(' e.g., yarn gen --project ember --version 3.10.1')
+			chalk.yellow(' e.g., yarn gen --project ember --version 3.10.1'),
 		)
 	}
 
@@ -66,13 +65,15 @@ async function  runCmd (cmd, path, args = []) {
 			await runCmd('corepack', projDirPath, ['pnpm', 'install'])
 		}
 
-
 		if (install) {
 			await runCmd(project === 'ember' ? 'yarn' : 'pnpm install', projDirPath)
 			console.log('\n\n')
 		}
 
-		await runCmd(project === 'ember' ? 'volta run yarn docs' : 'corepack pnpm run build:docs', projDirPath)
+		await runCmd(
+			project === 'ember' ? 'volta run yarn docs' : 'corepack pnpm run build:docs',
+			projDirPath,
+		)
 
 		let destination = `${docsPath}/s3-docs/v${version}/${project}-docs.json`
 		ensureFileSync(destination)
@@ -82,7 +83,7 @@ async function  runCmd (cmd, path, args = []) {
 
 		const yuiDocFile = path.join(
 			projDirPath,
-			project === 'ember' ? 'docs/data.json' : 'packages/-ember-data/dist/docs/data.json'
+			project === 'ember' ? 'docs/data.json' : 'packages/-ember-data/dist/docs/data.json',
 		)
 		copyFileSync(yuiDocFile, projYuiDocFile)
 	}
@@ -102,6 +103,6 @@ async function  runCmd (cmd, path, args = []) {
 		project,
 		'--version',
 		version,
-		'--no-sync'
+		'--no-sync',
 	]).stdout.pipe(process.stdout)
 })()
