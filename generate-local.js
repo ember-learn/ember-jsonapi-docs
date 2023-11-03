@@ -4,7 +4,6 @@ import execa from 'execa'
 import { copyFileSync, ensureFileSync, existsSync, removeSync } from 'fs-extra'
 import minimist from 'minimist'
 import path from 'path'
-import 'hard-rejection/register'
 
 const docsPath = '../ember-api-docs-data'
 

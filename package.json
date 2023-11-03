@@ -21,11 +21,12 @@
 	"scripts": {
 		"gen": "node -r esm generate-local.js",
 		"start": "node index.js",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
+		"lint": "eslint .",
+		"lint:fix": "eslint . --fix",
 		"test": "mocha -r esm test"
 	},
 	"dependencies": {
+		"chalk": "^4.1.2",
 		"cheerio": "^1.0.0-rc.2",
 		"command-exists": "^1.2.8",
 		"compare-versions": "^3.5.1",
@@ -33,10 +34,8 @@
 		"ember-rfc176-data": "^0.3.12",
 		"esm": "^3.2.25",
 		"execa": "^2.0.4",
-    "chalk": "^4.1.2",
 		"fs-extra": "^8.1.0",
 		"glob": "^7.1.4",
-		"hard-rejection": "^2.1.0",
 		"highlight.js": "^11.7.0",
 		"http-server": "^0.11.1",
 		"inflected": "^2.0.4",
@@ -58,12 +57,13 @@
 	"devDependencies": {
 		"chai": "^4.2.0",
 		"chalk": "^2.4.2",
-		"eslint": "6.4.0",
-		"eslint-plugin-node": "10.0.0",
-		"eslint-plugin-prettier": "3.1.1",
+		"eslint": "^8.52.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-n": "^16.2.0",
+    "eslint-plugin-prettier": "^5.0.1",
 		"husky": "^3.0.5",
 		"mocha": "^6.2.0",
-		"prettier": "1.18.2",
+		"prettier": "^3.0.3",
 		"pretty-quick": "^1.11.1"
 	}
 }
