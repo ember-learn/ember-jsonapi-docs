@@ -79,11 +79,7 @@ async function transformProjectsDeep(projects, docs) {
 	return built
 }
 
-export async function apiDocsProcessor(
-	projects,
-	specificDocsVersion,
-	runClean,
-) {
+export async function apiDocsProcessor(projects, specificDocsVersion, runClean) {
 	let filesToProcess = projects.map(project => {
 		return `${docsPath}/s3-docs/v${specificDocsVersion}/${project}-docs.json`
 	})
@@ -107,7 +103,7 @@ export async function apiDocsProcessor(
 					availableVersions.push(id.replace(`${project}-`, ''))
 				)
 				console.log({ project, availableVersions })
-				fs.writeJsonSync(projRevFile, projRevFileContent)
+				fs.writeJsonSync(projRevFile, projRevFileContent, { spaces: 2 })
 			})
 		)
 		.then(() => {
@@ -124,7 +120,6 @@ function mergeById(arr1, arr2) {
 		if (i < arr1.length && !seen.has(arr1[i].id)) {
 			result.push(arr1[i])
 			seen.add(arr1[i].id)
-
 		}
 		if (i < arr2.length && !seen.has(arr2[i].id)) {
 			result.push(arr2[i])
