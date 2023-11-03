@@ -93,18 +93,18 @@ export async function apiDocsProcessor(projects, specificDocsVersion, runClean) 
 			projects.map(project => {
 				const projRevFile = `${docsPath}/rev-index/${project}.json`
 				let projRevFileContent = fs.readJsonSync(
-					`${docsPath}/json-docs/${project}/projects/${project}.json`
+					`${docsPath}/json-docs/${project}/projects/${project}.json`,
 				)
 				const availableVersions = []
 				projRevFileContent.meta = {
 					availableVersions,
 				}
 				projRevFileContent.data.relationships['project-versions'].data.forEach(({ id }) =>
-					availableVersions.push(id.replace(`${project}-`, ''))
+					availableVersions.push(id.replace(`${project}-`, '')),
 				)
 				console.log({ project, availableVersions })
 				fs.writeJsonSync(projRevFile, projRevFileContent, { spaces: 2 })
-			})
+			}),
 		)
 		.then(() => {
 			console.log('\n\n\n')

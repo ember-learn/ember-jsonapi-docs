@@ -4,7 +4,7 @@ import { classWithIncluded } from '../lib/filter-jsonapi-doc.js'
 
 describe('filter json api docs', () => {
 	describe('#classWithIncluded', () => {
-		beforeEach(function() {
+		beforeEach(function () {
 			this.document = {
 				data: [
 					{
@@ -35,7 +35,7 @@ describe('filter json api docs', () => {
 			this.response = classWithIncluded(this.document, 'Ember.Butt')
 		})
 
-		it('returns the class in the result', function() {
+		it('returns the class in the result', function () {
 			assert.typeOf(this.response.data, 'object')
 			assert.deepEqual(this.response.data, {
 				id: 'Ember.Butt',
@@ -46,7 +46,7 @@ describe('filter json api docs', () => {
 			})
 		})
 
-		it('returns associated methods', function() {
+		it('returns associated methods', function () {
 			assert.deepEqual(this.response.included, [
 				{
 					id: 'Ember.Butt#foo',
@@ -60,7 +60,7 @@ describe('filter json api docs', () => {
 			])
 		})
 
-		it('does not return unassociated models', function() {
+		it('does not return unassociated models', function () {
 			let unassociated = _.filter(this.response.included, ['type', 'yoloswag'])
 			assert.equal(unassociated.length, 0)
 		})

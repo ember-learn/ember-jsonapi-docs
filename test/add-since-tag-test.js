@@ -3,7 +3,7 @@ import { assert } from 'chai'
 import _ from 'lodash'
 
 describe('addSinceTags', () => {
-	beforeEach(function() {
+	beforeEach(function () {
 		this.yuiDocSets = _.range(3).map(i => {
 			return {
 				version: `v1.0.${i}`,
@@ -26,7 +26,7 @@ describe('addSinceTags', () => {
 		addSinceTags(this.yuiDocSets)
 	})
 
-	it('adds a since tag to classitems', function() {
+	it('adds a since tag to classitems', function () {
 		this.yuiDocSets.forEach(({ data }) => {
 			data.classitems.forEach(({ since }) => assert.equal(since, '1.0.0'))
 		})

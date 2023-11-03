@@ -28,7 +28,7 @@ async function uploadPreviouslyBuiltDocsToS3() {
 					})
 			}
 			prompt.close()
-		}
+		},
 	)
 }
 
