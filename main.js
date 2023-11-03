@@ -3,15 +3,15 @@ import rimraf from 'rimraf'
 
 import markup from './lib/markup'
 import readDocs from './lib/read-docs'
-import fetchYuiDocs from './lib/fetch-yui-docs'
 import createClassesOnDisk from './lib/create-classes'
 import transformYuiObject from './lib/transform-yui-object'
 import normalizeEmberDependencies from './lib/normalize-ember-dependencies'
 import getVersionIndex from './lib/get-version-index'
 import saveDoc from './lib/save-document'
 import revProjVersionFiles from './lib/rev-docs'
-import { downloadExistingDocsToLocal, uploadDocsToS3 } from './lib/s3-sync'
 import fixBorkedYuidocFiles from './lib/fix-borked-yuidoc-files'
+
+const docsPath = '../ember-api-docs-data';
 
 async function transformObject(doc, projectName, docVersion) {
 	try {
@@ -37,7 +37,7 @@ async function transformProject(project, projectName) {
 		let docVersion = doc.version
 		console.log(`Starting to process ${projectName}-${docVersion}`)
 
-		const existingFolder = `tmp/json-docs/${projectName}/${docVersion}`
+		const existingFolder = `${docsPath}/json-docs/${projectName}/${docVersion}`
 		if (fs.existsSync(existingFolder)) {
 			rimraf.sync(existingFolder)
 		}
@@ -52,7 +52,7 @@ async function transformProject(project, projectName) {
 		return void 0
 	}
 
-	let existingDoc = `tmp/json-docs/${projectName}/projects/${projectName}.json`
+	let existingDoc = `${docsPath}/json-docs/${projectName}/projects/${projectName}.json`
 	if (fs.existsSync(existingDoc)) {
 		existingDoc = fs.readJsonSync(existingDoc)
 		const newData = docToSave.data.relationships['project-versions'].data
@@ -82,31 +82,22 @@ async function transformProjectsDeep(projects, docs) {
 export async function apiDocsProcessor(
 	projects,
 	specificDocsVersion,
-	ignorePreviouslyIndexedDoc,
 	runClean,
-	noSync
 ) {
-	if (!noSync) {
-		let docsVersionMsg = specificDocsVersion !== '' ? `. For version ${specificDocsVersion}` : ''
-		console.log(`Downloading docs for ${projects.join(' & ')}${docsVersionMsg}`)
-
-		await downloadExistingDocsToLocal()
-		let filesToProcess = await fetchYuiDocs(projects, specificDocsVersion, runClean)
-		await fs.mkdirp('tmp/s3-original-docs')
-		await Promise.all(filesToProcess.map(fixBorkedYuidocFiles))
-	} else {
-		console.log('Skipping downloading docs')
-	}
+	let filesToProcess = projects.map(project => {
+		return `${docsPath}/s3-docs/v${specificDocsVersion}/${project}-docs.json`
+	})
+	await Promise.all(filesToProcess.map(fixBorkedYuidocFiles))
 
 	const _transformProjectsDeep = transformProjectsDeep.bind(null, projects)
 
-	await readDocs(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean)
+	await readDocs(projects, specificDocsVersion, runClean)
 		.then(_transformProjectsDeep)
 		.then(() =>
 			projects.map(project => {
-				const projRevFile = `tmp/rev-index/${project}.json`
+				const projRevFile = `${docsPath}/rev-index/${project}.json`
 				let projRevFileContent = fs.readJsonSync(
-					`tmp/json-docs/${project}/projects/${project}.json`
+					`${docsPath}/json-docs/${project}/projects/${project}.json`
 				)
 				const availableVersions = []
 				projRevFileContent.meta = {
@@ -119,7 +110,6 @@ export async function apiDocsProcessor(
 				fs.writeJsonSync(projRevFile, projRevFileContent)
 			})
 		)
-		.then(uploadDocsToS3)
 		.then(() => {
 			console.log('\n\n\n')
 			console.log('Done!')

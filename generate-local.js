@@ -1,12 +1,12 @@
 import chalk from 'chalk'
 import commandExists from 'command-exists'
 import execa from 'execa'
-import { copyFileSync, existsSync, mkdirpSync, removeSync } from 'fs-extra'
+import { copyFileSync, ensureDirSync, ensureFileSync, existsSync, mkdirpSync, removeSync } from 'fs-extra'
 import minimist from 'minimist'
 import path from 'path'
 import 'hard-rejection/register'
 
-import { apiDocsProcessor } from './main'
+const docsPath = '../ember-api-docs-data';
 
 const argv = minimist(process.argv.slice(2))
 
@@ -17,10 +17,9 @@ const exit = function exit() {
 	process.exit(1)
 }
 
-const runCmd = async (cmd, path) => {
-	console.log(chalk.underline(`Running '${chalk.green(cmd)}' in '${path}'`))
-	try {
-		const executedCmd = await execa(`cd ${path} && ${cmd}`, { shell: true })
+const runCmd = async (cmd, path, args = []) => {
+	console.log(chalk.underline(`Running '${chalk.green(cmd)}' in ${path}`))
+	const executedCmd = await execa(cmd, args, { cwd: path, shell: true, stdio: 'inherit' })
 
 		if (executedCmd.failed) {
 			console.error(executedCmd.stdout)
@@ -64,20 +63,25 @@ const runCmd = async (cmd, path) => {
 	let buildDocs = async projDirPath => {
 		checkIfProjectDirExists(projDirPath)
 
+		if (project === 'ember') {
+			await runCmd('volta', projDirPath, ['run', 'yarn'])
+		} else {
+			await runCmd('corepack', projDirPath, ['pnpm', 'install'])
+		}
+
+
 		if (install) {
 			await runCmd(project === 'ember' ? 'yarn' : 'pnpm install', projDirPath)
 			console.log('\n\n')
 		}
 
-		if (build) {
-			await runCmd(project === 'ember' ? 'yarn docs' : 'pnpm build:docs', projDirPath)
-		}
+		await runCmd(project === 'ember' ? 'volta run yarn docs' : 'corepack pnpm run build:docs', projDirPath)
 
-		const projYuiDocFile = `tmp/s3-docs/v${version}/${project}-docs.json`
+		let destination = `${docsPath}/s3-docs/v${version}/${project}-docs.json`
+		ensureFileSync(destination)
+		const projYuiDocFile = destination;
 		removeSync(projYuiDocFile)
-		removeSync(`tmp/json-docs/${project}/${version}`)
-
-		mkdirpSync(`tmp/s3-docs/v${version}`)
+		removeSync(`${docsPath}/json-docs/${project}/${version}`)
 
 		const yuiDocFile = path.join(
 			projDirPath,
@@ -93,5 +97,14 @@ const runCmd = async (cmd, path) => {
 
 	await buildDocs(dirMap[project])
 
-	await apiDocsProcessor([project], [version], true, false, true)
+	await execa('volta', [
+		'run',
+		'yarn',
+		'start',
+		'--project',
+		project,
+		'--version',
+		version,
+		'--no-sync'
+	]).stdout.pipe(process.stdout)
 })()

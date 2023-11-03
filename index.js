@@ -9,10 +9,8 @@ let projects =
 	argv.project && possibleProjects.includes(argv.project) ? [argv.project] : possibleProjects
 let specificDocsVersion = argv.version ? argv.version : ''
 
-let ignorePreviouslyIndexedDoc =
-	projects.length !== 0 && specificDocsVersion !== '' && argv.ignorePreviouslyIndexedDoc
 let runClean = !!argv.clean
 let noSync = !argv.sync
 
 const { apiDocsProcessor } = require('./main.js')
-apiDocsProcessor(projects, specificDocsVersion, ignorePreviouslyIndexedDoc, runClean, noSync)
+apiDocsProcessor(projects, specificDocsVersion, runClean, noSync)
