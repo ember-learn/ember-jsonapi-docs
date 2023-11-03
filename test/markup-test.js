@@ -7,7 +7,7 @@ function desc(path) {
   return {
     id: Date.now(),
     attributes: {
-      description: fs.readFileSync(join(__dirname, `./mocks/description/${path}.md`), 'utf-8'),
+      description: fs.readFileSync(`./test/mocks/description/${path}.md`, 'utf-8'),
       methods: [],
       properties: [],
       events: [],
@@ -24,7 +24,7 @@ function mark(path) {
 }
 
 function maybeWrite(content, path) {
-  const fsPath = join(__dirname, `./mocks/description/${path}.html`);
+  const fsPath = `./test/mocks/description/${path}.html`;
   if (fs.existsSync(fsPath)) {
     return;
   }
@@ -32,7 +32,7 @@ function maybeWrite(content, path) {
 }
 
 function snapshot(path) {
-  const fsPath = join(__dirname, `./mocks/description/${path}.html`);
+  const fsPath = `./test/mocks/description/${path}.html`;
   return fs.readFileSync(fsPath, 'utf8');
 }
 

@@ -9,6 +9,7 @@
 	"repository": "git+https://github.com/ember-learn/ember-jsonapi-docs.git",
 	"license": "MIT",
 	"author": "Stanley Stuart <stanley+npm@stan.li>",
+	"type": "module",
 	"contributors": [
 		"Todd Jordan",
 		"Sivakumar Kailasam <siva@rubberduck.engineering>",
@@ -19,11 +20,11 @@
 		"test": "test"
 	},
 	"scripts": {
-		"gen": "node -r esm generate-local.js",
+		"gen": "node generate-local.js",
 		"start": "node index.js",
 		"lint": "eslint .",
 		"lint:fix": "eslint . --fix",
-		"test": "mocha -r esm test"
+		"test": "mocha test"
 	},
 	"dependencies": {
 		"chalk": "^4.1.2",
@@ -32,7 +33,6 @@
 		"compare-versions": "^3.5.1",
 		"download": "^7.1.0",
 		"ember-rfc176-data": "^0.3.12",
-		"esm": "^3.2.25",
 		"execa": "^2.0.4",
 		"fs-extra": "^8.1.0",
 		"glob": "^7.1.4",
@@ -40,7 +40,7 @@
 		"http-server": "^0.11.1",
 		"inflected": "^2.0.4",
 		"keyfinder": "^1.0.0",
-		"lodash": "^4.17.21",
+		"lodash-es": "^4.17.21",
 		"marked": "^4.3.0",
 		"minimist": "^1.2.6",
 		"mkdir-promise": "^1.0.0",
@@ -58,11 +58,11 @@
 		"chai": "^4.2.0",
 		"chalk": "^2.4.2",
 		"eslint": "^8.52.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-n": "^16.2.0",
-    "eslint-plugin-prettier": "^5.0.1",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-plugin-n": "^16.2.0",
+		"eslint-plugin-prettier": "^5.0.1",
 		"husky": "^3.0.5",
-		"mocha": "^6.2.0",
+		"mocha": "^10.2.0",
 		"prettier": "^3.0.3",
 		"pretty-quick": "^1.11.1"
 	}
