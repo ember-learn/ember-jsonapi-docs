@@ -21,7 +21,9 @@
 	"scripts": {
 		"gen": "node -r esm generate-local.js",
 		"start": "node index.js",
-		"test": "eslint lib/**/*.js index.js test/**.js && mocha -r esm test"
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+		"test": "mocha -r esm test"
 	},
 	"dependencies": {
 		"cheerio": "^1.0.0-rc.2",

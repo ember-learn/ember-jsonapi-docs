@@ -1,39 +1,36 @@
 import chalk from 'chalk'
 import commandExists from 'command-exists'
 import execa from 'execa'
-import { copyFileSync, ensureDirSync, ensureFileSync, existsSync, mkdirpSync, removeSync } from 'fs-extra'
+import { copyFileSync, ensureFileSync, existsSync, removeSync } from 'fs-extra'
 import minimist from 'minimist'
 import path from 'path'
 import 'hard-rejection/register'
 
-const docsPath = '../ember-api-docs-data';
+const docsPath = '../ember-api-docs-data'
 
 const argv = minimist(process.argv.slice(2))
 
-const { project, version, install, build } = argv
+const { project, version, install } = argv
 
 const exit = function exit() {
 	console.log(...arguments)
 	process.exit(1)
 }
 
-const runCmd = async (cmd, path, args = []) => {
+async function  runCmd (cmd, path, args = []) {
 	console.log(chalk.underline(`Running '${chalk.green(cmd)}' in ${path}`))
 	const executedCmd = await execa(cmd, args, { cwd: path, shell: true, stdio: 'inherit' })
 
-		if (executedCmd.failed) {
-			console.error(executedCmd.stdout)
-			console.error(executedCmd.stderr)
-			process.exit(1)
-
-		}
-		console.log(executedCmd.stdout + '\n')
-	} catch (error) {
-		console.log(error)
+	if (executedCmd.failed) {
+		console.error(executedCmd.stdout)
+		console.error(executedCmd.stderr)
 		process.exit(1)
 	}
+
+	console.log(executedCmd.stdout + '\n')
 }
-;(async () => {
+
+(async () => {
 	if (!project || !version) {
 		exit(
 			chalk.red('Both project and version args are required.\n'),
@@ -79,7 +76,7 @@ const runCmd = async (cmd, path, args = []) => {
 
 		let destination = `${docsPath}/s3-docs/v${version}/${project}-docs.json`
 		ensureFileSync(destination)
-		const projYuiDocFile = destination;
+		const projYuiDocFile = destination
 		removeSync(projYuiDocFile)
 		removeSync(`${docsPath}/json-docs/${project}/${version}`)
 
