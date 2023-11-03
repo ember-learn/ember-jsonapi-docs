@@ -1,6 +1,6 @@
-import addSinceTags from '../lib/add-since-tags.js'
-import { assert } from 'chai'
-import _ from 'lodash'
+import addSinceTags from '../lib/add-since-tags.js';
+import { assert } from 'chai';
+import _ from 'lodash';
 
 describe('addSinceTags', () => {
   beforeEach(function () {
@@ -21,14 +21,14 @@ describe('addSinceTags', () => {
             },
           ],
         },
-      }
-    })
-    addSinceTags(this.yuiDocSets)
-  })
+      };
+    });
+    addSinceTags(this.yuiDocSets);
+  });
 
   it('adds a since tag to classitems', function () {
     this.yuiDocSets.forEach(({ data }) => {
-      data.classitems.forEach(({ since }) => assert.equal(since, '1.0.0'))
-    })
-  })
-})
+      data.classitems.forEach(({ since }) => assert.equal(since, '1.0.0'));
+    });
+  });
+});
