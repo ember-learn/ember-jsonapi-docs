@@ -1,10 +1,10 @@
 import transformModules from '../lib/modules-transform.js';
 import { assert } from 'chai';
-import _ from 'lodash';
+import { range, filter } from 'lodash-es';
 
 describe('transformModules', () => {
   beforeEach(function () {
-    this.yuiDocSets = _.range(3).map(i => {
+    this.yuiDocSets = range(3).map(i => {
       return {
         version: `v1.0.${i}`,
         data: {
@@ -74,7 +74,7 @@ describe('transformModules', () => {
 
   it('adds a parent attribute to sub modules', function () {
     this.yuiDocSets.forEach(({ data }) => {
-      let subModules = _.filter(data.modules, ({ is_submodule }) => is_submodule);
+      let subModules = filter(data.modules, ({ is_submodule }) => is_submodule);
       subModules.forEach(({ parent }) => {
         assert.equal(parent, 'foo');
       });

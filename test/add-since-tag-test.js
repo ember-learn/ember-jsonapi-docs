@@ -1,10 +1,10 @@
+import { range } from 'lodash-es';
 import addSinceTags from '../lib/add-since-tags.js';
 import { assert } from 'chai';
-import _ from 'lodash';
 
 describe('addSinceTags', () => {
   beforeEach(function () {
-    this.yuiDocSets = _.range(3).map(i => {
+    this.yuiDocSets = range(3).map(i => {
       return {
         version: `v1.0.${i}`,
         data: {
