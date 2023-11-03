@@ -18,11 +18,11 @@
 7
 8
 </pre></td>
-              <td class="code"><pre><span class="keyword">import</span> <span class="type">Route</span> from &apos;<span class="meta">@ember</span>/routing/route&apos;;
-export <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">ArticlesRoute</span> <span class="keyword">extends</span> <span class="title">Route</span> </span>{
+              <td class="code"><pre><span class="keyword">import</span> <span class="type">Route</span> from '<span class="meta">@ember</span>/routing/route';
+<span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">ArticlesRoute</span> <span class="keyword">extends</span> <span class="title">Route</span> </span>{
   resetController(controller, isExiting, transition) {
-    <span class="keyword">if</span> (isExiting &amp;&amp; transition.targetName !== <span class="symbol">&apos;erro</span>r&apos;) {
-      controller.set(<span class="symbol">&apos;pag</span>e&apos;, <span class="number">1</span>);
+    <span class="keyword">if</span> (isExiting &amp;&amp; transition.targetName !== 'error') {
+      controller.set('page', <span class="number">1</span>);
     }
   }
 }</pre></td>

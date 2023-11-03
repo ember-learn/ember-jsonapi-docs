@@ -8,9 +8,9 @@
 2
 3
 </pre></td>
-              <td class="code"><pre><span class="xml">  <span class="tag">&lt;<span class="name">h1</span>&gt;</span></span><span class="template-variable">{{<span class="name">person.title</span>}}</span><span class="xml"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span>
-  </span><span class="comment">{{! Executed in the component&apos;s context. }}</span><span class="xml">
-  </span><span class="template-variable">{{<span class="name"><span class="builtin-name">yield</span></span>}}</span><span class="xml"> </span><span class="comment">{{! block contents }}</span></pre></td>
+              <td class="code"><pre><span class="language-xml">  <span class="tag">&lt;<span class="name">h1</span>&gt;</span></span><span class="template-variable">{{<span class="name">person.title</span>}}</span><span class="language-xml"><span class="tag">&lt;/<span class="name">h1</span>&gt;</span>
+  </span><span class="comment">{{! Executed in the component's context. }}</span><span class="language-xml">
+  </span><span class="template-variable">{{<span class="name"><span class="built_in">yield</span></span>}}</span><span class="language-xml"> </span><span class="comment">{{! block contents }}</span></pre></td>
             </tr>
           </tbody>
         </table>
@@ -43,14 +43,14 @@
 7
 8
 </pre></td>
-              <td class="code"><pre>  <span class="keyword">import</span> Ember <span class="keyword">from</span> <span class="string">&apos;ember&apos;</span>;
-  <span class="keyword">export</span> <span class="keyword">default</span> Ember.Component.extend({
-    <span class="attr">actions</span>: {
-      <span class="function"><span class="title">hello</span>(<span class="params">name</span>)</span> {
-        <span class="built_in">console</span>.log(<span class="string">&quot;Hello&quot;</span>, name);
-      }
+              <td class="code"><pre><span class="keyword">import</span> <span class="title class_">Ember</span> <span class="keyword">from</span> <span class="string">'ember'</span>;
+<span class="keyword">export</span> <span class="keyword">default</span> <span class="title class_">Ember</span>.<span class="property">Component</span>.<span class="title function_">extend</span>({
+  <span class="attr">actions</span>: {
+    <span class="title function_">hello</span>(<span class="params">name</span>) {
+      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">"Hello"</span>, name);
     }
-  });</pre></td>
+  }
+});</pre></td>
             </tr>
           </tbody>
         </table>
