@@ -16,7 +16,7 @@ const exit = function exit() {
 	process.exit(1)
 }
 
-async function  runCmd (cmd, path, args = []) {
+async function runCmd (cmd, path, args = []) {
 	console.log(chalk.underline(`Running '${chalk.green(cmd)}' in ${path}`))
 	const executedCmd = await execa(cmd, args, { cwd: path, shell: true, stdio: 'inherit' })
 
@@ -29,7 +29,7 @@ async function  runCmd (cmd, path, args = []) {
 	console.log(executedCmd.stdout + '\n')
 }
 
-(async () => {
+;(async () => {
 	if (!project || !version) {
 		exit(
 			chalk.red('Both project and version args are required.\n'),

@@ -1,4 +1,4 @@
-import updateWithIDs from '../lib/update-with-versions-and-project'
+import updateWithIDs from '../lib/update-with-versions-and-project.js'
 import { assert } from 'chai'
 
 describe('update with versions and project', () => {

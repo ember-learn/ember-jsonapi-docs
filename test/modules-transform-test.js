@@ -1,4 +1,4 @@
-import transformModules from '../lib/modules-transform'
+import transformModules from '../lib/modules-transform.js'
 import { assert } from 'chai'
 import _ from 'lodash'
 

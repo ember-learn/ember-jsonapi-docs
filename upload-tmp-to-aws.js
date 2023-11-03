@@ -1,4 +1,4 @@
-import { uploadDocsToS3 } from './lib/s3-sync'
+import { uploadDocsToS3 } from './lib/s3-sync.js'
 import readline from 'readline'
 
 // Only run this script if you have confirmed that the tmp directory's

@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import _ from 'lodash'
-import { classWithIncluded } from '../lib/filter-jsonapi-doc'
+import { classWithIncluded } from '../lib/filter-jsonapi-doc.js'
 
 describe('filter json api docs', () => {
 	describe('#classWithIncluded', () => {

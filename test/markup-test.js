@@ -1,4 +1,4 @@
-import markup from '../lib/markup'
+import markup from '../lib/markup.js'
 import { assert } from 'chai'
 import fs from 'fs'
 import { join } from 'path'

@@ -1,4 +1,4 @@
-import addSinceTags from '../lib/add-since-tags'
+import addSinceTags from '../lib/add-since-tags.js'
 import { assert } from 'chai'
 import _ from 'lodash'
 
