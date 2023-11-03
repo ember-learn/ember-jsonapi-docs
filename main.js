@@ -11,7 +11,7 @@ import saveDoc from './lib/save-document'
 import revProjVersionFiles from './lib/rev-docs'
 import fixBorkedYuidocFiles from './lib/fix-borked-yuidoc-files'
 
-const docsPath = '../ember-api-docs-data';
+const docsPath = '../ember-api-docs-data'
 
 async function transformObject(doc, projectName, docVersion) {
 	try {

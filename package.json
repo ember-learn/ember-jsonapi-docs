@@ -22,6 +22,7 @@
 		"gen": "node -r esm generate-local.js",
 		"start": "node index.js",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
 		"test": "mocha -r esm test"
 	},
 	"dependencies": {
