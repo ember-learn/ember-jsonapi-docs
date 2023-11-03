@@ -1,7 +1,7 @@
-// eslint-disable-next-line
-require = require('esm')(module /*, options*/)
+import minimist from 'minimist';
+import { apiDocsProcessor } from './main.js';
 
-const argv = require('minimist')(process.argv.slice(2));
+const argv = minimist(process.argv.slice(2));
 
 let possibleProjects = ['ember', 'ember-data'];
 let projects =
@@ -11,5 +11,4 @@ let specificDocsVersion = argv.version ? argv.version : '';
 let runClean = !!argv.clean;
 let noSync = !argv.sync;
 
-const { apiDocsProcessor } = require('./main.js');
 apiDocsProcessor(projects, specificDocsVersion, runClean, noSync);

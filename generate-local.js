@@ -1,9 +1,11 @@
 import chalk from 'chalk';
 import commandExists from 'command-exists';
 import execa from 'execa';
-import { copyFileSync, ensureFileSync, existsSync, removeSync } from 'fs-extra';
+import fsExtra from 'fs-extra';
 import minimist from 'minimist';
 import path from 'path';
+
+const { copyFileSync, ensureFileSync, existsSync, removeSync } = fsExtra;
 
 const docsPath = '../ember-api-docs-data';
 
@@ -47,8 +49,8 @@ async function runCmd(cmd, path, args = []) {
     exit(chalk.red('We need yarn installed globally for this script to work'));
   }
 
-  let emberProjectPath = path.join(__dirname, '../', 'ember.js');
-  let emberDataProjectPath = path.join(__dirname, '../', 'data');
+  let emberProjectPath = path.join('../', 'ember.js');
+  let emberDataProjectPath = path.join('../', 'data');
 
   let checkIfProjectDirExists = dirPath => {
     if (!existsSync(dirPath)) {

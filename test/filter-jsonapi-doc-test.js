@@ -1,6 +1,6 @@
 import { assert } from 'chai';
-import _ from 'lodash';
 import { classWithIncluded } from '../lib/filter-jsonapi-doc.js';
+import { filter } from 'lodash-es';
 
 describe('filter json api docs', () => {
   describe('#classWithIncluded', () => {
@@ -61,7 +61,7 @@ describe('filter json api docs', () => {
     });
 
     it('does not return unassociated models', function () {
-      let unassociated = _.filter(this.response.included, ['type', 'yoloswag']);
+      let unassociated = filter(this.response.included, ['type', 'yoloswag']);
       assert.equal(unassociated.length, 0);
     });
   });
