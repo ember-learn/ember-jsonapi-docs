@@ -27,7 +27,7 @@ function semverVersion(value) {
 program
   .addOption(
     new Option('-p, --project <project>', 'the project that you want to run this for')
-      .choices(['ember', 'ember-data'])
+      .choices(['ember', 'ember-data', 'ember-cli'])
       .makeOptionMandatory(),
   )
   .requiredOption('-v, --version <version>', 'project version', semverVersion);
@@ -59,6 +59,7 @@ try {
 
 let emberProjectPath = path.join('../', 'ember.js');
 let emberDataProjectPath = path.join('../', 'data');
+let emberCliProjectPath = path.join('../', 'ember-cli');
 
 let checkIfProjectDirExists = dirPath => {
   if (!existsSync(dirPath)) {
@@ -69,14 +70,14 @@ let checkIfProjectDirExists = dirPath => {
 let buildDocs = async projDirPath => {
   checkIfProjectDirExists(projDirPath);
 
-  if (project === 'ember') {
-    await runCmd('volta', projDirPath, ['run', 'yarn']);
-  } else {
+  if (project === 'ember-data') {
     await runCmd('corepack', projDirPath, ['pnpm', 'install']);
+  } else {
+    await runCmd('volta', projDirPath, ['run', 'yarn']);
   }
 
   await runCmd(
-    project === 'ember' ? 'volta run yarn docs' : 'corepack pnpm run build:docs',
+    project === 'ember-data' ? 'corepack pnpm run build:docs' : 'volta run yarn docs',
     projDirPath,
   );
 
@@ -86,16 +87,20 @@ let buildDocs = async projDirPath => {
   removeSync(projYuiDocFile);
   removeSync(`${docsPath}/json-docs/${project}/${version}`);
 
-  const yuiDocFile = path.join(
-    projDirPath,
-    project === 'ember' ? 'docs/data.json' : 'packages/-ember-data/dist/docs/data.json',
-  );
+  const paths = {
+    ember: 'docs/data.json',
+    'ember-cli': 'docs/build/data.json',
+    'ember-data': 'packages/-ember-data/dist/docs/data.json',
+  };
+
+  const yuiDocFile = path.join(projDirPath, paths[project]);
   copyFileSync(yuiDocFile, projYuiDocFile);
 };
 
 let dirMap = {
   ember: emberProjectPath,
   'ember-data': emberDataProjectPath,
+  'ember-cli': emberCliProjectPath,
 };
 
 await buildDocs(dirMap[project]);
