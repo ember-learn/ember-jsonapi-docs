@@ -10,6 +10,10 @@
 	"license": "MIT",
 	"author": "Stanley Stuart <stanley+npm@stan.li>",
 	"type": "module",
+  "bin":{
+    "build-jsonapi-docs": "./index.js",
+    "build-yuidoc": "./generate-local.js"
+  },
 	"contributors": [
 		"Todd Jordan",
 		"Sivakumar Kailasam <siva@rubberduck.engineering>",
@@ -30,6 +34,7 @@
 		"chalk": "^4.1.2",
 		"cheerio": "^1.0.0-rc.2",
 		"command-exists": "^1.2.8",
+		"commander": "^11.1.0",
 		"compare-versions": "^3.5.1",
 		"download": "^7.1.0",
 		"ember-rfc176-data": "^0.3.12",
@@ -56,7 +61,6 @@
 	},
 	"devDependencies": {
 		"chai": "^4.2.0",
-		"chalk": "^2.4.2",
 		"eslint": "^8.52.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-n": "^16.2.0",
