@@ -113,21 +113,7 @@ Once that is all done, push it and open a PR 🎉
 > ✅ **TIP:** If you are debugging failed builds, periodically discard the changes
 made to `ember-api-docs-data`, since changes are made in-place.
 
-## (Optional) View the generated docs in a web app
+## (Optional) View the generated docs in the `ember-api-docs` frontend
 
-The Prembered version of the ember-api-docs expects a folder in its root that links to the `ember-api-docs-data` folder, so all you need to do is create a symbolic link to ember-api-docs-data and you can see the app running locally.
-
-Clone the [ember-api-docs](https://github.com/ember-learn/ember-api-docs)
-repository, install dependencies, and start the front end in "local" mode:
-
-```sh
-git clone https://github.com/ember-learn/ember-api-docs
-cd ember-api-docs
-ln -s ../ember-api-docs-data # assuming it's checked out in the same folder
-npm install
-yarn start
-```
-
-> Note: at the time of writing this the ember-api-docs app needs to be on the `prember` branch but this will change very soon when we go live with it.
-
-Visit the app in your browser at [http://localhost:4200](http://localhost:4200)
+If you want to see how this content will look in the `ember-api-docs` frontend in your local environment follow [these instructions](https://github.com/ember-learn/ember-api-docs).
+ 
