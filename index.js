@@ -14,7 +14,7 @@ function semverVersion(value) {
 program
   .addOption(
     new Option('-p, --projects <project...>', 'the projects that you want to run this for')
-      .choices(['ember', 'ember-data'])
+      .choices(['ember', 'ember-data', 'ember-cli'])
       .makeOptionMandatory(),
   )
   .addOption(
