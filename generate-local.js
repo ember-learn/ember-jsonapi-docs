@@ -52,9 +52,9 @@ async function runCmd(cmd, path, args = []) {
 }
 
 try {
-  await commandExists('yarn');
+  await commandExists('pnpm');
 } catch (e) {
-  exit(chalk.red('We need yarn installed globally for this script to work'));
+  exit(chalk.red('We need pnpm installed globally for this script to work'));
 }
 
 let emberProjectPath = path.join('../', 'ember.js');
@@ -70,13 +70,13 @@ let buildDocs = async projDirPath => {
   checkIfProjectDirExists(projDirPath);
 
   if (project === 'ember') {
-    await runCmd('volta', projDirPath, ['run', 'yarn']);
+    await runCmd('corepack', projDirPath, ['pnpm', 'install']);
   } else {
     await runCmd('corepack', projDirPath, ['pnpm', 'install']);
   }
 
   await runCmd(
-    project === 'ember' ? 'volta run yarn docs' : 'corepack pnpm run build:docs',
+    project === 'ember' ? 'corepack pnpm run docs' : 'corepack pnpm run build:docs',
     projDirPath,
   );
 
@@ -100,6 +100,6 @@ let dirMap = {
 
 await buildDocs(dirMap[project]);
 
-await execa('volta', ['run', 'yarn', 'start', '--projects', project, '--version', version], {
+await execa('pnpm', ['run', 'start', '--projects', project, '--version', version], {
   stdio: 'inherit',
 });
