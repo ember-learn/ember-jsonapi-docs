@@ -1,4 +1,4 @@
-# Ember JSON API Docs [![Build Status](https://github.com/ember-learn/ember-json-api-docs/actions/workflows/ci.yml/badge.svg)](https://github.com/ember-learn/ember-jsonapi-docs/actions/workflows/ci.yaml)
+# Ember JSON API Docs [![Build Status](https://github.com/ember-learn/ember-jsonapi-docs/actions/workflows/ci.yaml/badge.svg)](https://github.com/ember-learn/ember-jsonapi-docs/actions/workflows/ci.yaml)
 
 
 This tool gets the code comments from `ember.js` and `ember-data` libraries, 
