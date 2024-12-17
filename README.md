@@ -1,6 +1,7 @@
-# Ember JSON API Docs [![Build Status](https://travis-ci.org/ember-learn/ember-jsonapi-docs.svg?branch=master)](https://travis-ci.org/ember-learn/ember-jsonapi-docs)
+# Ember JSON API Docs [![Build Status](https://github.com/ember-learn/ember-json-api-docs/actions/workflows/ci.yml/badge.svg)](https://github.com/ember-learn/ember-jsonapi-docs/actions/workflows/ci.yaml)
 
-This tool gets the code comments from `ember.js` and `ember-data` libraries,
+
+This tool gets the code comments from `ember.js` and `ember-data` libraries, 
 turns them into JSON files, and then turns those JSON files into a
 [JSON:API](http://jsonapi.org/) format.
 
@@ -13,7 +14,7 @@ The files this tool creates are used to power
 ## Prerequisites
 
 - the latest [Node.js](https://nodejs.org/) LTS
-- [yarn v1](https://yarnpkg.com/)
+- [pnpm v9](https://pnpm.io/) (preferably managed via [corepack](https://github.com/nodejs/corepack))
 
 Clone all of the following repositories into the same directory so they are "siblings" on the file system
 
@@ -45,8 +46,8 @@ files into the `s3-docs` directory of `ember-api-docs-data`:
 
 ```sh
 cd ../ember-jsonapi-docs
-yarn
-yarn gen --project ember --version "5.2.0"
+pnpm i
+pnpm gen --project ember --version "5.2.0"
 ```
 
 I would recommend committing in ember-api-docs-data at this stage so that you can see that the following steps work.
