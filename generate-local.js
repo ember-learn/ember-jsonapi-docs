@@ -26,6 +26,9 @@ function semverVersion(value) {
 
 program
   .addOption(
+    new Option('--skip-install', 'skip the installation of dependencies')
+  )
+  .addOption(
     new Option('-p, --project <project>', 'the project that you want to run this for')
       .choices(['ember', 'ember-data'])
       .makeOptionMandatory(),
@@ -36,7 +39,7 @@ program.parse();
 
 const options = program.opts();
 
-const { project, version } = options;
+const { project, version, skipInstall } = options;
 
 async function runCmd(cmd, path, args = []) {
   console.log(chalk.underline(`Running '${chalk.green(cmd)}' in ${path}`));
@@ -69,10 +72,12 @@ let checkIfProjectDirExists = dirPath => {
 let buildDocs = async projDirPath => {
   checkIfProjectDirExists(projDirPath);
 
-  if (project === 'ember') {
-    await runCmd('corepack', projDirPath, ['pnpm', 'install']);
-  } else {
-    await runCmd('corepack', projDirPath, ['pnpm', 'install']);
+  if (!skipInstall) {
+    if (project === 'ember') {
+      await runCmd('corepack', projDirPath, ['pnpm', 'install']);
+    } else {
+      await runCmd('corepack', projDirPath, ['pnpm', 'install']);
+    }
   }
 
   await runCmd(
