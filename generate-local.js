@@ -25,9 +25,7 @@ function semverVersion(value) {
 }
 
 program
-  .addOption(
-    new Option('--skip-install', 'skip the installation of dependencies')
-  )
+  .addOption(new Option('--skip-install', 'skip the installation of dependencies'))
   .addOption(
     new Option('-p, --project <project>', 'the project that you want to run this for')
       .choices(['ember', 'ember-data'])
