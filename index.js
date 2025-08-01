@@ -5,8 +5,10 @@ import { program, Option, InvalidArgumentError } from 'commander';
 import chalk from 'chalk';
 
 function semverVersion(value) {
-  if (!/^\d+\.\d+\.\d+$/.test(value)) {
-    throw new InvalidArgumentError('Not a correctly defined semver version i.e. major.minor.patch');
+  if (!/^\d+\.\d+\.\d+(-[0-9A-Za-z-.]+)?$/.test(value)) {
+    throw new InvalidArgumentError(
+      'Not a correctly defined semver version i.e. major.minor.patch or with prerelease',
+    );
   }
   return value;
 }
