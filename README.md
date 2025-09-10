@@ -31,13 +31,13 @@ tags you want to generate docs for. For example:
 
 ```sh
 cd ../ember.js
-get fetch --all
-git checkout v5.2.0
+git fetch --all
+git checkout v5.2.0-ember-source
 
 AND/OR
 
 cd ../data
-get fetch --all
+git fetch --all
 git checkout v5.2.0
 ```
 
