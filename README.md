@@ -59,9 +59,10 @@ git commit -m "add docs for ember v5.2.0"
 ```
 
 Next, we need to fix the generated files in ember-api-docs-data. (Note: this step could probably be incorporated into ember-jsonapi-docs
-but for now this step works).
+but for now this step works). The `delete_unused_files` script will return an error for `ember.json` and `ember-data.json`, this is expected
 
 ```sh
+npm i
 npm run fix:files
 git add .
 git commit -m "fix urls and rev-index for ember"
